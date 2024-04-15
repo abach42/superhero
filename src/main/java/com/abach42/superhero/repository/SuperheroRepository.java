@@ -10,5 +10,5 @@ import com.abach42.superhero.entity.Superhero;
 public interface SuperheroRepository extends JpaRepository<Superhero, Long>{
     List<Superhero> findAll();
     Optional<Superhero> findById(Long id);
-    //sort, pagable
+    //todo sort, pagable
 }
