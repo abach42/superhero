@@ -1,4 +1,5 @@
 @host = localhost
+# todo https
 @port = 8080
 @sheme = http
 @domain = {{sheme}}://{{host}}:{{port}}
