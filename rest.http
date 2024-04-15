@@ -1,0 +1,7 @@
+@host = localhost
+@port = 8080
+@sheme = http
+@domain = {{sheme}}://{{host}}:{{port}}
+
+### Get all superheros
+GET {{domain}}/api/superheros/
