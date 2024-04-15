@@ -1,0 +1,13 @@
+spring.application.name: superhero
+spring:
+    config:
+        activate:
+            on-profile: default
+    main:
+        banner-mode: off
+    datasource:
+        url: jdbc:postgresql://localhost:15432/db
+        username: db
+        password: db
+        driverClassName: org.postgresql.Driver
+    
