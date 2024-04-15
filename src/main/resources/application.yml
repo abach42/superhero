@@ -10,4 +10,11 @@ spring:
         username: db
         password: db
         driverClassName: org.postgresql.Driver
-    
+springdoc:
+    swagger-ui:
+        enabled: true
+        path: /swagger-ui.html
+        tryItOutEnabled: false
+        filter: false
+        syntaxHighlight.activated: true
+debug: true
