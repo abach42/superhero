@@ -1,0 +1,26 @@
+databaseChangeLog:
+    - changeSet:
+        id:  20200607-book-insert
+        author:  phea_soy
+        changes:
+            - insert:
+                tableName:  superhero
+                columns:
+                    - column:
+                        name: alias
+                        value: whatever
+                    - column:
+                        name: real_name
+                        value: Enterprise Kubernetes
+                    - column:
+                        name: date_of_birth
+                        value: 1970-01-01
+                    - column:
+                        name: gender
+                        value: Male
+                    - column:
+                        name: occupation
+                        value: whatever
+                    - column:
+                        name: origin_story
+                        value: whatever

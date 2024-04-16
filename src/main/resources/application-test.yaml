@@ -14,7 +14,10 @@ spring:
     sql:
         init:
             mode: always
-    flyway:
-        baselineOnMigrate: true
+    liquibase:
         enabled: true
+        change-log: classpath:/db/migrations/changelog-master.yaml
+    flyway:
+        baselineOnMigrate: false
+        enabled: false
 debug: true
