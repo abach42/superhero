@@ -13,6 +13,8 @@ spring:
     flyway:
         baselineOnMigrate: false
         enabled: false
+    liquibase:
+        enabled: false
 springdoc:
     swagger-ui:
         enabled: true

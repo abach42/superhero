@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: "20200607-book"
+      author: phea_soy
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: superhero
+      changes:
+        - createTable:
+            tableName: superhero
+            columns:
+              - column:
+                  autoIncrement: true
+                  #constraints:
+                    #primaryKey: true
+                    #primaryKeyName: pk_book
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: alias
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: real_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_of_birth
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: occupation
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: origin_story
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+                  constraints:
+                    default: false
+              
+                                      
