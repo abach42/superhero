@@ -36,15 +36,13 @@ public class Superhero {
         String occupation,
         String originStory
     ) {
-        //todo use setters
-        this.alias = alias;
-        this.realName = realName;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.occupation = occupation;
-        this.originStory = originStory;
+        setAlias(alias);
+        setRealName(realName);
+        setDateOfBirth(dateOfBirth);
+        setGender(gender);
+        setOccupation(occupation);
+        setOriginStory(originStory);
     }
-
 
     public long getId() {
         return id;
