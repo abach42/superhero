@@ -1,17 +1,20 @@
 databaseChangeLog:
     - changeSet:
-        id:  20200607-book-insert
-        author:  phea_soy
+        id: 1-superhero
+        author: me
         changes:
             - insert:
                 tableName:  superhero
                 columns:
                     - column:
+                        name: id
+                        value: 1
+                    - column:
                         name: alias
-                        value: whatever
+                        value: foo
                     - column:
                         name: real_name
-                        value: Enterprise Kubernetes
+                        value: bar
                     - column:
                         name: date_of_birth
                         value: 1970-01-01
@@ -20,7 +23,7 @@ databaseChangeLog:
                         value: Male
                     - column:
                         name: occupation
-                        value: whatever
+                        value: foo
                     - column:
                         name: origin_story
-                        value: whatever
+                        value: foo

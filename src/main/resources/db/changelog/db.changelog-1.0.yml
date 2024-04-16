@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: "20200607-book"
-      author: phea_soy
+      id: 1-superhero
+      author: me
       preConditions:
         - onFail: MARK_RAN
           not:
@@ -13,9 +13,10 @@ databaseChangeLog:
             columns:
               - column:
                   autoIncrement: true
+                  #todo add primary key
                   #constraints:
                     #primaryKey: true
-                    #primaryKeyName: pk_book
+                    #primaryKeyName: pk_name follows up
                   name: id
                   type: BIGSERIAL
               - column:
