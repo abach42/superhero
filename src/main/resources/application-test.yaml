@@ -1,0 +1,20 @@
+spring.application.name: superhero
+spring:
+    config:
+        activate:
+            on-profile: test
+    jpa:
+        properties:
+            hibernate:
+                ddl-auto: create-drop
+                format_sql: true
+                highlight_sql: true
+    datasource:
+        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    sql:
+        init:
+            mode: always
+    flyway:
+        baselineOnMigrate: true
+        enabled: true
+debug: true
