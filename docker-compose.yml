@@ -10,5 +10,5 @@ services:
       POSTGRES_PASSWORD: db
       POSTGRES_DB: db
     volumes:
-      - ./src/main/resources/db/.data/:/var/lib/posgresql/data/
-      - ./src/main/resources/db/init/create.sql:/docker-entrypoint-initdb.d/create.sql
+      - ./src/main/resources/db/oci/.data/:/var/lib/posgresql/data/
+      - ./src/main/resources/db/oci/create.sql:/docker-entrypoint-initdb.d/create.sql
