@@ -11,9 +11,6 @@ spring:
         username: db
         password: db
         driverClassName: org.postgresql.Driver
-    flyway:
-        baselineOnMigrate: false
-        enabled: false
     liquibase:
         enabled: false
 springdoc:
