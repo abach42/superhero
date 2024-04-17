@@ -1,7 +1,8 @@
 package com.abach42.superhero.service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,10 @@ public class SuperheroService {
         this.superheroRepository = superheroRepository;
     }
     
-    public Stream<SuperheroDto> getAllSuperheros() {
-        return superheroRepository.findAll().stream().map(SuperheroDto::fromDomain);
+    public List<SuperheroDto> getAllSuperheros() {
+        return superheroRepository.findAll()
+            .stream().map(SuperheroDto::fromDomain)
+            .collect(Collectors.toList());
     }
 
     public Optional<SuperheroDto> getSuperhero(Long id) {

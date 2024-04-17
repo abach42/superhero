@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class SuperheroControllerTest {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
        
-        given(superheroService.getAllSuperheros()).willReturn(Stream.of(expected));
+        given(superheroService.getAllSuperheros()).willReturn(List.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
                 get("/api/superheros/")
@@ -53,12 +52,20 @@ public class SuperheroControllerTest {
             .andExpect(status().isOk())
             .andReturn();
 
-        
-
         ObjectReader reader = objectMapper.readerForListOf(SuperheroDto.class);
         List<SuperheroDto> actual = reader.readValue(mvcResult.getResponse().getContentAsString());
 
         assertThat(actual.get(0)).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    @Description("Controller action for superhero not found returns 404")
+    public void testGetAllSuperherosNotFound() throws Exception {
+        mockMvc.perform(
+            get("/api/superheros/")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isNotFound());
     }
 
     @Test
@@ -77,11 +84,19 @@ public class SuperheroControllerTest {
             .andReturn();
 
         SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), SuperheroDto.class);
+        
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
-    
-    // test 404s
+    @Test
+    @Description("Controller action for superhero not found returns 404")
+    public void testGetSuperheroNotFound() throws Exception {
+        mockMvc.perform(
+            get("/api/superheros/666")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isNotFound());
+    }
 
     //todo test roles
     //todo  .andExpect(status().isBadRequest()).andExpect(responseBody().containsError("name", "must not be null")); 
