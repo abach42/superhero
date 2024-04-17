@@ -17,9 +17,13 @@ public class Superhero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String alias;
+    @Column(nullable = false)
     private String realName;
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
+    @Column(nullable = false)
     private String gender;
     private String occupation;
     
@@ -91,6 +95,7 @@ public class Superhero {
     public String getOriginStory() {
         return originStory;
     }
+
     public void setOriginStory(String originStory) {
         this.originStory = originStory;
     }

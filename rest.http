@@ -5,8 +5,20 @@
 @domain = {{sheme}}://{{host}}:{{port}}
 
 ### Get all superheroes
-GET {{domain}}/api/v1/superheroes/
+GET {{domain}}/api/v1/superheroes HTTP/1.1
 
 ### Get superhero
-GET {{domain}}/api/v1/superheroes/666
+GET {{domain}}/api/v1/superheroes/1 HTTP/1.1
 Accept: application/json
+
+### Add new superhero
+POST {{domain}}/api/v1/superheroes HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+
+  "dateOfBirth": "1987-07-22",
+  "gender": "Male",
+  "occupation": "Illustrator"
+} 

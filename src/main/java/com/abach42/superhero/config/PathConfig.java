@@ -10,5 +10,5 @@ public final class PathConfig {
     protected final static String VERSION = "/v1";
     public final static String BASE_URI = ALIAS + VERSION;
 
-    public final static String SUPERHEROES = "/superheroes/";
+    public final static String SUPERHEROES = BASE_URI + "/superheroes";
 }
