@@ -2,21 +2,17 @@ package com.abach42.superhero.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.entity.dto.SuperheroDto;
-import com.abach42.superhero.exception.SuperheroException;
+import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.service.SuperheroService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +27,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(PathConfig.BASE_URI + PathConfig.SUPERHEROES)
 public class SuperheroController {
+    public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found";
+    public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
+
     private final SuperheroService superheroService;
 
     public SuperheroController(SuperheroService superheroService) {
@@ -55,18 +54,17 @@ public class SuperheroController {
                 )
             }), 
         @ApiResponse( 
-            responseCode = "404", 
-            description = "Superheroes not found",
+            responseCode = "404",
+            description = SUPERHEROES_NOT_FOUND_MSG,
             content = @Content 
         )
     })
     @GetMapping
     public ResponseEntity<?> getAllSuperheros() {
         List<SuperheroDto> superheroes = superheroService.getAllSuperheros();
-        superheroes = new ArrayList<>();
     
         if (superheroes.isEmpty()) {
-            throw new SuperheroException(HttpStatus.NOT_FOUND, "Superheroes not found");
+            throw new ApiException(HttpStatus.NOT_FOUND, SUPERHEROES_NOT_FOUND_MSG);
         }
             
         return ResponseEntity.ok(superheroes);
@@ -85,14 +83,14 @@ public class SuperheroController {
             }), 
         @ApiResponse( 
             responseCode = "404", 
-            description = "Superhero not found on id",
+            description = SUPERHERO_NOT_FOUND_MSG,
             content = @Content 
         )
     })
     @GetMapping("{id}")
     public ResponseEntity<SuperheroDto> getSuperhero(@PathVariable Long id) {
         return ResponseEntity.ok(superheroService.getSuperhero(id).orElseThrow(
-            () -> new SuperheroException(HttpStatus.NOT_FOUND, "Superhero not found on id" + id)
+            () -> new ApiException(HttpStatus.NOT_FOUND, SUPERHERO_NOT_FOUND_MSG + id)
         ));
     }
 }
