@@ -1,13 +1,14 @@
 package com.abach42.superhero.unit.entity.dto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Description;
 
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
-
-import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SuperheroDtoTest {
     @Test
