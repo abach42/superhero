@@ -18,9 +18,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Superhero API")
 @RestController
-@RequestMapping(PathConfig.BASE_URI + "/superheros/")
+@RequestMapping(PathConfig.BASE_URI + PathConfig.SUPERHEROES)
 public class SuperheroController {
     private final SuperheroService superheroService;
 
@@ -32,10 +34,10 @@ public class SuperheroController {
     //todo paginate
     //todo deleted I/0
 
-    @Operation(summary = "Get all superheros")
+    @Operation(summary = "Get all superheroes")
     @ApiResponses({
         @ApiResponse(
-            responseCode = "200", description = "Superheros found",
+            responseCode = "200", description = "Superheroes found",
             content = {
                 @Content(
                     mediaType = "application/json",
@@ -47,7 +49,7 @@ public class SuperheroController {
             }), 
         @ApiResponse( 
             responseCode = "404", 
-            description = "Superheros not found",
+            description = "Superheroes not found",
             content = @Content 
         )})
     @GetMapping
