@@ -4,9 +4,9 @@
 @sheme = http
 @domain = {{sheme}}://{{host}}:{{port}}
 
-### Get all superheros
-GET {{domain}}/api/superheros/
+### Get all superheroes
+GET {{domain}}/api/v1/superheroes/
 
 ### Get superhero
-GET {{domain}}/api/superheros/1
+GET {{domain}}/api/v1/superheroes/666
 Accept: application/json

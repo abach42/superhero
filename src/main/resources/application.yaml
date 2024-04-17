@@ -1,5 +1,11 @@
 spring.application.name: superhero
-server.port: 8888
+server:
+    port: 8888
+    error:
+        include-message: always
+        include-binding-errors: always
+        include-stacktrace: on-param
+        include-exception: false
 spring:
     config:
         activate:
