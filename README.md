@@ -13,11 +13,13 @@ tbd: what does it do?
 
 Postgresql database will be started an initialized in a docker container. 
 
-2. 🚀 Start application: `mvn spring:boot-run`
+2. 🚀 Start application: `mvn spring:boot-run` (server.port: 8888)
 
 3. 🍽️ Use rest client: GET {{domain}}/api/superheros/
 
 4. 💡See openapi definition at {{domain}}/swagger-ui.html
+
+5. Run test by `mvn clean test -Dspring.profiles.active=test`
 
 ## Using JWT
 
