@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 
 @WebMvcTest(SuperheroController.class)
 public class SuperheroControllerTest {
-    private final static String BASE_URI = PathConfig.BASE_URI;
+    private final static String PATH = PathConfig.BASE_URI + PathConfig.SUPERHEROES;
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,7 +49,7 @@ public class SuperheroControllerTest {
         given(superheroService.getAllSuperheros()).willReturn(List.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
-                get(BASE_URI + "/superheros/")
+                get(PATH)
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -65,7 +65,7 @@ public class SuperheroControllerTest {
     @Description("Controller action for superhero not found returns 404")
     public void testGetAllSuperherosNotFound() throws Exception {
         mockMvc.perform(
-            get("/api/superheros/")
+            get(PATH)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isNotFound());
@@ -80,7 +80,7 @@ public class SuperheroControllerTest {
         given(superheroService.getSuperhero(0L)).willReturn(Optional.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
-                get(BASE_URI + "/superheros/0")
+                get(PATH + "0")
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -95,7 +95,7 @@ public class SuperheroControllerTest {
     @Description("Controller action for superhero not found returns 404")
     public void testGetSuperheroNotFound() throws Exception {
         mockMvc.perform(
-            get(BASE_URI + "/superheros/666")
+            get(PATH + "666")
             .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isNotFound());
