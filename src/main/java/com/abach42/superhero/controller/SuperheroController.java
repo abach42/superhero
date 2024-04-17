@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.service.SuperheroService;
 
@@ -19,7 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@RequestMapping("/api/superheros/")
+@RequestMapping(PathConfig.BASE_URI + "/superheros/")
 public class SuperheroController {
     private final SuperheroService superheroService;
 
