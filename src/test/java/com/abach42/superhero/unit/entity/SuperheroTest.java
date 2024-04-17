@@ -1,16 +1,18 @@
-package com.abach42.superhero.unit;
+package com.abach42.superhero.unit.entity;
 
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 
 import org.junit.Test;
+import org.springframework.context.annotation.Description;
 
 import com.abach42.superhero.entity.Superhero;
 
 public class SuperheroTest {
     @Test
-    public void testGettersAndSetters() {
+    @Description("Superhero entity getters get and setters set.")
+    public void testGettersAndSettersOfSuperheroEntity() {
         Superhero superhero = new Superhero(
             "Batman",
             "Bruce Wayne",
