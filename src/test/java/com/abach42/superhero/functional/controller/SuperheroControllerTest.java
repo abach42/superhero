@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
-import com.abach42.superhero.repository.SuperheroRepository;
+import com.abach42.superhero.service.SuperheroService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
@@ -34,7 +36,7 @@ public class SuperheroControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private SuperheroRepository superheroRepository;
+    private SuperheroService superheroService;
 
     @Test
     @Description("Controller action for superheros returns superheros")
@@ -42,7 +44,7 @@ public class SuperheroControllerTest {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
        
-        given(superheroRepository.findAll()).willReturn(List.of(superhero));
+        given(superheroService.getAllSuperheros()).willReturn(Stream.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
                 get("/api/superheros/")
@@ -58,6 +60,28 @@ public class SuperheroControllerTest {
 
         assertThat(actual.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
+
+    @Test
+    @Description("Controller action for superhero returns a superhero")
+    public void testGetSuperhero() throws Exception {
+        Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
+        SuperheroDto expected = SuperheroDto.fromDomain(superhero);
+       
+        given(superheroService.getSuperhero(0L)).willReturn(Optional.of(expected));
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/api/superheros/0")
+                .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+        SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), SuperheroDto.class);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    
+    // test 404s
 
     //todo test roles
     //todo  .andExpect(status().isBadRequest()).andExpect(responseBody().containsError("name", "must not be null")); 

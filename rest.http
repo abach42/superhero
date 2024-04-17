@@ -6,3 +6,7 @@
 
 ### Get all superheros
 GET {{domain}}/api/superheros/
+
+### Get superhero
+GET {{domain}}/api/superheros/1
+Accept: application/json
