@@ -5,13 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDate;
 
 import org.junit.Test;
-import org.springframework.context.annotation.Description;
+import org.junit.jupiter.api.DisplayName;
 
 import com.abach42.superhero.entity.Superhero;
 
 public class SuperheroTest {
     @Test
-    @Description("Superhero entity getters get and setters set.")
+    @DisplayName("Superhero entity getters get and setters set.")
     public void testGettersAndSettersOfSuperheroEntity() {
         Superhero superhero = new Superhero(
             "Batman",

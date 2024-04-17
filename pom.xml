@@ -89,10 +89,25 @@
           <version>3.2.5</version>
           <configuration>
               <reportFormat>plain</reportFormat>
-              <consoleOutputReporter>
+              <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+                  <disable>false</disable>
+                  <version>3.0</version>
+                  <usePhrasedFileName>false</usePhrasedFileName>
+                  <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+                  <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+                  <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+              </statelessTestsetReporter>
+              <consoleOutputReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
                   <disable>true</disable>
+                  <encoding>UTF-8</encoding>
+                  <usePhrasedFileName>false</usePhrasedFileName>
               </consoleOutputReporter>
-              <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter"/>
+              <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">
+                  <disable>false</disable>
+                  <usePhrasedFileName>false</usePhrasedFileName>
+                  <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
+                  <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
+              </statelessTestsetInfoReporter>
           </configuration>
           <dependencies>
               <!-- https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html#external-extensions-for-the-plugin-->

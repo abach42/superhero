@@ -1,6 +1,5 @@
 package com.abach42.superhero.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
