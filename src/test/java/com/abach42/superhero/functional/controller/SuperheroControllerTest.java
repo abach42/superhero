@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
@@ -28,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectReader;
 
 @WebMvcTest(SuperheroController.class)
 public class SuperheroControllerTest {
+    private final static String BASE_URI = PathConfig.BASE_URI;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -46,7 +49,7 @@ public class SuperheroControllerTest {
         given(superheroService.getAllSuperheros()).willReturn(List.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/api/superheros/")
+                get(BASE_URI + "/superheros/")
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -77,7 +80,7 @@ public class SuperheroControllerTest {
         given(superheroService.getSuperhero(0L)).willReturn(Optional.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/api/superheros/0")
+                get(BASE_URI + "/superheros/0")
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -92,7 +95,7 @@ public class SuperheroControllerTest {
     @Description("Controller action for superhero not found returns 404")
     public void testGetSuperheroNotFound() throws Exception {
         mockMvc.perform(
-            get("/api/superheros/666")
+            get(BASE_URI + "/superheros/666")
             .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isNotFound());
