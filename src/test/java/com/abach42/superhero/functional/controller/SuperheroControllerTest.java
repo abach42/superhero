@@ -1,4 +1,4 @@
-package com.abach42.superhero.functional;
+package com.abach42.superhero.functional.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -38,11 +40,12 @@ public class SuperheroControllerTest {
     private SuperheroRepository superheroRepository;
 
     @Test
+    @Description("Controller action for superheros returns superheros")
     public void testGetAllSuperheros() throws Exception {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
        
-        when(superheroRepository.findAll()).thenReturn(List.of(superhero));
+        given(superheroRepository.findAll()).willReturn(List.of(superhero));
 
         MvcResult mvcResult = mockMvc.perform(
                 get("/api/superheros/")
@@ -50,6 +53,8 @@ public class SuperheroControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
+
+        
 
         ObjectReader reader = objectMapper.readerForListOf(SuperheroDto.class);
         List<SuperheroDto> actual = reader.readValue(mvcResult.getResponse().getContentAsString());

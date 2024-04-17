@@ -1,6 +1,7 @@
-package com.abach42.superhero.unit;
+package com.abach42.superhero.unit.entity.dto;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Description;
 
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SuperheroDtoTest {
     @Test
+    @Description("Superhero can be mappted to it's DTO")
     public void testFromDomain() {
         // Arrange
         Superhero superhero = new Superhero("Superman", "Clark Joseph Kent", LocalDate.of(1970, 1, 1), "Male", "Journalist", "Some story");
