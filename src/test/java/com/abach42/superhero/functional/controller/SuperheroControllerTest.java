@@ -68,19 +68,21 @@ public class SuperheroControllerTest {
             get(PATH)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNotFound())
+        .andExpect(status().reason(SuperheroController.SUPERHEROES_NOT_FOUND_MSG));
     }
 
     @Test
     @Description("Controller action for superhero returns a superhero")
     public void testGetSuperhero() throws Exception {
+        long id = 0;
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
        
-        given(superheroService.getSuperhero(0L)).willReturn(Optional.of(expected));
+        given(superheroService.getSuperhero(id)).willReturn(Optional.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
-                get(PATH + "0")
+                get(PATH + id)
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -94,13 +96,14 @@ public class SuperheroControllerTest {
     @Test
     @Description("Controller action for superhero not found returns 404")
     public void testGetSuperheroNotFound() throws Exception {
+        int id = 0;
         mockMvc.perform(
-            get(PATH + "666")
+            get(PATH + id)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNotFound())
+        .andExpect(status().reason(SuperheroController.SUPERHERO_NOT_FOUND_MSG + id));
     }
 
     //todo test roles
-    //todo  .andExpect(status().isBadRequest()).andExpect(responseBody().containsError("name", "must not be null")); 
 }
