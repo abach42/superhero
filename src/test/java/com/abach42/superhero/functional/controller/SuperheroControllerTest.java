@@ -10,11 +10,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -41,7 +41,7 @@ public class SuperheroControllerTest {
     private SuperheroService superheroService;
 
     @Test
-    @Description("Controller action for superheros returns superheros")
+    @DisplayName("Controller action for superheroes returns superheros")
     public void testGetAllSuperheros() throws Exception {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
@@ -62,7 +62,7 @@ public class SuperheroControllerTest {
     }
 
     @Test
-    @Description("Controller action for superhero not found returns 404")
+    @DisplayName("Controller action for superheroes not found returns 404")
     public void testGetAllSuperherosNotFound() throws Exception {
         mockMvc.perform(
             get(PATH)
@@ -73,7 +73,7 @@ public class SuperheroControllerTest {
     }
 
     @Test
-    @Description("Controller action for superhero returns a superhero")
+    @DisplayName("Controller action for superhero returns a superhero")
     public void testGetSuperhero() throws Exception {
         long id = 0;
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
@@ -94,7 +94,7 @@ public class SuperheroControllerTest {
     }
 
     @Test
-    @Description("Controller action for superhero not found returns 404")
+    @DisplayName("Controller action for superhero not found returns 404")
     public void testGetSuperheroNotFound() throws Exception {
         int id = 0;
         mockMvc.perform(
