@@ -2,17 +2,23 @@ package com.abach42.superhero.controller;
 
 import java.net.URI;
 
-import org.springframework.dao.DataAccessException;
+import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abach42.superhero.config.OnCreate;
+import com.abach42.superhero.config.OnUpdate;
 import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.entity.dto.ErrorResponse;
 import com.abach42.superhero.entity.dto.SuperheroDto;
@@ -27,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 
 @Tag(name = "Superhero API")
@@ -99,8 +106,9 @@ public class SuperheroController {
             content = @Content 
         )
     })
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SuperheroDto> getSuperhero(@PathVariable Long id) {
+        //todo consider to move throw
         return ResponseEntity.ok(superheroService.getSuperhero(id).orElseThrow(
             () -> new ApiException(HttpStatus.NOT_FOUND, SUPERHERO_NOT_FOUND_MSG + id)
         ));
@@ -116,7 +124,7 @@ public class SuperheroController {
                     schema = @Schema(
                         implementation = SuperheroDto.class)
                 ) 
-            }), 
+            }),
         @ApiResponse( 
             responseCode = "422", 
             description = "Validation error. Check 'errors' field for details.",
@@ -132,6 +140,7 @@ public class SuperheroController {
             content = @Content 
         )
     })
+    @Validated(OnCreate.class)
     @PostMapping 
     public ResponseEntity<SuperheroDto> createSuperhero(@Valid @RequestBody SuperheroDto superheroDto) {
         try {
@@ -140,9 +149,16 @@ public class SuperheroController {
                         URI.create(PathConfig.SUPERHEROES + "/" + createdSuperheroDto.id())
                     )
                     .body(createdSuperheroDto);
-        } catch (ApiException | NullPointerException | IllegalArgumentException | DataAccessException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG);
+        } catch (RuntimeException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG + "cause " + e.getCause());
         }
         //TODO WRITE TEST https://reflectoring.io/spring-boot-exception-handling/#controlleradvice
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/{id}")
+    public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable(required = true) Long id, @Valid @RequestBody SuperheroDto superheroDto) {
+        SuperheroDto updatedSuperheroDto = superheroService.updateSuperhero(id, superheroDto);
+        return ResponseEntity.ok(updatedSuperheroDto);
     }
 }

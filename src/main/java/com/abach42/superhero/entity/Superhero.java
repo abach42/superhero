@@ -2,6 +2,9 @@ package com.abach42.superhero.entity;
 
 import java.time.LocalDate;
 
+import com.abach42.superhero.config.OnCreate;
+import com.abach42.superhero.config.OnUpdate;
+
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
@@ -9,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -18,12 +23,23 @@ public class Superhero {
     private long id;
 
     @Column(nullable = false)
+    @NotNull(groups = OnCreate.class)
+    @Null(groups = OnUpdate.class)
     private String alias;
+
     @Column(nullable = false)
+    @NotNull(groups = OnCreate.class)
+    @Null(groups = OnUpdate.class)
     private String realName;
+
     @Column(nullable = false)
+    @NotNull(groups = OnCreate.class)
+    @Null(groups = OnUpdate.class)
     private LocalDate dateOfBirth;
+
     @Column(nullable = false)
+    @NotNull(groups = OnCreate.class)
+    @Null(groups = OnUpdate.class)
     private String gender;
     private String occupation;
     
