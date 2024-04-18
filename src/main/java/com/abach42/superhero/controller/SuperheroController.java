@@ -1,7 +1,6 @@
 package com.abach42.superhero.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -11,11 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.entity.dto.ErrorResponse;
 import com.abach42.superhero.entity.dto.SuperheroDto;
+import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.service.SuperheroService;
 
@@ -32,7 +33,6 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
 public class SuperheroController {
-    public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found";
     public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
     public static final String SUPERHERO_NOT_CREATED_MSG = "Superhero could not be written";
 
@@ -46,6 +46,11 @@ public class SuperheroController {
     //todo paginate
     //todo deleted I/0
 
+    /*
+     * List of all superheroes with simple paging 
+     * and without page metadata return, to keep response simple
+     * on a simple entity. 
+     */
     @Operation(summary = "Get all superheroes")
     @ApiResponses({
         @ApiResponse(
@@ -55,24 +60,25 @@ public class SuperheroController {
                     mediaType = "application/json",
                     array = @ArraySchema(       
                         schema = @Schema(
-                            implementation = SuperheroDto.class)
+                            implementation = SuperheroListDto.class)
                     )
                 )
             }), 
         @ApiResponse( 
             responseCode = "404",
-            description = SUPERHEROES_NOT_FOUND_MSG,
+            description = SuperheroService.SUPERHEROES_NOT_FOUND_MSG,
+            content = @Content 
+        ),
+        @ApiResponse( 
+            responseCode = "422",
+            description = SuperheroService.MAX_PAGE_EXEEDED_MSG,
             content = @Content 
         )
     })
     @GetMapping
-    public ResponseEntity<?> getAllSuperheros() {
-        List<SuperheroDto> superheroes = superheroService.getAllSuperheros();
-    
-        if (superheroes.isEmpty()) {
-            throw new ApiException(HttpStatus.NOT_FOUND, SUPERHEROES_NOT_FOUND_MSG);
-        }
-            
+    public ResponseEntity<?> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page) {
+        SuperheroListDto superheroes = superheroService.getAllSuperheros(page);
+
         return ResponseEntity.ok(superheroes);
     }
 
@@ -137,5 +143,6 @@ public class SuperheroController {
         } catch (ApiException | NullPointerException | IllegalArgumentException | DataAccessException e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG);
         }
+        //TODO WRITE TEST https://reflectoring.io/spring-boot-exception-handling/#controlleradvice
     }
 }
