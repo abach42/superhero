@@ -1,5 +1,6 @@
 package com.abach42.superhero.config;
 
+import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,12 +29,14 @@ public class MethodArgumentNotValidAdvice {
             HttpStatus.UNPROCESSABLE_ENTITY.value(),
             "Validation error. Check 'errors' field for details."
         );
-
+    
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errorResponse.addValidationError(fieldError.getField(), 
-            fieldError.getDefaultMessage());
+            errorResponse.addValidationError(
+                fieldError.getField(), 
+                fieldError.getDefaultMessage()
+            );
         }
-
+    
         return ResponseEntity.unprocessableEntity().body(errorResponse);
     }
 }

@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
@@ -53,16 +55,36 @@ public class SuperheroService {
     public SuperheroDto addSuperhero(SuperheroDto superheroDto)  {
         Objects.requireNonNull(superheroDto);
 
-        Superhero newSuperhero = new Superhero(
-            superheroDto.alias(),
-            superheroDto.realName(),
-            superheroDto.dateOfBirth(),
-            superheroDto.gender(),
-            superheroDto.occupation(),
-            null //todo
-        );
-
+        Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
         Superhero createdSuperhero = superheroRepository.save(newSuperhero);
+
         return SuperheroDto.fromDomain(createdSuperhero);
     }
+
+    /* 
+     * Merge and write manually superheroDTO, using `JPA automatic dirty checking` by not 
+     * merging a null value. 
+     * todo: @DynamicUpdate over entity
+     * todo: get this merge done by framework solution, but including *Dto
+     */
+    @Transactional
+    public SuperheroDto updateSuperhero(Long id, SuperheroDto update) {
+        Optional<Superhero> maybeSuperhero = superheroRepository.findById(id);
+
+        Superhero updatedSuperhero = maybeSuperhero.map(
+            origin -> {
+                if(update.alias() != null) origin.setAlias(update.alias());
+                if(update.realName() != null) origin.setRealName(update.realName());
+                if(update.dateOfBirth() != null) origin.setDateOfBirth(update.dateOfBirth());
+                if(update.gender() != null) origin.setGender(update.gender());
+                if(update.occupation() != null) origin.setOccupation(update.occupation());
+                return origin;
+            }  
+        ).orElseThrow(
+            () -> new ApiException(HttpStatus.NOT_FOUND, SuperheroController.SUPERHERO_NOT_FOUND_MSG + id));
+
+        Superhero savedSuperhero = superheroRepository.save(updatedSuperhero);
+        return SuperheroDto.fromDomain(savedSuperhero);
+    }
+    
 }
