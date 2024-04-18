@@ -95,7 +95,6 @@
           </dependency>
           </dependencies>
           <configuration>
-            <argLine>-Xshare:off</argLine>
             <parallel>all</parallel>
             <reportFormat>plain</reportFormat>
             <consoleOutputReporter>
