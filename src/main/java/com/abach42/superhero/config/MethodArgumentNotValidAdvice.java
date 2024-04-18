@@ -14,6 +14,10 @@ import com.abach42.superhero.entity.dto.ErrorResponse;
 @ControllerAdvice
 public class MethodArgumentNotValidAdvice {
     
+    /* TODO rather extend spring error type {timestamp, status, error, message, path}
+     * than own type {status, message, errors[]} 
+     * or build one error type for all messages.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(

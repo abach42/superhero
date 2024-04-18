@@ -1,29 +1,49 @@
 package com.abach42.superhero.service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
+import com.abach42.superhero.entity.dto.SuperheroListDto;
+import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.repository.SuperheroRepository;
+
+import jakarta.annotation.Nullable;
 
 @Service
 public class SuperheroService {
+    public static final String MAX_PAGE_EXEEDED_MSG = "The total page number has been exceeded.";
+    public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found";
 
     private final SuperheroRepository superheroRepository;
+    private final Integer defaultPageSize;
 
-    public SuperheroService(SuperheroRepository superheroRepository) {
+    public SuperheroService(SuperheroRepository superheroRepository, Integer defaultPageSize) {
         this.superheroRepository = superheroRepository;
+        this.defaultPageSize = defaultPageSize;
     }
     
-    public List<SuperheroDto> getAllSuperheros() {
-        return superheroRepository.findAll()
-            .stream().map(SuperheroDto::fromDomain)
-            .collect(Collectors.toList());
+    public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) {
+        Page<SuperheroDto> superheroPage = superheroRepository
+            .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize))
+            .map(SuperheroDto::fromDomain);
+
+        if(pageNumber != null && pageNumber > superheroPage.getTotalPages()) {
+            throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, 
+            String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXEEDED_MSG, superheroPage.getTotalPages(), pageNumber));
+        }
+
+        if (superheroPage.isEmpty()) {
+            throw new ApiException(HttpStatus.NOT_FOUND, SUPERHEROES_NOT_FOUND_MSG);
+        }
+
+        return SuperheroListDto.fromPage(superheroPage);
     }
 
     public Optional<SuperheroDto> getSuperhero(Long id) {

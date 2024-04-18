@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(name = "sperhero")
 public record SuperheroDto(
     @Schema(
         title = "superhero id", 

@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,13 +25,13 @@ import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
+import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.service.SuperheroService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 
 @WebMvcTest(SuperheroController.class)
 public class SuperheroControllerTest {
-    private final static String PATH = PathConfig.BASE_URI + PathConfig.SUPERHEROES;
+    private final static String PATH = PathConfig.SUPERHEROES;
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,12 +43,13 @@ public class SuperheroControllerTest {
     private SuperheroService superheroService;
 
     @Test
-    @DisplayName("Controller action for superheroes returns superheros")
+    @DisplayName("Controller action for superheroes returns first page of superheroes, no page chosen")
     public void testGetAllSuperheros() throws Exception {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
-        SuperheroDto expected = SuperheroDto.fromDomain(superhero);
+        SuperheroDto superheroDto = SuperheroDto.fromDomain(superhero);
+        SuperheroListDto expected = SuperheroListDto.fromPage(new PageImpl<>(List.of(superheroDto),PageRequest.ofSize(1),1L));
        
-        given(superheroService.getAllSuperheros()).willReturn(List.of(expected));
+        given(superheroService.getAllSuperheros(null)).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
                 get(PATH)
@@ -55,21 +58,8 @@ public class SuperheroControllerTest {
             .andExpect(status().isOk())
             .andReturn();
 
-        ObjectReader reader = objectMapper.readerForListOf(SuperheroDto.class);
-        List<SuperheroDto> actual = reader.readValue(mvcResult.getResponse().getContentAsString());
-
-        assertThat(actual.get(0)).usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("Controller action for superheroes not found returns 404")
-    public void testGetAllSuperherosNotFound() throws Exception {
-        mockMvc.perform(
-            get(PATH)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(status().reason(SuperheroController.SUPERHEROES_NOT_FOUND_MSG));
+        SuperheroListDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), SuperheroListDto.class);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
@@ -82,7 +72,7 @@ public class SuperheroControllerTest {
         given(superheroService.getSuperhero(id)).willReturn(Optional.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
-                get(PATH + id)
+                get(PATH + "/" + id)
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -98,7 +88,7 @@ public class SuperheroControllerTest {
     public void testGetSuperheroNotFound() throws Exception {
         int id = 0;
         mockMvc.perform(
-            get(PATH + id)
+            get(PATH + "/" + id)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isNotFound())
