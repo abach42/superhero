@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
@@ -20,8 +19,10 @@ import jakarta.annotation.Nullable;
 
 @Service
 public class SuperheroService {
-    public static final String MAX_PAGE_EXEEDED_MSG = "The total page number has been exceeded.";
     public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found";
+    public static final String MAX_PAGE_EXEEDED_MSG = "The total page number has been exceeded.";
+    public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
+    public static final String SUPERHERO_NOT_CREATED_MSG = "Superhero could not be written";
 
     private final SuperheroRepository superheroRepository;
     private final Integer defaultPageSize;
@@ -30,15 +31,16 @@ public class SuperheroService {
         this.superheroRepository = superheroRepository;
         this.defaultPageSize = defaultPageSize;
     }
-    
+
     public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) {
         Page<SuperheroDto> superheroPage = superheroRepository
-            .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize))
-            .map(SuperheroDto::fromDomain);
+                .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize))
+                .map(SuperheroDto::fromDomain);
 
-        if(pageNumber != null && pageNumber > superheroPage.getTotalPages()) {
-            throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, 
-            String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXEEDED_MSG, superheroPage.getTotalPages(), pageNumber));
+        if (pageNumber != null && pageNumber > superheroPage.getTotalPages()) {
+            throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXEEDED_MSG, superheroPage.getTotalPages(),
+                            pageNumber));
         }
 
         if (superheroPage.isEmpty()) {
@@ -48,43 +50,47 @@ public class SuperheroService {
         return SuperheroListDto.fromPage(superheroPage);
     }
 
-    public Optional<SuperheroDto> getSuperhero(Long id) {
-        return superheroRepository.findById(id).map(SuperheroDto::fromDomain);
+    public SuperheroDto getSuperhero(Long id) {
+        return superheroRepository.findById(id).map(SuperheroDto::fromDomain).orElseThrow(
+                () -> new ApiException(HttpStatus.NOT_FOUND, SUPERHERO_NOT_FOUND_MSG + id));
     }
 
-    public SuperheroDto addSuperhero(SuperheroDto superheroDto)  {
-        Objects.requireNonNull(superheroDto);
+    public SuperheroDto addSuperhero(SuperheroDto superheroDto) throws ApiException {
+        try {
+            Objects.requireNonNull(superheroDto);
 
-        Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
-        Superhero createdSuperhero = superheroRepository.save(newSuperhero);
+            Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
+            Superhero createdSuperhero = superheroRepository.save(newSuperhero);
 
-        return SuperheroDto.fromDomain(createdSuperhero);
+            return SuperheroDto.fromDomain(createdSuperhero);
+        } catch (RuntimeException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG + "cause " + e.getCause());
+        }
     }
 
-    /* 
-     * Merge and write manually superheroDTO, using `JPA automatic dirty checking` by not 
-     * merging a null value. 
+    /*
+     * Merge and write manually superheroDTO, using `JPA automatic dirty checking`
+     * by not
+     * merging a null value.
      * todo: @DynamicUpdate over entity
      * todo: get this merge done by framework solution, but including *Dto
      */
     @Transactional
-    public SuperheroDto updateSuperhero(Long id, SuperheroDto update) {
-        Optional<Superhero> maybeSuperhero = superheroRepository.findById(id);
+    public SuperheroDto updateSuperhero(Long id, SuperheroDto update) throws ApiException {
+        Superhero origin = SuperheroDto.toDomain(getSuperhero(id));
 
-        Superhero updatedSuperhero = maybeSuperhero.map(
-            origin -> {
-                if(update.alias() != null) origin.setAlias(update.alias());
-                if(update.realName() != null) origin.setRealName(update.realName());
-                if(update.dateOfBirth() != null) origin.setDateOfBirth(update.dateOfBirth());
-                if(update.gender() != null) origin.setGender(update.gender());
-                if(update.occupation() != null) origin.setOccupation(update.occupation());
-                return origin;
-            }  
-        ).orElseThrow(
-            () -> new ApiException(HttpStatus.NOT_FOUND, SuperheroController.SUPERHERO_NOT_FOUND_MSG + id));
+        if (update.alias() != null)
+            origin.setAlias(update.alias());
+        if (update.realName() != null)
+            origin.setRealName(update.realName());
+        if (update.dateOfBirth() != null)
+            origin.setDateOfBirth(update.dateOfBirth());
+        if (update.gender() != null)
+            origin.setGender(update.gender());
+        if (update.occupation() != null)
+            origin.setOccupation(update.occupation());
 
-        Superhero savedSuperhero = superheroRepository.save(updatedSuperhero);
+        Superhero savedSuperhero = superheroRepository.save(origin);
         return SuperheroDto.fromDomain(savedSuperhero);
     }
-    
 }

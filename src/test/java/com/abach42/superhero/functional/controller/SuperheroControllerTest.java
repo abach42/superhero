@@ -47,18 +47,20 @@ public class SuperheroControllerTest {
     public void testGetAllSuperheros() throws Exception {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto superheroDto = SuperheroDto.fromDomain(superhero);
-        SuperheroListDto expected = SuperheroListDto.fromPage(new PageImpl<>(List.of(superheroDto),PageRequest.ofSize(1),1L));
-       
+        SuperheroListDto expected = SuperheroListDto
+                .fromPage(new PageImpl<>(List.of(superheroDto), PageRequest.ofSize(1), 1L));
+
         given(superheroService.getAllSuperheros(null)).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
                 get(PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
 
-        SuperheroListDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), SuperheroListDto.class);
+        SuperheroListDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                SuperheroListDto.class);
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
@@ -68,18 +70,18 @@ public class SuperheroControllerTest {
         long id = 0;
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
-       
+
         given(superheroService.getSuperhero(id)).willReturn(Optional.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
                 get(PATH + "/" + id)
-                .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
 
         SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), SuperheroDto.class);
-        
+
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
@@ -88,12 +90,12 @@ public class SuperheroControllerTest {
     public void testGetSuperheroNotFound() throws Exception {
         int id = 0;
         mockMvc.perform(
-            get(PATH + "/" + id)
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(status().reason(SuperheroController.SUPERHERO_NOT_FOUND_MSG + id));
+                get(PATH + "/" + id)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(status().reason(SuperheroController.SUPERHERO_NOT_FOUND_MSG + id));
     }
 
-    //todo test roles
+    // todo test roles
 }
