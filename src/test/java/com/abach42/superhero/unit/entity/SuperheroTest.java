@@ -14,13 +14,12 @@ public class SuperheroTest {
     @DisplayName("Superhero entity getters get and setters set.")
     public void testGettersAndSettersOfSuperheroEntity() {
         Superhero superhero = new Superhero(
-            "Batman",
-            "Bruce Wayne",
-            LocalDate.of(1939, 5, 1),
-            "Male",
-            "Crimefighter",
-            "After witnessing the murder of his parents..."
-        );
+                "Batman",
+                "Bruce Wayne",
+                LocalDate.of(1939, 5, 1),
+                "Male",
+                "Crimefighter",
+                "After witnessing the murder of his parents...");
 
         assertEquals("Batman", superhero.getAlias());
         assertEquals("Bruce Wayne", superhero.getRealName());
@@ -35,7 +34,7 @@ public class SuperheroTest {
         superhero.setGender("Male");
         superhero.setOccupation("Journalist");
         superhero.setOriginStory("Superman was born on the planet Krypton...");
-        
+
         assertEquals("Superman", superhero.getAlias());
         assertEquals("Clark Kent", superhero.getRealName());
         assertEquals(LocalDate.of(1938, 6, 1), superhero.getDateOfBirth());

@@ -39,8 +39,8 @@ public class SuperheroServiceTest {
         superheroService = new SuperheroService(superheroRepository, 10);
 
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
-        Page<Superhero> page = new PageImpl<>(List.of(superhero),PageRequest.ofSize(1),1L);
-        
+        Page<Superhero> page = new PageImpl<>(List.of(superhero), PageRequest.ofSize(1), 1L);
+
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
 
         SuperheroListDto result = superheroService.getAllSuperheros(1);
@@ -58,8 +58,8 @@ public class SuperheroServiceTest {
 
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
 
-        ApiException exception = assertThrows(ApiException.class, 
-            () -> superheroService.getAllSuperheros(2));
+        ApiException exception = assertThrows(ApiException.class,
+                () -> superheroService.getAllSuperheros(2));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(exception.getMessage()).containsSequence("The total page number has been exceeded.");
     }
@@ -68,13 +68,13 @@ public class SuperheroServiceTest {
     @DisplayName("Get all heroes, throws notfound, because superheroPage is empty")
     void testGetAllHeroesThrowsNotFound() {
         superheroService = new SuperheroService(superheroRepository, 10);
-    
+
         Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L);
-    
+
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
-    
-        ApiException exception = assertThrows(ApiException.class, 
-            () -> superheroService.getAllSuperheros(null));
+
+        ApiException exception = assertThrows(ApiException.class,
+                () -> superheroService.getAllSuperheros(null));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(exception.getMessage()).containsSequence("Superheroes not found");
     }

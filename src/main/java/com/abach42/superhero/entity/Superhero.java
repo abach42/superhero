@@ -42,20 +42,20 @@ public class Superhero {
     @Null(groups = OnUpdate.class)
     private String gender;
     private String occupation;
-    
+
     @Column(length = 2048)
     private String originStory;
 
-    protected Superhero() {}
+    protected Superhero() {
+    }
 
     public Superhero(
-        String alias, 
-        String realName, 
-        LocalDate dateOfBirth, 
-        String gender, 
-        String occupation,
-        String originStory
-    ) {
+            String alias,
+            String realName,
+            LocalDate dateOfBirth,
+            String gender,
+            String occupation,
+            String originStory) {
         setAlias(alias);
         setRealName(realName);
         setDateOfBirth(dateOfBirth);

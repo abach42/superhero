@@ -15,7 +15,8 @@ public class SuperheroDtoTest {
     @DisplayName("Superhero can be mappted to it's DTO")
     public void testFromDomain() {
         // Arrange
-        Superhero superhero = new Superhero("Superman", "Clark Joseph Kent", LocalDate.of(1970, 1, 1), "Male", "Journalist", "Some story");
+        Superhero superhero = new Superhero("Superman", "Clark Joseph Kent", LocalDate.of(1970, 1, 1), "Male",
+                "Journalist", "Some story");
 
         // Act
         SuperheroDto superheroDto = SuperheroDto.fromDomain(superhero);

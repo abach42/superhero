@@ -47,14 +47,12 @@ public class SuperheroListDto {
 
     public static SuperheroListDto fromPage(Page<SuperheroDto> page) {
         return new SuperheroListDto(
-            page.getContent(), 
-            new PageMeta(
-                page.getPageable().getPageNumber(),
-                page.getTotalPages(),
-                page.getPageable().getPageSize(),
-                page.getTotalElements()
-            )
-        );
+                page.getContent(),
+                new PageMeta(
+                        page.getPageable().getPageNumber(),
+                        page.getTotalPages(),
+                        page.getPageable().getPageSize(),
+                        page.getTotalElements()));
     }
     
     private static record PageMeta (

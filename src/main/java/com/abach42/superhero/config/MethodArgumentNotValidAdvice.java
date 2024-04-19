@@ -13,27 +13,20 @@ import com.abach42.superhero.entity.dto.ErrorResponse;
 
 @ControllerAdvice
 public class MethodArgumentNotValidAdvice {
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
-        MethodArgumentNotValidException ex,
-        ServletWebRequest request
-    ) {
-        ErrorResponse errorResponse = new ErrorResponse(
-            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-            HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
-            ex.getBody().getDetail(),
-            request.getRequest().getRequestURI().toString()
-        );
-    
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            ServletWebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(), ex.getBody().getDetail(),
+                request.getRequest().getRequestURI().toString());
+
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errorResponse.addValidationError(
-                fieldError.getField(), 
-                fieldError.getDefaultMessage()
-            );
+            errorResponse.addValidationError(fieldError.getField(),
+                    fieldError.getDefaultMessage());
         }
-    
+
         return ResponseEntity.unprocessableEntity().body(errorResponse);
     }
 }

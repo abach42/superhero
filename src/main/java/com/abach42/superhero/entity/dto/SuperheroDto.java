@@ -72,26 +72,24 @@ public record SuperheroDto(
     
     String occupation //todo admin only
     //todo add origin story in case of admin role
-) {
-    public static SuperheroDto fromDomain(Superhero superhero) {
-        return new SuperheroDto(
-            superhero.getId(), 
-            superhero.getAlias(),
-            superhero.getRealName(), 
-            superhero.getDateOfBirth(), 
-            superhero.getGender(),
-            superhero.getOccupation()
-        );
-    }
+    ) {
+        public static SuperheroDto fromDomain(Superhero superhero) {
+            return new SuperheroDto(
+                    superhero.getId(),
+                    superhero.getAlias(),
+                    superhero.getRealName(),
+                    superhero.getDateOfBirth(),
+                    superhero.getGender(),
+                    superhero.getOccupation());
+        }
 
-    public static Superhero toDomain(SuperheroDto superheroDto) {
-        return new Superhero(
-            superheroDto.alias(), 
-            superheroDto.realName(), 
-            superheroDto.dateOfBirth(),
-            superheroDto.gender(),
-            superheroDto.occupation(),
-            null
-        );
+        public static Superhero toDomain(SuperheroDto superheroDto) {
+            return new Superhero(
+                    superheroDto.alias(),
+                    superheroDto.realName(),
+                    superheroDto.dateOfBirth(),
+                    superheroDto.gender(),
+                    superheroDto.occupation(),
+                    null);
+        }
     }
-}

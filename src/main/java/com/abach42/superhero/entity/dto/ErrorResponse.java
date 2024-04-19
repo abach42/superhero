@@ -10,29 +10,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
-    @Schema(
-        title = "HttpStatus", 
-        example = "400",
-        format = "integer"
-    )
+    @Schema(title = "HttpStatus", example = "400", format = "integer")
     private final Integer status;
 
-    @Schema(
-        title = "message", 
-        example = "Something impossible"
-    )
+    @Schema(title = "message", example = "Something impossible")
     private final String error;
 
-    @Schema(
-        title = "message", 
-        example = "Something impossible"
-    )
+    @Schema(title = "message", example = "Something impossible")
     private final String message;
 
-    @Schema(
-        title = "path", 
-        example = "/api/v1/myentity/777"
-    )
+    @Schema(title = "path", example = "/api/v1/myentity/777")
     private final String path;
 
     private List<ValidationError> errors;
@@ -69,15 +56,9 @@ public class ErrorResponse {
     }
 
     private static class ValidationError {
-        @Schema(
-            title = "field", 
-            example = "name"
-        )
+        @Schema(title = "field", example = "name")
         private final String field;
-        @Schema(
-            title = "message", 
-            example = "Name is missing"
-        )
+        @Schema(title = "message", example = "Name is missing")
         private final String message;
 
         public ValidationError(String field, String message) {
