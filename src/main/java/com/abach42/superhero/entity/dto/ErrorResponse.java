@@ -10,13 +10,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
-    @Schema(title = "HttpStatus", example = "400", format = "integer")
+    @Schema(title = "HttpStatus", example = "666", format = "integer")
     private final Integer status;
 
-    @Schema(title = "message", example = "Something impossible")
+    @Schema(title = "message", example = "Impossible status")
     private final String error;
 
-    @Schema(title = "message", example = "Something impossible")
+    @Schema(title = "message", example = "Something really impossible happened.")
     private final String message;
 
     @Schema(title = "path", example = "/api/v1/myentity/777")

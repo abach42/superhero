@@ -50,8 +50,12 @@ public class SuperheroService {
         return SuperheroListDto.fromPage(superheroPage);
     }
 
-    public SuperheroDto getSuperhero(Long id) {
-        return superheroRepository.findById(id).map(SuperheroDto::fromDomain).orElseThrow(
+    public SuperheroDto getSupherheroConverted(Long id) throws ApiException {
+        return SuperheroDto.fromDomain(getSuperhero(id));
+    }
+
+    private Superhero getSuperhero(Long id) throws ApiException {
+        return superheroRepository.findById(id).orElseThrow(
                 () -> new ApiException(HttpStatus.NOT_FOUND, SUPERHERO_NOT_FOUND_MSG + id));
     }
 
@@ -64,33 +68,46 @@ public class SuperheroService {
 
             return SuperheroDto.fromDomain(createdSuperhero);
         } catch (RuntimeException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG + "cause " + e.getCause());
+            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG);
         }
     }
 
     /*
      * Merge and write manually superheroDTO, using `JPA automatic dirty checking`
-     * by not
-     * merging a null value.
-     * todo: @DynamicUpdate over entity
-     * todo: get this merge done by framework solution, but including *Dto
+     * by not merging a null value.
+     * TODO: @DynamicUpdate over entity
+     * TODO: get this merge done by framework solution, but including *Dto
      */
     @Transactional
     public SuperheroDto updateSuperhero(Long id, SuperheroDto update) throws ApiException {
-        Superhero origin = SuperheroDto.toDomain(getSuperhero(id));
+        Superhero origin = getSuperhero(id);
 
-        if (update.alias() != null)
+        if (update.alias() != null) {
             origin.setAlias(update.alias());
-        if (update.realName() != null)
+        }
+        if (update.realName() != null) {
             origin.setRealName(update.realName());
-        if (update.dateOfBirth() != null)
+        }
+        if (update.dateOfBirth() != null) {
             origin.setDateOfBirth(update.dateOfBirth());
-        if (update.gender() != null)
+        }
+        if (update.gender() != null) {
             origin.setGender(update.gender());
-        if (update.occupation() != null)
+        }
+        if (update.occupation() != null) {
             origin.setOccupation(update.occupation());
+        }
 
         Superhero savedSuperhero = superheroRepository.save(origin);
         return SuperheroDto.fromDomain(savedSuperhero);
+    }
+
+    public SuperheroDto markSuperheroAsDeleted(Long id) throws ApiException {
+        Superhero superhero = getSuperhero(id);
+        superhero.setDeleted(true);
+
+        superheroRepository.save(superhero);
+
+        return SuperheroDto.fromDomain(superhero);
     }
 }

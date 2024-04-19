@@ -14,14 +14,11 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Superhero can be mappted to it's DTO")
     public void testFromDomain() {
-        // Arrange
         Superhero superhero = new Superhero("Superman", "Clark Joseph Kent", LocalDate.of(1970, 1, 1), "Male",
                 "Journalist", "Some story");
 
-        // Act
         SuperheroDto superheroDto = SuperheroDto.fromDomain(superhero);
-
-        // Assert
+        
         assertEquals(superhero.getId(), superheroDto.id());
         assertEquals(superhero.getAlias(), superheroDto.alias());
         assertEquals(superhero.getDateOfBirth(), superheroDto.dateOfBirth());

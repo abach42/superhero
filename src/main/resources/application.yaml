@@ -12,6 +12,15 @@ spring:
             on-profile: default
     main:
         banner-mode: off
+    shell:
+        interactive:
+            enabled: true
+    jpa:
+        properties:
+            hibernate:
+                ddl-auto: none
+                format_sql: true
+                highlight_sql: true
     datasource:
         url: jdbc:postgresql://localhost:15432/db
         username: db
@@ -30,3 +39,16 @@ springdoc:
         tryItOutEnabled: false
         filter: false
         syntaxHighlight.activated: true
+debug: true
+logging:
+    level:
+        org:
+            hibernate:
+                SQL: DEBUG
+                orm.jdbc.bind: TRACE
+abach42:
+    superhero:
+        eraseRecordsMarkedAsDeletedAt: "0 0 0 ? * SAT" 
+        # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
+        # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
+        # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight

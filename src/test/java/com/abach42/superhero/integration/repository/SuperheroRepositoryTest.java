@@ -28,4 +28,6 @@ public class SuperheroRepositoryTest {
     void testFindAll() {
         assertThat(superheroRepository.count()).isGreaterThan(0L);
     }
+
+    //test deleted on single and list
 }

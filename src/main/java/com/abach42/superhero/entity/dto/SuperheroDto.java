@@ -41,7 +41,7 @@ public record SuperheroDto(
     )
     @NotNull(groups = OnCreate.class)
     @Null(groups = OnUpdate.class)
-    String realName, //todo admin only
+    String realName, //TODO admin only
 
     @Schema(
         title = "birth date", 
@@ -54,7 +54,7 @@ public record SuperheroDto(
     @Null(groups = OnUpdate.class)
     LocalDate dateOfBirth,
 
-    //todo make enum type, save byte
+    //TODO make enum type, save byte
     @Schema(
         title = "gender tag", 
         example = "Male", 
@@ -70,8 +70,8 @@ public record SuperheroDto(
         description = "Current apparent profession that the public is supposed to believe is being practiced."
     )
     
-    String occupation //todo admin only
-    //todo add origin story in case of admin role
+    String occupation //TODO admin only
+    //TODO add origin story in case of admin role
     ) {
         public static SuperheroDto fromDomain(Superhero superhero) {
             return new SuperheroDto(
