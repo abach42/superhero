@@ -1,5 +1,5 @@
 @host = localhost
-# todo https
+# TODO https
 @port = 8888
 @sheme = http
 @domain = {{sheme}}://{{host}}:{{port}}
@@ -8,7 +8,7 @@
 GET {{domain}}/api/v1/superheroes HTTP/1.1
 
 ### Get superhero
-GET {{domain}}/api/v1/superheroes/111 HTTP/1.1
+GET {{domain}}/api/v1/superheroes/1 HTTP/1.1
 Accept: application/json
 
 ### Add new superhero
@@ -17,7 +17,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  
+  "id": 1,
+  "alias": "Der Admin jklhjklö ",
   "realName": "Alex Admin ddbbb",
   "dateOfBirth": "1987-07-22",
   "gender": "Male",
@@ -49,3 +50,6 @@ Content-Type: application/json
   "gender": "Male",
   "occupation": "Administrator"
 }
+
+### Delete superheo (mark as deleted)
+DELETE {{domain}}/api/v1/superheroes/1 HTTP/1.1

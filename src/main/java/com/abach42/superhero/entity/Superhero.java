@@ -46,6 +46,8 @@ public class Superhero {
     @Column(length = 2048)
     private String originStory;
 
+    private Boolean deleted;
+
     protected Superhero() {
     }
 
@@ -114,5 +116,13 @@ public class Superhero {
 
     public void setOriginStory(String originStory) {
         this.originStory = originStory;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

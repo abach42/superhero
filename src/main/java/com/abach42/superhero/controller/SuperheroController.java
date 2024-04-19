@@ -2,7 +2,6 @@ package com.abach42.superhero.controller;
 
 import java.net.URI;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,8 +43,8 @@ public class SuperheroController {
         this.superheroService = superheroService;
     }
 
-    // localize birth date
-    // todo deleted I/0
+    // TODO localize birth date
+    // TODO deleted I/0
 
     /*
      * List of all superheroes with simple paging
@@ -65,11 +64,20 @@ public class SuperheroController {
                     )
                 )
             }), 
-            @ApiResponse(responseCode = "404", description = SuperheroService.SUPERHEROES_NOT_FOUND_MSG, content = @Content),
-            @ApiResponse(responseCode = "422", description = SuperheroService.MAX_PAGE_EXEEDED_MSG, content = @Content)
+        @ApiResponse(
+            responseCode = "404", 
+            description = SuperheroService.SUPERHEROES_NOT_FOUND_MSG, 
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "422", 
+            description = SuperheroService.MAX_PAGE_EXEEDED_MSG, 
+            content = @Content //TODO 
+        )
     })
     @GetMapping
-    public ResponseEntity<?> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page) {
+    public ResponseEntity<?> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page)
+            throws ApiException {
         SuperheroListDto superheroes = superheroService.getAllSuperheros(page);
         return ResponseEntity.ok(superheroes);
     }
@@ -93,7 +101,7 @@ public class SuperheroController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<SuperheroDto> getSuperhero(@PathVariable Long id) throws ApiException {
-        return ResponseEntity.ok(superheroService.getSuperhero(id));
+        return ResponseEntity.ok(superheroService.getSupherheroConverted(id));
     }
 
     @Operation(summary = "Add new superhero")
@@ -126,18 +134,32 @@ public class SuperheroController {
     @PostMapping
     public ResponseEntity<SuperheroDto> createSuperhero(@Valid @RequestBody SuperheroDto superheroDto)
             throws ApiException, MethodArgumentNotValidException {
-        try {
-            SuperheroDto createdSuperheroDto = superheroService.addSuperhero(superheroDto);
-            return ResponseEntity.created(
-                    URI.create(PathConfig.SUPERHEROES + "/" + createdSuperheroDto.id()))
-                    .body(createdSuperheroDto);
-        } catch (RuntimeException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SuperheroService.SUPERHERO_NOT_CREATED_MSG + "cause " + e.getCause());
-        }
+        SuperheroDto createdSuperheroDto = superheroService.addSuperhero(superheroDto);
+        return ResponseEntity.created(
+                URI.create(PathConfig.SUPERHEROES + "/" + createdSuperheroDto.id()))
+                .body(createdSuperheroDto);
         // TODO WRITE TEST
         // https://reflectoring.io/spring-boot-exception-handling/#controlleradvice
     }
 
+    //TODO still TODO 
+    @Operation(summary = "Update existing superhero")
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200", description = "Superhero updated",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                        implementation = SuperheroDto.class)
+                ) 
+            }),
+        @ApiResponse( 
+            responseCode = "404", 
+            description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
+            content = @Content //TODO 
+        )
+    })
     @Validated(OnUpdate.class)
     @PutMapping("/{id}")
     public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable(required = true) Long id,
@@ -147,10 +169,32 @@ public class SuperheroController {
         // TODO WRITE TEST
     }
 
+    @Operation(summary = "Delete superhero (mark as deleted)")
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200", description = "Superhero deleted",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                        implementation = SuperheroDto.class)
+                ) 
+            }),
+        @ApiResponse( 
+            responseCode = "404", 
+            description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
+            content = @Content 
+        )
+    })
+    //annotate
     @DeleteMapping("/{id}")
-    public ResponseEntity<SuperheroDto> markSuperheroDeleted(@PathVariable Long id) {
+    public ResponseEntity<SuperheroDto> softDeleteSuperhero(@PathVariable Long id) {
+        SuperheroDto updatedSuperheroDto = superheroService.markSuperheroAsDeleted(id);
+        return ResponseEntity.ok(updatedSuperheroDto);
 
+        //TODO write test
+        
         // TODO Provide a cli command to delete marked as deleted records/ consider to
-        // run a scheduler
+        // run a scheduler, put hint to readme
     }
 }

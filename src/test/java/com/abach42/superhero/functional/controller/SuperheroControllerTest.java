@@ -71,7 +71,7 @@ public class SuperheroControllerTest {
         Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
 
-        given(superheroService.getSuperhero(id)).willReturn(Optional.of(expected));
+        given(superheroService.getSupherheroConverted(id)).willReturn(Optional.of(expected));
 
         MvcResult mvcResult = mockMvc.perform(
                 get(PATH + "/" + id)
@@ -97,5 +97,5 @@ public class SuperheroControllerTest {
                 .andExpect(status().reason(SuperheroController.SUPERHERO_NOT_FOUND_MSG + id));
     }
 
-    // todo test roles
+    // TODO test roles
 }
