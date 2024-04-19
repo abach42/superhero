@@ -15,26 +15,49 @@ public class ErrorResponse {
         example = "400",
         format = "integer"
     )
-    private final int status;
+    private final Integer status;
+
+    @Schema(
+        title = "message", 
+        example = "Something impossible"
+    )
+    private final String error;
 
     @Schema(
         title = "message", 
         example = "Something impossible"
     )
     private final String message;
+
+    @Schema(
+        title = "path", 
+        example = "/api/v1/myentity/777"
+    )
+    private final String path;
+
     private List<ValidationError> errors;
 
-    public ErrorResponse(int status, String message) {
+    public ErrorResponse(Integer status, String error, String message, String path) {
         this.status = status;
+        this.error = error;
         this.message = message;
+        this.path = path;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
+    }
+
+    public String getError() {
+        return error;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public List<ValidationError> getErrors() {
