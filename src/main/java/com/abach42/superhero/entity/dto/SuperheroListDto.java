@@ -45,14 +45,21 @@ public class SuperheroListDto {
         return superheroes.isEmpty();
     }
 
-    public static SuperheroListDto fromPage(Page<SuperheroDto> page) {
+    /*
+     * instead of page.getTotalElements(), soft delete respected totals by param
+     */
+    public static SuperheroListDto fromPage(Page<SuperheroDto> page, long totalElements) {
         return new SuperheroListDto(
                 page.getContent(),
                 new PageMeta(
                         page.getPageable().getPageNumber(),
-                        page.getTotalPages(),
+                        totalPagesRespectSoftDeleted(totalElements, page),
                         page.getPageable().getPageSize(),
-                        page.getTotalElements()));
+                        (int) totalElements));
+    }
+
+    private static int totalPagesRespectSoftDeleted(long totalElements, Page<SuperheroDto> page) {
+        return (int) Math.ceil((double) totalElements / page.getPageable().getPageSize());
     }
     
     private static record PageMeta (
@@ -84,6 +91,6 @@ public class SuperheroListDto {
             format = "integer", 
             accessMode = AccessMode.READ_ONLY
         )
-        Long totalElements
+        Integer totalElements
     ) {}
 }

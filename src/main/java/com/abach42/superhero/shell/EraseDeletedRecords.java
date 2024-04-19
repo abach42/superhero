@@ -1,7 +1,9 @@
-package com.abach42.superhero.service;
+package com.abach42.superhero.shell;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+
+import com.abach42.superhero.service.DatabaseClearupService;
 
 @ShellComponent
 public class EraseDeletedRecords {

@@ -44,7 +44,6 @@ public class SuperheroController {
     }
 
     // TODO localize birth date
-    // TODO deleted I/0
 
     /*
      * List of all superheroes with simple paging
@@ -72,7 +71,11 @@ public class SuperheroController {
         @ApiResponse(
             responseCode = "422", 
             description = SuperheroService.MAX_PAGE_EXEEDED_MSG, 
-            content = @Content //TODO 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorResponse.class)
+            )
         )
     })
     @GetMapping

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class SuperheroService {
 
     public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) {
         Page<SuperheroDto> superheroPage = superheroRepository
-                .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize))
+                .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize, Sort.by("id")))
                 .map(SuperheroDto::fromDomain);
 
         if (pageNumber != null && pageNumber > superheroPage.getTotalPages()) {
@@ -47,7 +48,7 @@ public class SuperheroService {
             throw new ApiException(HttpStatus.NOT_FOUND, SUPERHEROES_NOT_FOUND_MSG);
         }
 
-        return SuperheroListDto.fromPage(superheroPage);
+        return SuperheroListDto.fromPage(superheroPage, superheroRepository.count());
     }
 
     public SuperheroDto getSupherheroConverted(Long id) throws ApiException {

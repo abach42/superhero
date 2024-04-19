@@ -7,8 +7,11 @@
 ### Get all superheroes
 GET {{domain}}/api/v1/superheroes HTTP/1.1
 
+### Get all superheroes with page
+GET {{domain}}/api/v1/superheroes?page=0 HTTP/1.1
+
 ### Get superhero
-GET {{domain}}/api/v1/superheroes/1 HTTP/1.1
+GET {{domain}}/api/v1/superheroes/5 HTTP/1.1
 Accept: application/json
 
 ### Add new superhero
@@ -52,4 +55,4 @@ Content-Type: application/json
 }
 
 ### Delete superheo (mark as deleted)
-DELETE {{domain}}/api/v1/superheroes/1 HTTP/1.1
+DELETE {{domain}}/api/v1/superheroes/4 HTTP/1.1
