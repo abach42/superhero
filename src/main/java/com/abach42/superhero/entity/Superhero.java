@@ -22,6 +22,7 @@ public class Superhero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    //TODO make unique, even in database
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
     @Null(groups = OnUpdate.class)
@@ -46,7 +47,7 @@ public class Superhero {
     @Column(length = 2048)
     private String originStory;
 
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     protected Superhero() {
     }
