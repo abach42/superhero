@@ -29,5 +29,7 @@ public class SuperheroRepositoryTest {
         assertThat(superheroRepository.count()).isGreaterThan(0L);
     }
 
-    //test deleted on single and list
+    //TODO restore database every method
+    //TODO test deleted on single and list
+    //TODO test erase
 }

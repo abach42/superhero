@@ -33,7 +33,7 @@ public class SuperheroService {
         this.defaultPageSize = defaultPageSize;
     }
 
-    public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) {
+    public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) throws ApiException {
         Page<SuperheroDto> superheroPage = superheroRepository
                 .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize, Sort.by("id")))
                 .map(SuperheroDto::fromDomain);
@@ -61,7 +61,7 @@ public class SuperheroService {
     }
 
     public SuperheroDto addSuperhero(SuperheroDto superheroDto) throws ApiException {
-        try {
+       try {
             Objects.requireNonNull(superheroDto);
 
             Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
@@ -74,12 +74,12 @@ public class SuperheroService {
     }
 
     /*
-     * Merge and write manually superheroDTO, using `JPA automatic dirty checking`
+     * TODO: Merge and write manually superheroDTO, using `JPA automatic dirty checking`
      * by not merging a null value.
-     * TODO: @DynamicUpdate over entity
-     * TODO: get this merge done by framework solution, but including *Dto
+     * * @DynamicUpdate over entity
+     * * get this merge done by framework solution, but including *Dto
+     * * @Transactional over here to enable dirty checking
      */
-    @Transactional
     public SuperheroDto updateSuperhero(Long id, SuperheroDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
 

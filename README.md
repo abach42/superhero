@@ -30,3 +30,4 @@ tbd.
 ## Cleaning data
 
 Enter container or development console, wait for shell:> and type `manually-erase-marked-as-deleted` (Manually start to erase records which are marked as deleted.) to delete records, which are marked as `deleted` on DELETE api command. 
+To enter spring shell, activate by `spring.shell.interactive.enabled: true`

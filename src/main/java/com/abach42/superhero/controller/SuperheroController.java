@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.abach42.superhero.config.OnCreate;
 import com.abach42.superhero.config.OnUpdate;
 import com.abach42.superhero.config.PathConfig;
-import com.abach42.superhero.entity.dto.ErrorResponse;
+import com.abach42.superhero.entity.dto.ErrorDetailedDto;
+import com.abach42.superhero.entity.dto.ErrorDto;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.exception.ApiException;
@@ -66,7 +67,11 @@ public class SuperheroController {
         @ApiResponse(
             responseCode = "404", 
             description = SuperheroService.SUPERHEROES_NOT_FOUND_MSG, 
-            content = @Content
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
         ),
         @ApiResponse(
             responseCode = "422", 
@@ -74,7 +79,7 @@ public class SuperheroController {
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(
-                    implementation = ErrorResponse.class)
+                    implementation = ErrorDto.class)
             )
         )
     })
@@ -94,12 +99,16 @@ public class SuperheroController {
                     mediaType = "application/json",
                     schema = @Schema(
                         implementation = SuperheroDto.class)
-                ) 
+                )
             }), 
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
-            content = @Content 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
         )
     })
     @GetMapping("/{id}")
@@ -116,21 +125,25 @@ public class SuperheroController {
                     mediaType = "application/json",
                     schema = @Schema(
                         implementation = SuperheroDto.class)
-                ) 
+                )
             }),
         @ApiResponse( 
-            responseCode = "422", 
+            responseCode = "422",
             description = "Validation error. Check 'errors' field for details.",
             content =  @Content(
                 mediaType = "application/json",
                 schema = @Schema(
-                    implementation = ErrorResponse.class)
-            )  
+                    implementation = ErrorDetailedDto.class)
+            )
         ), 
         @ApiResponse( 
-            responseCode = "400", 
+            responseCode = "400",
             description = SuperheroService.SUPERHERO_NOT_CREATED_MSG,
-            content = @Content 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
         )
     })
     @Validated(OnCreate.class)
@@ -145,7 +158,6 @@ public class SuperheroController {
         // https://reflectoring.io/spring-boot-exception-handling/#controlleradvice
     }
 
-    //TODO still TODO 
     @Operation(summary = "Update existing superhero")
     @ApiResponses({
         @ApiResponse(
@@ -155,12 +167,25 @@ public class SuperheroController {
                     mediaType = "application/json",
                     schema = @Schema(
                         implementation = SuperheroDto.class)
-                ) 
+                )
             }),
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
-            content = @Content //TODO 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
+        ), 
+        @ApiResponse( 
+            responseCode = "400",
+            description = "Invalid request content",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
         )
     })
     @Validated(OnUpdate.class)
@@ -189,15 +214,11 @@ public class SuperheroController {
             content = @Content 
         )
     })
-    //annotate
     @DeleteMapping("/{id}")
     public ResponseEntity<SuperheroDto> softDeleteSuperhero(@PathVariable Long id) {
         SuperheroDto updatedSuperheroDto = superheroService.markSuperheroAsDeleted(id);
         return ResponseEntity.ok(updatedSuperheroDto);
 
         //TODO write test
-        
-        // TODO Provide a cli command to delete marked as deleted records/ consider to
-        // run a scheduler, put hint to readme
     }
 }

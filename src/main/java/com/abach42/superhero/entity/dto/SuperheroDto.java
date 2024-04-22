@@ -28,7 +28,6 @@ public record SuperheroDto(
         description = "Public alias name of superhero", 
         required = true
     )
-    @NotNull
     @NotNull(groups = OnCreate.class)
     @Null(groups = OnUpdate.class)
     String alias,
