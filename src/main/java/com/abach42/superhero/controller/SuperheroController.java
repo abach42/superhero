@@ -44,8 +44,6 @@ public class SuperheroController {
         this.superheroService = superheroService;
     }
 
-    // TODO localize birth date
-
     /*
      * List of all superheroes with simple paging
      * and without page metadata return, to keep response simple
@@ -127,6 +125,7 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 )
             }),
+        //TODO test single missing fields (fucntional) using SpringBootTest 
         @ApiResponse( 
             responseCode = "422",
             description = "Validation error. Check 'errors' field for details.",
@@ -154,8 +153,6 @@ public class SuperheroController {
         return ResponseEntity.created(
                 URI.create(PathConfig.SUPERHEROES + "/" + createdSuperheroDto.id()))
                 .body(createdSuperheroDto);
-        // TODO WRITE TEST
-        // https://reflectoring.io/spring-boot-exception-handling/#controlleradvice
     }
 
     @Operation(summary = "Update existing superhero")
@@ -178,6 +175,7 @@ public class SuperheroController {
                     implementation = ErrorDto.class)
             )
         ), 
+        //TODO test functional
         @ApiResponse( 
             responseCode = "400",
             description = "Invalid request content",
@@ -194,9 +192,9 @@ public class SuperheroController {
             @Valid @RequestBody SuperheroDto superheroDto) throws ApiException {
         SuperheroDto updatedSuperheroDto = superheroService.updateSuperhero(id, superheroDto);
         return ResponseEntity.ok(updatedSuperheroDto);
-        // TODO WRITE TEST
     }
 
+    //TODO write soft deleted still exit
     @Operation(summary = "Delete superhero (mark as deleted)")
     @ApiResponses({
         @ApiResponse(

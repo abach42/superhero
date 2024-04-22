@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.SuperheroDto;
@@ -52,7 +51,8 @@ public class SuperheroService {
     }
 
     public SuperheroDto getSupherheroConverted(Long id) throws ApiException {
-        return SuperheroDto.fromDomain(getSuperhero(id));
+        Superhero superhero = getSuperhero(id);
+        return SuperheroDto.fromDomain(superhero);
     }
 
     private Superhero getSuperhero(Long id) throws ApiException {
