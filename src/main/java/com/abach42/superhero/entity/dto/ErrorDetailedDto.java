@@ -9,50 +9,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
-    @Schema(title = "HttpStatus", example = "666", format = "integer")
-    private final Integer status;
-
-    @Schema(title = "message", example = "Impossible status")
-    private final String error;
-
-    @Schema(title = "message", example = "Something really impossible happened.")
-    private final String message;
-
-    @Schema(title = "path", example = "/api/v1/myentity/777")
-    private final String path;
-
+public class ErrorDetailedDto extends ErrorDto {
     private List<ValidationError> errors;
 
-    public ErrorResponse(Integer status, String error, String message, String path) {
-        this.status = status;
-        this.error = error;
-        this.message = message;
-        this.path = path;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public List<ValidationError> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(List<ValidationError> errors) {
-        this.errors = errors;
+    public ErrorDetailedDto(Integer status, String error, String message, String path) {
+        super(status, error, message, path);
     }
 
     private static class ValidationError {
@@ -66,14 +27,22 @@ public class ErrorResponse {
             this.message = message;
         }
 
+        //used by spring framework, vsdcode does not see it
+        @SuppressWarnings("unused")
         public String getField() {
             return field;
         }
 
+        //used by spring framework, vsdcode does not see it
+        @SuppressWarnings("unused")
         public String getMessage() {
             return message;
         }
     }
+
+    public List<ValidationError> getErrors() {
+        return errors;
+    }  
 
     public void addValidationError(String field, String message) {
         if (Objects.isNull(errors)) {

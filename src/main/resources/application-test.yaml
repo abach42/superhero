@@ -18,3 +18,8 @@ spring:
         enabled: true
         change-log: classpath:/db/migrations/changelog-master.yaml
 debug: true
+abach42:
+    superhero:
+        oci:
+            testcontainer:
+                imageName: postgres:latest

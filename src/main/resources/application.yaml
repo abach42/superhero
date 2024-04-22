@@ -14,7 +14,7 @@ spring:
         banner-mode: off
     shell:
         interactive:
-            enabled: true
+            enabled: false
     jpa:
         properties:
             hibernate:
@@ -39,7 +39,7 @@ springdoc:
         tryItOutEnabled: false
         filter: false
         syntaxHighlight.activated: true
-debug: true
+debug: false
 logging:
     level:
         org:

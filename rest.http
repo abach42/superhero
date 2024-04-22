@@ -8,10 +8,14 @@
 GET {{domain}}/api/v1/superheroes HTTP/1.1
 
 ### Get all superheroes with page
-GET {{domain}}/api/v1/superheroes?page=0 HTTP/1.1
+GET {{domain}}/api/v1/superheroes?page=11 HTTP/1.1
+
+### Get superhero 404
+GET {{domain}}/api/v1/superheroes/666 HTTP/1.1
+Accept: application/json
 
 ### Get superhero
-GET {{domain}}/api/v1/superheroes/5 HTTP/1.1
+GET {{domain}}/api/v1/superheroes/6 HTTP/1.1
 Accept: application/json
 
 ### Add new superhero
@@ -20,15 +24,14 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "id": 1,
-  "alias": "Der Admin jklhjklö ",
+  "alias": "foo",
   "realName": "Alex Admin ddbbb",
   "dateOfBirth": "1987-07-22",
   "gender": "Male",
   "occupation": "Administrator"
 }
 
-### Update superhero
+### Update superhero - should be ok
 PUT {{domain}}/api/v1/superheroes/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -41,13 +44,14 @@ Content-Type: application/json
   "occupation": "Administrator"
 }
 
+
 ### Update superhero
 PUT {{domain}}/api/v1/superheroes/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 
 {
-  "alias": "Der Admin jklhjklö ",
+ "alias": "The Wise Owl",
   "realName": "Alex Admin ddbbb",
   "dateOfBirth": "1987-07-22",
   "gender": "Male",
