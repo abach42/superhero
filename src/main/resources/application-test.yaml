@@ -23,3 +23,11 @@ abach42:
         oci:
             testcontainer:
                 imageName: postgres:latest
+junit:
+    jupiter:
+        execution: 
+            parallel:
+                mode:
+                    default: concurrent
+                    classes:
+                        default: concurrent
