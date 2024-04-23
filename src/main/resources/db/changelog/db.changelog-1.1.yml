@@ -27,3 +27,33 @@ databaseChangeLog:
                     - column:
                         name: origin_story
                         value: foo
+                    - column:
+                        name: deleted
+                        value: false
+            - insert:
+                tableName: superhero
+                columns:
+                    - column:
+                        name: id
+                        value: 2
+                    - column:
+                        name: alias
+                        value: foobar
+                    - column:
+                        name: real_name
+                        value: bar
+                    - column:
+                        name: date_of_birth
+                        value: 1970-01-01
+                    - column:
+                        name: gender
+                        value: Female
+                    - column:
+                        name: occupation
+                        value: foo
+                    - column:
+                        name: origin_story
+                        value: foo
+                    - column:
+                        name: deleted
+                        value: true

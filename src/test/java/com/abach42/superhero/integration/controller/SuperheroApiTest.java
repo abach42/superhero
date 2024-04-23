@@ -18,6 +18,7 @@ import com.abach42.superhero.integration.configuration.TestContainerConfiguratio
 
 /*
  * End to end test with database and real client
+ * TODO: delete - this one just exists as documentation in repository
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers

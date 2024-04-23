@@ -57,6 +57,4 @@ public class SuperheroDtoTest {
         );
         assertThat(constraintViolations).hasSize(0);
     }
-
-    
 }
