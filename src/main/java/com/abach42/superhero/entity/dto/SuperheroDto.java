@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 
 @Schema(name = "sperhero")
 public record SuperheroDto(
@@ -30,6 +31,7 @@ public record SuperheroDto(
     )
     @NotNull(groups = OnCreate.class)
     @Null(groups = OnUpdate.class)
+    @Size(max = 20, groups = {OnCreate.class, OnUpdate.class})
     String alias,
 
     @Schema(
