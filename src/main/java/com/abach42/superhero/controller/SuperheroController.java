@@ -191,7 +191,6 @@ public class SuperheroController {
 
     @Operation(summary = "Delete superhero (mark as deleted)")
     @ApiResponses({
-        //TODO test integrated on repository - still exists
         @ApiResponse(
             responseCode = "200", description = "Superhero deleted",
             content = {

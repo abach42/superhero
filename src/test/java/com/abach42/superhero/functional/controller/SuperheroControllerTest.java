@@ -164,6 +164,5 @@ public class SuperheroControllerTest {
         assertThat(actual).usingRecursiveComparison().isEqualTo(superheroDto);
     }
 
-
     // TODO test roles
 }

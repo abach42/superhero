@@ -1,8 +1,7 @@
 package com.abach42.superhero.repository;
 
 import java.util.Optional;
-
-
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,15 +18,22 @@ public interface SuperheroRepository extends JpaRepository<Superhero, Long> {
         return findAllByDeletedIsFalse(pageable);
     }
 
+    @Override
+    default @NonNull List<Superhero> findAll() {
+        return findAllByDeletedIsFalse();
+    }
+
     public Page<Superhero> findAllByDeletedIsFalse(Pageable pageable);
 
-    Optional<Superhero> findOneByIdAndDeletedIsFalse(Long id);
+    public List<Superhero> findAllByDeletedIsFalse();
 
     @Override
     public default @NonNull Optional<Superhero> findById(@NonNull Long id) {
         return findOneByIdAndDeletedIsFalse(id);
     }
-
+    
+    Optional<Superhero> findOneByIdAndDeletedIsFalse(Long id);
+    
     @Override
     default long count() {
         return countByDeletedIsFalse();
