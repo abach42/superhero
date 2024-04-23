@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.NestedTestConfiguration;
+import org.springframework.test.context.NestedTestConfiguration.EnclosingConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.abach42.superhero.entity.Superhero;
@@ -30,9 +32,10 @@ public class SuperheroRepositoryTest {
     private SuperheroRepository subject;
 
     @Nested
+    @NestedTestConfiguration(EnclosingConfiguration.OVERRIDE)
     @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
     @DisplayName("Tests for counting superheroes")
-    class CountTests {
+    class CountTest {
         @Test
         @DisplayName("count superheroes dos not count soft deleted")
         void testCountDoesNotCountSoftDeleted() {
