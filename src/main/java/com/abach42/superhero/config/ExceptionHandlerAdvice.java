@@ -3,6 +3,7 @@ package com.abach42.superhero.config;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
@@ -23,7 +24,8 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<ErrorDetailedDto> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
             ServletWebRequest request) {
-        ErrorDetailedDto errorDetailedResponse = new ErrorDetailedDto(getStatusCodeNumber(exception), getError(exception), 
+        HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+        ErrorDetailedDto errorDetailedResponse = new ErrorDetailedDto(getStatusCodeNumber(httpStatus), getError(httpStatus), 
                 getMessage(exception), getPath(request));
     
         for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
@@ -37,17 +39,21 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorDto> handle(ApiException exception, ServletWebRequest request) {
         return new ResponseEntity<>(
-            new ErrorDto(getStatusCodeNumber(exception), getError(exception), getMessage(exception), getPath(request)),         
+            new ErrorDto(getStatusCodeNumber(exception.getStatusCode()), getError(exception), getMessage(exception), getPath(request)),         
                 exception.getStatusCode());
     }
 
-    private int getStatusCodeNumber(ErrorResponse exception) {
-        return exception.getStatusCode().value();
+    private int getStatusCodeNumber(HttpStatusCode httpStatus) {
+        return httpStatus.value();
     }
 
     private String getError(ErrorResponse exception) {
-        return Optional.of(HttpStatus.resolve(getStatusCodeNumber(exception)))
+        return Optional.of(HttpStatus.resolve(getStatusCodeNumber(exception.getStatusCode())))
                 .map(HttpStatus::getReasonPhrase).orElse("Unknown error");
+    }
+
+    private String getError(HttpStatus httpStatus) {
+        return httpStatus.getReasonPhrase();
     }
 
     private String getMessage(ErrorResponse exception) {
