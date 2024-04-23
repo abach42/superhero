@@ -4,7 +4,7 @@ databaseChangeLog:
         author: me
         changes:
             - insert:
-                tableName:  superhero
+                tableName: superhero
                 columns:
                     - column:
                         name: id

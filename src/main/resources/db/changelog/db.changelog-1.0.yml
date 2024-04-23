@@ -53,6 +53,11 @@ databaseChangeLog:
                   name: deleted
                   type: BOOLEAN
                   constraints:
-                    default: false
+                    nullable: false
+        - addDefaultValue:
+            columnDataType: boolean
+            columnName: deleted
+            defaultValueBoolean: false
+            tableName: superhero
               
                                       
