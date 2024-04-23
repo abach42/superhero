@@ -127,7 +127,7 @@ public class SuperheroController {
             }),
         //TODO test single missing fields (fucntional) using SpringBootTest 
         @ApiResponse( 
-            responseCode = "422",
+            responseCode = "400",
             description = "Validation error. Check 'errors' field for details.",
             content =  @Content(
                 mediaType = "application/json",
@@ -145,9 +145,8 @@ public class SuperheroController {
             )
         )
     })
-    @Validated(OnCreate.class)
     @PostMapping
-    public ResponseEntity<SuperheroDto> createSuperhero(@Valid @RequestBody SuperheroDto superheroDto)
+    public ResponseEntity<SuperheroDto> createSuperhero(@Validated(OnCreate.class) @RequestBody SuperheroDto superheroDto)
             throws ApiException, MethodArgumentNotValidException {
         SuperheroDto createdSuperheroDto = superheroService.addSuperhero(superheroDto);
         return ResponseEntity.created(
@@ -186,10 +185,9 @@ public class SuperheroController {
             )
         )
     })
-    @Validated(OnUpdate.class)
     @PutMapping("/{id}")
     public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable(required = true) Long id,
-            @Valid @RequestBody SuperheroDto superheroDto) throws ApiException {
+            @Validated(OnUpdate.class) @RequestBody SuperheroDto superheroDto) throws ApiException {
         SuperheroDto updatedSuperheroDto = superheroService.updateSuperhero(id, superheroDto);
         return ResponseEntity.ok(updatedSuperheroDto);
     }
