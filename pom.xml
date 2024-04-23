@@ -101,7 +101,7 @@
           </dependency>
           </dependencies>
           <configuration>
-            <argLine>-Xmx1024m</argLine>
+            <argLine>-Xshare:off</argLine>
             <parallel>all</parallel>
             <reportFormat>plain</reportFormat>
             <consoleOutputReporter>
