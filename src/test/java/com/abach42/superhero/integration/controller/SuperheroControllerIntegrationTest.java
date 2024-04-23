@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.NestedTestConfiguration;
+import org.springframework.test.context.NestedTestConfiguration.EnclosingConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -56,6 +59,67 @@ public class SuperheroControllerIntegrationTest {
     @Autowired
     private SuperheroRepository superheroRepository;
 
+    @Nested
+    @NestedTestConfiguration(EnclosingConfiguration.OVERRIDE)
+    @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+    @DisplayName("Test without database change")
+    class NoDatabaseChangeTest {
+        @Test
+        @DisplayName("(mockmvc + db) get all superheros page number too high" )
+        public void testGetAllSuperherosFailsWhenPageNotExists() throws Exception {
+            int failPage = 999; //assuming test data have max 998 pages
+    
+            MvcResult mvcResult = mockMvc.perform(
+                        get(PATH + "?page="+ failPage).accept(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+    
+            ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
+            assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY.value(), 
+                        HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(), 
+                        SuperheroService.MAX_PAGE_EXEEDED_MSG + " Total: " + TOTAL_PAGES + ", requested: " + failPage + ".",
+                        PATH));
+        }
+
+        @Test
+        @DisplayName("(mockmvc + db) add new superhero fails when missing field")
+        public void testAddSuperheroFailsWhenMissingFieldInPayload() throws Exception {
+            Superhero failingSuperhero = new Superhero(null, "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
+            mockMvc.perform(
+                    post(PATH)
+                        .content(OBJECT_MAPPER.writeValueAsString(failingSuperhero))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+        }
+    
+        @Test
+        @DisplayName("(mockmvc + db) add new superhero fails when missing")
+        public void testAddSuperheroFailsWhenEmptyPayload() throws Exception {
+            mockMvc.perform(
+                    post(PATH)
+                        .content(OBJECT_MAPPER.writeValueAsString(null))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("(mockmvc + db) update superhero fails when missing field")
+        public void testUpdateSuperheroFailsWhenMissingFieldInPayload() throws Exception {
+            mockMvc.perform(
+                    put(PATH + "/" + 1)
+                        .content(OBJECT_MAPPER.writeValueAsString(null))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        }
+    }
+
     @Test
     @DisplayName("(mockmvc + db) get all supeheroes not found")
     public void testGetAllSuperherosFailsWhenNoSuperhero() throws Exception {
@@ -80,24 +144,6 @@ public class SuperheroControllerIntegrationTest {
     }
     
     @Test
-    @DisplayName("(mockmvc + db) get all superheros page number too high" )
-    public void testGetAllSuperherosFailsWhenPageNotExists() throws Exception {
-        int failPage = 999; //assuming test data have max 998 pages
-
-        MvcResult mvcResult = mockMvc.perform(
-                    get(PATH + "?page="+ failPage).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-            .andReturn();
-
-        ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
-        assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY.value(), 
-                    HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(), 
-                    SuperheroService.MAX_PAGE_EXEEDED_MSG + " Total: " + TOTAL_PAGES + ", requested: " + failPage + ".",
-                    PATH));
-    }
-
-    @Test
     @DisplayName("(mockmvc + db) get a superhero not found")
     public void testGetSuperheroFailsWhenNoSuperhero() throws Exception {
         superheroRepository.deleteAll();
@@ -112,31 +158,6 @@ public class SuperheroControllerIntegrationTest {
         ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
         assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(), 
                 HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHERO_NOT_FOUND_MSG + 1, PATH + "/" + 1));
-    }
-
-    @Test
-    @DisplayName("(mockmvc + db) add new superhero fails when missing field")
-    public void testAddSuperheroFailsWhenMissingFieldInPayload() throws Exception {
-        Superhero failingSuperhero = new Superhero(null, "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
-        mockMvc.perform(
-                post(PATH)
-                    .content(OBJECT_MAPPER.writeValueAsString(failingSuperhero))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @DisplayName("(mockmvc + db) add new superhero fails when missing")
-    public void testAddSuperheroFailsWhenEmptyPayload() throws Exception {
-        mockMvc.perform(
-                post(PATH)
-                    .content(OBJECT_MAPPER.writeValueAsString(null))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -160,18 +181,6 @@ public class SuperheroControllerIntegrationTest {
         assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(), 
                 HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHERO_NOT_FOUND_MSG + 1, 
                 PATH + "/" + 1));
-    }
-
-    @Test
-    @DisplayName("(mockmvc + db) update superhero fails when missing field")
-    public void testUpdateSuperheroFailsWhenMissingFieldInPayload() throws Exception {
-        mockMvc.perform(
-                put(PATH + "/" + 1)
-                    .content(OBJECT_MAPPER.writeValueAsString(null))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isBadRequest());
     }
 
     @Test
