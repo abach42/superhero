@@ -3,6 +3,9 @@ spring:
     config:
         activate:
             on-profile: test
+    shell:
+        interactive:
+            enabled: false
     jpa:
         properties:
             hibernate:
@@ -27,6 +30,11 @@ junit:
     jupiter:
         execution: 
             parallel:
+                enabled: true
+                config:
+                    strategy: fixed
+                    fixed:
+                        parallelism: 8
                 mode:
                     default: concurrent
                     classes:

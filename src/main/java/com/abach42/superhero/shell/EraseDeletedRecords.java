@@ -1,10 +1,12 @@
 package com.abach42.superhero.shell;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import com.abach42.superhero.service.DatabaseClearupService;
 
+@Profile("!test")
 @ShellComponent
 public class EraseDeletedRecords {
     DatabaseClearupService databaseClearupService; 

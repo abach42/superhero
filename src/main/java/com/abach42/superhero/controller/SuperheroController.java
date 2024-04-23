@@ -51,7 +51,7 @@ public class SuperheroController {
     @Operation(summary = "Get all superheroes")
     @ApiResponses({
         @ApiResponse(
-            responseCode = "200", description = "Superheroes found",
+            responseCode = "200", description = "Superheroes found.",
             content = {
                 @Content(
                     mediaType = "application/json",
@@ -61,7 +61,6 @@ public class SuperheroController {
                     )
                 )
             }), 
-        //TODO test integrated
         @ApiResponse(
             responseCode = "404", 
             description = SuperheroService.SUPERHEROES_NOT_FOUND_MSG, 
@@ -71,7 +70,6 @@ public class SuperheroController {
                     implementation = ErrorDto.class)
             )
         ),
-        //TODO test integrated
         @ApiResponse(
             responseCode = "422", 
             description = SuperheroService.MAX_PAGE_EXEEDED_MSG, 
@@ -83,7 +81,7 @@ public class SuperheroController {
         )
     })
     @GetMapping
-    public ResponseEntity<?> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page)
+    public ResponseEntity<SuperheroListDto> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page)
             throws ApiException {
         SuperheroListDto superheroes = superheroService.getAllSuperheros(page);
         return ResponseEntity.ok(superheroes);
@@ -92,7 +90,7 @@ public class SuperheroController {
     @Operation(summary = "Get superhero")
     @ApiResponses({
         @ApiResponse(
-            responseCode = "200", description = "Superhero found",
+            responseCode = "200", description = "Superhero found.",
             content = {
                 @Content(
                     mediaType = "application/json",
@@ -100,7 +98,6 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 )
             }), 
-        //TODO test integrated
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
@@ -119,7 +116,7 @@ public class SuperheroController {
     @Operation(summary = "Add new superhero")
     @ApiResponses({
         @ApiResponse(
-            responseCode = "201", description = "Superhero created",
+            responseCode = "201", description = "Superhero created.",
             content = {
                 @Content(
                     mediaType = "application/json",
@@ -127,17 +124,15 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 )
             }),
-        //TODO test single missing fields (fucntional) using SpringBootTest 
         @ApiResponse( 
-            responseCode = "400",
-            description = "Validation error. Check 'errors' field for details.",
+            responseCode = "422",
+            description = "Invalid request content.",
             content =  @Content(
                 mediaType = "application/json",
                 schema = @Schema(
                     implementation = ErrorDetailedDto.class)
             )
-        ), 
-        //TODO test integrated
+        ),
         @ApiResponse( 
             responseCode = "400",
             description = SuperheroService.SUPERHERO_NOT_CREATED_MSG,
@@ -168,7 +163,6 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 )
             }),
-        //TODO test integrated
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
@@ -178,7 +172,6 @@ public class SuperheroController {
                     implementation = ErrorDto.class)
             )
         ), 
-        //TODO test functional
         @ApiResponse( 
             responseCode = "400",
             description = "Invalid request content",
@@ -196,10 +189,9 @@ public class SuperheroController {
         return ResponseEntity.ok(updatedSuperheroDto);
     }
 
-    //TODO write soft deleted still exit
     @Operation(summary = "Delete superhero (mark as deleted)")
     @ApiResponses({
-        //TODO test integrated
+        //TODO test integrated on repository - still exists
         @ApiResponse(
             responseCode = "200", description = "Superhero deleted",
             content = {
@@ -209,11 +201,14 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 ) 
             }),
-        //TODO test integrated
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
-            content = @Content 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
         )
     })
     @DeleteMapping("/{id}")
