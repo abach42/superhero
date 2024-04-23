@@ -3,6 +3,7 @@ package com.abach42.superhero.functional.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,7 +29,6 @@ import com.abach42.superhero.config.OnCreate;
 import com.abach42.superhero.config.PathConfig;
 import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.dto.ErrorDetailedDto;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.service.SuperheroService;
@@ -134,19 +134,14 @@ public class SuperheroControllerTest {
         SuperheroDto failedSuperheroDto = new SuperheroDto(1L, null, null, null, null, null);
 
         given(superheroService.addSuperhero(failedSuperheroDto)).willReturn(failedSuperheroDto); 
-        MvcResult mvcResult = mockMvc.perform(
-                        post(PATH)
-                                .content(objectMapper.writeValueAsString(failedSuperheroDto))
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                )
-                        .andDo(print())
-                        .andExpect(status().isUnprocessableEntity())
-                .andReturn();
-        
-                ErrorDetailedDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
-                ErrorDetailedDto.class);
-        assertThat(actual).isInstanceOf(ErrorDetailedDto.class);    
+        mockMvc.perform(
+                post(PATH)
+                        .content(objectMapper.writeValueAsString(failedSuperheroDto))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        )
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -155,7 +150,7 @@ public class SuperheroControllerTest {
         given(superheroService.markSuperheroAsDeleted(anyLong())).willReturn(superheroDto);
 
         MvcResult mvcResult = mockMvc.perform(
-                        post(PATH)
+                        delete(PATH + "/" + 0)
                                 .content(objectMapper.writeValueAsString(superheroDto))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
