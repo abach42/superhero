@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import com.abach42.superhero.entity.Superhero;

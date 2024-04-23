@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.abach42.superhero.config.OnCreate;
 import com.abach42.superhero.config.OnUpdate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
@@ -25,23 +26,22 @@ public class Superhero {
     //TODO make unique, even in database
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     private String alias;
 
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     private String realName;
 
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     private String gender;
+
+    @Null(groups = OnUpdate.class)
     private String occupation;
 
     @Column(length = 2048)

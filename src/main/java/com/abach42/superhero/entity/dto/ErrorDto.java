@@ -1,10 +1,13 @@
 package com.abach42.superhero.entity.dto;
 
+import com.abach42.superhero.config.serialization.ErrorDtoDeserializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonDeserialize(using = ErrorDtoDeserializer.class)
 public class ErrorDto {
     @Schema(title = "HttpStatus", example = "666", format = "integer")
     protected final Integer status;
@@ -40,4 +43,6 @@ public class ErrorDto {
     public String getPath() {
         return path;
     }
+
+
 }

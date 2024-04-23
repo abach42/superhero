@@ -19,10 +19,10 @@ import jakarta.annotation.Nullable;
 
 @Service
 public class SuperheroService {
-    public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found";
+    public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found.";
     public static final String MAX_PAGE_EXEEDED_MSG = "The total page number has been exceeded.";
     public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
-    public static final String SUPERHERO_NOT_CREATED_MSG = "Superhero could not be written";
+    public static final String SUPERHERO_NOT_CREATED_MSG = "Superhero could not be written.";
 
     private final SuperheroRepository superheroRepository;
     private final Integer defaultPageSize;

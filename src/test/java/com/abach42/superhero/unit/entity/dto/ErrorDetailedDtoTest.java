@@ -10,7 +10,6 @@ public class ErrorDetailedDtoTest {
 
     @Test
     public void testErrorDetailedDto() {
-        // Arrange
         Integer status = 400;
         String error = "Bad Request";
         String message = "Validation failed";
@@ -18,11 +17,9 @@ public class ErrorDetailedDtoTest {
         String field = "name";
         String validationMessage = "Name is required";
 
-        // Act
         ErrorDetailedDto errorDetailedDto = new ErrorDetailedDto(status, error, message, path);
         errorDetailedDto.addValidationError(field, validationMessage);
 
-        // Assert
         assertEquals(status, errorDetailedDto.getStatus());
         assertEquals(error, errorDetailedDto.getError());
         assertEquals(message, errorDetailedDto.getMessage());

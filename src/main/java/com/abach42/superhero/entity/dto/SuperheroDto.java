@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.abach42.superhero.config.OnCreate;
 import com.abach42.superhero.config.OnUpdate;
 import com.abach42.superhero.entity.Superhero;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
@@ -30,7 +31,6 @@ public record SuperheroDto(
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     @Size(max = 20, groups = {OnCreate.class, OnUpdate.class})
     String alias,
 
@@ -41,7 +41,6 @@ public record SuperheroDto(
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     String realName, //TODO admin only
 
     @Schema(
@@ -52,7 +51,7 @@ public record SuperheroDto(
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth,
 
     //TODO make enum type, save byte
@@ -63,7 +62,6 @@ public record SuperheroDto(
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     String gender,
     @Schema(
         title = "occupation", 
