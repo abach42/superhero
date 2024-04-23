@@ -32,7 +32,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 @Tag(name = "Superhero API")
 @RestController
@@ -62,6 +61,7 @@ public class SuperheroController {
                     )
                 )
             }), 
+        //TODO test integrated
         @ApiResponse(
             responseCode = "404", 
             description = SuperheroService.SUPERHEROES_NOT_FOUND_MSG, 
@@ -71,6 +71,7 @@ public class SuperheroController {
                     implementation = ErrorDto.class)
             )
         ),
+        //TODO test integrated
         @ApiResponse(
             responseCode = "422", 
             description = SuperheroService.MAX_PAGE_EXEEDED_MSG, 
@@ -99,6 +100,7 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 )
             }), 
+        //TODO test integrated
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
@@ -135,6 +137,7 @@ public class SuperheroController {
                     implementation = ErrorDetailedDto.class)
             )
         ), 
+        //TODO test integrated
         @ApiResponse( 
             responseCode = "400",
             description = SuperheroService.SUPERHERO_NOT_CREATED_MSG,
@@ -165,6 +168,7 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 )
             }),
+        //TODO test integrated
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
@@ -195,6 +199,7 @@ public class SuperheroController {
     //TODO write soft deleted still exit
     @Operation(summary = "Delete superhero (mark as deleted)")
     @ApiResponses({
+        //TODO test integrated
         @ApiResponse(
             responseCode = "200", description = "Superhero deleted",
             content = {
@@ -204,6 +209,7 @@ public class SuperheroController {
                         implementation = SuperheroDto.class)
                 ) 
             }),
+        //TODO test integrated
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
@@ -214,7 +220,5 @@ public class SuperheroController {
     public ResponseEntity<SuperheroDto> softDeleteSuperhero(@PathVariable Long id) {
         SuperheroDto updatedSuperheroDto = superheroService.markSuperheroAsDeleted(id);
         return ResponseEntity.ok(updatedSuperheroDto);
-
-        //TODO write test
     }
 }

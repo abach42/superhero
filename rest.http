@@ -24,7 +24,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "alias": "foo",
+ 
   "realName": "Alex Admin ddbbb",
   "dateOfBirth": "1987-07-22",
   "gender": "Male",
