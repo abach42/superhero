@@ -9,6 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 
 import com.abach42.superhero.entity.Superhero;
 
+/*
+ * Yes, lombock would do...
+ */
 public class SuperheroTest {
     @Test
     @DisplayName("Superhero entity getters get and setters set.")
