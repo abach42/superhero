@@ -12,7 +12,7 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 `.bin/start.sh`
 
-This will make an image of project, start a docker network, initialize a postgre database and provide localhost, TLS at port 8443.
+This will make an image of project, start a docker network, initialize a postgres database and provide localhost, TLS at port 8443.
 
 * Use some rest client: `GET https://localhost:8443/api/v1/superheros/ HTTP/1.1` (Please use JWT).
 
