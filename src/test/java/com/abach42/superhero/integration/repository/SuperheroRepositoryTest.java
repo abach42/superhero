@@ -2,8 +2,7 @@ package com.abach42.superhero.integration.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,8 +17,9 @@ import org.springframework.test.context.NestedTestConfiguration;
 import org.springframework.test.context.NestedTestConfiguration.EnclosingConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.abach42.superhero.configuration.TestContainerConfiguration;
+import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.integration.configuration.TestContainerConfiguration;
 import com.abach42.superhero.repository.SuperheroRepository;
 
 @DataJpaTest
@@ -30,6 +30,13 @@ public class SuperheroRepositoryTest {
 
     @Autowired
     private SuperheroRepository subject;
+
+    private Superhero superhero;
+
+    @BeforeEach
+    public void setUp() {
+        this.superhero = TestDataConfiguration.DUMMY_SUPERHERO;
+    }
 
     @Nested
     @NestedTestConfiguration(EnclosingConfiguration.OVERRIDE)
@@ -70,7 +77,6 @@ public class SuperheroRepositoryTest {
     @DisplayName("add new superhero")
     @Transactional
     void testAddNewSuperhero() {
-        Superhero superhero = new Superhero("foo", "bar", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
         subject.save(superhero);
         assertThat(subject.count()).isEqualTo(2L);
     }

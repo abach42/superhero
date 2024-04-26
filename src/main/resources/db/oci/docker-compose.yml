@@ -1,0 +1,14 @@
+services:
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:latest
+    restart: always
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      POSTGRES_DB: ${SPRING_DATASOURCE_NAME}
+    volumes:
+      - ./.data/:/var/lib/posgresql/data/
+      - ./create.sql:/docker-entrypoint-initdb.d/create.sql

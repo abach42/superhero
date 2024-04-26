@@ -92,5 +92,6 @@ public class SuperheroListDto {
             accessMode = AccessMode.READ_ONLY
         )
         Integer totalElements
-    ) {}
+    ) {     
+    }
 }

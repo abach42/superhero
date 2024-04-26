@@ -1,6 +1,9 @@
 spring.application.name: superhero
 server:
-    port: 8888
+    port: 8443
+    ssl:
+        key-store: classpath:.certs/abach42.superhero.p12
+        key-store-password: D00FDOOF
     error:
         include-message: always
         include-binding-errors: always
@@ -22,9 +25,9 @@ spring:
                 format_sql: true
                 highlight_sql: true
     datasource:
-        url: jdbc:postgresql://localhost:15432/db
-        username: db
-        password: db
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
         driverClassName: org.postgresql.Driver
     liquibase:
         enabled: false
@@ -32,11 +35,16 @@ spring:
         web:    
             pageable: 
                 default-page-size: 5
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    public-key: classpath:.certs/public.pem
+                    private-key: classpath:.certs/private.pem
 springdoc:
     swagger-ui:
         enabled: true
-        path: /swagger-ui.html
-        tryItOutEnabled: false
+        tryItOutEnabled: true
         filter: false
         syntaxHighlight.activated: true
 debug: false
@@ -52,3 +60,5 @@ abach42:
         # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
         # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
         # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight
+logging.level.web: TRACE
+logging.level.org.springframework.web: DEBUG

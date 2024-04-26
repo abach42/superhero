@@ -1,14 +1,24 @@
 CREATE EXTENSION pgcrypto;
 
+CREATE TABLE superhero_user (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(64) UNIQUE NOT NULL,
+    password VARCHAR(128) NOT NULL,
+    role VARCHAR(10),
+    deleted BOOLEAN DEFAULT false
+);
+
 CREATE TABLE superhero (
     id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES superhero_user(id),
     alias VARCHAR(100),
     real_name VARCHAR(100),
     date_of_birth DATE,
     gender VARCHAR(10),
     occupation VARCHAR(100),
     origin_story TEXT,
-    deleted BOOLEAN DEFAULT false
+    deleted BOOLEAN DEFAULT false,
+    CONSTRAINT superhero_user FOREIGN KEY (user_id) REFERENCES superhero_user(id)
 );
 
 CREATE TABLE skill (
@@ -22,9 +32,9 @@ CREATE TABLE skill_profile (
     superhero_id INT REFERENCES superhero(id),
     skill_id INT REFERENCES Skill(skill_id),
     intensity NUMERIC NOT NULL,
+    deleted BOOLEAN DEFAULT false,
     CONSTRAINT fk_superhero FOREIGN KEY (superhero_id) REFERENCES superhero(id),
-    CONSTRAINT fk_skill FOREIGN KEY (skill_id) REFERENCES Skill(skill_id),
-    deleted BOOLEAN DEFAULT false
+    CONSTRAINT fk_skill FOREIGN KEY (skill_id) REFERENCES Skill(skill_id)
 );
 
 CREATE TABLE rescue_action (
@@ -32,17 +42,17 @@ CREATE TABLE rescue_action (
     superhero_initiator_id INT REFERENCES superhero(id),
     action VARCHAR(100) NOT NULL,
     description TEXT,
-    CONSTRAINT fk_superhero_initiator_rescue FOREIGN KEY (superhero_initiator_id) REFERENCES superhero(id),
-    deleted BOOLEAN DEFAULT false
+    deleted BOOLEAN DEFAULT false,
+    CONSTRAINT fk_superhero_initiator_rescue FOREIGN KEY (superhero_initiator_id) REFERENCES superhero(id)
 );
 
 CREATE TABLE participation (
     participation_id SERIAL PRIMARY KEY,
     rescue_action_id INT REFERENCES rescue_action(rescue_action_id),
     superhero_id INT REFERENCES superhero(id),
+    deleted BOOLEAN DEFAULT false,
     CONSTRAINT fk_rescue_action FOREIGN KEY (rescue_action_id) REFERENCES rescue_action(rescue_action_id),
-    CONSTRAINT fk_superhero_participation FOREIGN KEY (superhero_id) REFERENCES superhero(id),
-    deleted BOOLEAN DEFAULT false
+    CONSTRAINT fk_superhero_participation FOREIGN KEY (superhero_id) REFERENCES superhero(id)
 );
 
 INSERT INTO skill (skill_name) VALUES
@@ -64,24 +74,43 @@ INSERT INTO skill (skill_name) VALUES
 ('self_control'), -- Selbstbeherrschung
 ('good_looks'); -- Gut-Aussehen
 
-INSERT INTO superhero (alias, real_name, date_of_birth, gender, occupation, origin_story)
+INSERT INTO superhero_user (email, password, role)
 VALUES
-('The Administrator', 'Alex Admin', '1987-07-22', 'Male', 'Administrator', 'Alex Admin gained superhuman administrative skills after being exposed to a mysterious computer virus.'),
-('Captain Courageous', 'Chris Courage', '1980-05-15', 'Male', 'Defender of Justice', 'Chris Courage was a regular citizen until a fateful accident imbued him with superhuman courage.'),
-('Speedster', 'Samantha Swift', '1992-08-21', 'Female', 'Delivery Driver', 'Samantha Swift gained the ability to move at incredible speeds after being struck by lightning.'),
-('The Kindness Knight', 'Kevin Knight', '1975-02-10', 'Male', 'Social Worker', 'Kevin Knight was inspired to become a hero after witnessing acts of kindness in his community.'),
-('Doctor Empathy', 'Emma Empath', '1988-11-03', 'Female', 'Psychologist', 'Emma Empath developed the power to sense and understand the emotions of others during a medical experiment.'),
-('The Wise Owl', 'Oliver Wisdom', '1963-09-28', 'Male', 'Retired Teacher', 'Oliver Wisdom''s wisdom is legendary, and he uses his knowledge to guide and mentor other heroes.'),
-('Creative Genius', 'Cassandra Creative', '1995-04-17', 'Female', 'Artist', 'Cassandra Creative''s imaginative mind allows her to come up with ingenious solutions to any problem.'),
-('The Gentle Giant', 'Gary Gentle', '1978-07-09', 'Male', 'Construction Worker', 'Gary Gentle possesses superhuman strength, but he uses it with care and gentleness to help others.'),
-('Lady Loyalty', 'Leah Loyal', '1986-12-30', 'Female', 'Veterinarian', 'Leah Loyal is known for her unwavering loyalty to her friends and the causes she believes in.'),
-('The Peacekeeper', 'Pete Peace', '1970-03-25', 'Male', 'Mediator', 'Pete Peace has the ability to calm any situation and find peaceful resolutions to conflicts.'),
-('The Generous Guardian', 'Grace Generous', '1990-06-12', 'Female', 'Philanthropist', 'Grace Generous uses her wealth and resources to help those in need and make the world a better place.'),
-('The Courageous Cat', 'Carlos Courage', '1983-10-05', 'Male', 'Firefighter', 'Carlos Courage fearlessly rushes into danger to save lives, inspired by his love for his pet cat.'),
-('The Swift Swimmer', 'Sarah Swift', '1998-02-18', 'Female', 'Lifeguard', 'Sarah Swift is not only a fast swimmer but also a quick thinker, always ready to dive into action to save others.'),
-('The Kind-hearted Knight', 'Keith Kindheart', '1972-06-30', 'Male', 'Teacher', 'Keith Kindheart is beloved by his community for his compassionate nature and willingness to help others.'),
-('The Empathetic Eagle', 'Ella Empathy', '1984-09-12', 'Female', 'Therapist', 'Ella Empathy can feel the pain of others and uses her powers to heal both physically and emotionally.'),
-('The Wise Wizard', 'Walter Wisdom', '1960-11-20', 'Male', 'Librarian', 'Walter Wisdom''s vast knowledge of ancient texts and magical artifacts makes him a formidable ally in the fight against evil.');
+('admin@example.com', '{bcrypt}$2a$12$anOoGoXF50pcBQMlUSDA..s7mJjQakVJ3dGXkQm3iRAiigRZWvts6', 'ADMIN'),
+('chris@example.com', '{bcrypt}$2a$12$4cAnXB4ziicHOuRiV4XVQOhCNr3w4N95Q07d3d1SNovRmLFfcPchS', 'USER'),
+('samantha@example.com', '{bcrypt}$2a$12$XTxxbXQmCVr.c10nOM/V2OE0tFwxwumS.CDqOjFg6GkST2VhXwUuy', 'USER'),
+('kevin@example.com', '{bcrypt}$2a$12$tHbblSycdUJgFF6/nJ/yG.Fwz7tESgDMek9DRSTnKQhRlyz4Mtr32', 'USER'),
+('emma@example.com', '{bcrypt}$2a$12$o41irHYILPDLVR.RcMk8IeOVpe2QlbhqK8ocbbCOxzGaindMZtHW.', 'USER'),
+('oliver@example.com', '{bcrypt}$2a$12$nEp7ynfqWgYXX4hQTvkOkO.2XiFoIvk5ovBw0ehygF2apBTlLz./m', 'USER'),
+('cassandra@example.com', '{bcrypt}$2a$12$1EUCNLOWgT95K/Wq3LYU.egM6AWt2zl4bJ7QCx7XPJ3uwBJUsl0Ye', 'USER'),
+('gary@example.com', '{bcrypt}$2a$12$J5yrKvd5K0YN6Thy4aI.bes1hzurkc0fjDDlN/smvfqkV5IxZ7JuS', 'USER'),
+('leah@example.com', '{bcrypt}$2a$12$gF45UC2TnJnWZA9Wg3So..sruiYXYXwqfVUecQXfSUcWI1n/JQVY.', 'USER'),
+('pete@example.com', '{bcrypt}$2a$12$jDIBR0Bu6i/rMlMYJ/TiquwjStIH2qweKywiRa3oxV3MyClROh58O', 'USER'),
+('grace@example.com', '{bcrypt}$2a$12$XOAwRzHyJ3qe2NRpFIN56uBKVh/buBHpTUmU0Cc8Vn2n2H0WQJjWW', 'USER'),
+('carlos@example.com', '{bcrypt}$2a$12$iRtrPjgggB42.Q5L0HiskOtzB/38jKN/96nIJe1aXo7rHh..u9MAm', 'USER'),
+('sarah@example.com', '{bcrypt}$2a$12$eQbyf1v2gR10DMZJhVcvLupQxuMk/IFMGur97Nd0ucRTI/.OQK0NG', 'USER'),
+('keith@example.com', '{bcrypt}$2a$12$OHuZ3xXiwavZZqKG28B/s.9GT8cLmkexSxeiajsalYmJcxJeHk4Mq', 'USER'),
+('ella@example.com', '{bcrypt}$2a$12$Ya7ekHzToVdqyeuiozpoJODLto6HABrDNkSQ8Uigz2CgkvC0e/aUy', 'USER'),
+('walter@example.com', '{bcrypt}$2a$12$gErPAHGz.PrcwrTkLkZ2euMD02qqTYR3q7bjw0VAaEMenVQFrsnaC', 'USER');
+
+INSERT INTO superhero (user_id, alias, real_name, date_of_birth, gender, occupation, origin_story)
+VALUES
+(1, 'The Administrator', 'Andreas Admin', '1987-07-22', 'Male', 'Administrator', 'Alex Admin gained superhuman administrative skills after being exposed to a mysterious computer virus.'),
+(2, 'Captain Courageous', 'Chris Courage', '1980-05-15', 'Male', 'Defender of Justice', 'Chris Courage was a regular citizen until a fateful accident imbued him with superhuman courage.'),
+(3, 'Speedster', 'Samantha Swift', '1992-08-21', 'Female', 'Delivery Driver', 'Samantha Swift gained the ability to move at incredible speeds after being struck by lightning.'),
+(4, 'The Kindness Knight', 'Kevin Knight', '1975-02-10', 'Male', 'Social Worker', 'Kevin Knight was inspired to become a hero after witnessing acts of kindness in his community.'),
+(5, 'Doctor Empathy', 'Emma Empath', '1988-11-03', 'Female', 'Psychologist', 'Emma Empath developed the power to sense and understand the emotions of others during a medical experiment.'),
+(6, 'The Wise Owl', 'Oliver Wisdom', '1963-09-28', 'Male', 'Retired Teacher', 'Oliver Wisdom''s wisdom is legendary, and he uses his knowledge to guide and mentor other heroes.'),
+(7, 'Creative Genius', 'Cassandra Creative', '1995-04-17', 'Female', 'Artist', 'Cassandra Creative''s imaginative mind allows her to come up with ingenious solutions to any problem.'),
+(8, 'The Gentle Giant', 'Gary Gentle', '1978-07-09', 'Male', 'Construction Worker', 'Gary Gentle possesses superhuman strength, but he uses it with care and gentleness to help others.'),
+(9, 'Lady Loyalty', 'Leah Loyal', '1986-12-30', 'Female', 'Veterinarian', 'Leah Loyal is known for her unwavering loyalty to her friends and the causes she believes in.'),
+(10, 'The Peacekeeper', 'Pete Peace', '1970-03-25', 'Male', 'Mediator', 'Pete Peace has the ability to calm any situation and find peaceful resolutions to conflicts.'),
+(11, 'The Generous Guardian', 'Grace Generous', '1990-06-12', 'Female', 'Philanthropist', 'Grace Generous uses her wealth and resources to help those in need and make the world a better place.'),
+(12, 'The Courageous Cat', 'Carlos Courage', '1983-10-05', 'Male', 'Firefighter', 'Carlos Courage fearlessly rushes into danger to save lives, inspired by his love for his pet cat.'),
+(13, 'The Swift Swimmer', 'Sarah Swift', '1998-02-18', 'Female', 'Lifeguard', 'Sarah Swift is not only a fast swimmer but also a quick thinker, always ready to dive into action to save others.'),
+(14, 'The Kind-hearted Knight', 'Keith Kindheart', '1972-06-30', 'Male', 'Teacher', 'Keith Kindheart is beloved by his community for his compassionate nature and willingness to help others.'),
+(15, 'The Empathetic Eagle', 'Ella Empathy', '1984-09-12', 'Female', 'Therapist', 'Ella Empathy can feel the pain of others and uses her powers to heal both physically and emotionally.'),
+(16, 'The Wise Wizard', 'Walter Wisdom', '1960-11-20', 'Male', 'Librarian', 'Walter Wisdom''s vast knowledge of ancient texts and magical artifacts makes him a formidable ally in the fight against evil.');
 
 -- Assigning random skills to superheroes
 INSERT INTO skill_profile (superhero_id, skill_id, intensity)

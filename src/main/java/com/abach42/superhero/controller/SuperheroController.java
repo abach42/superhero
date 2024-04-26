@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.abach42.superhero.config.OnCreate;
-import com.abach42.superhero.config.OnUpdate;
-import com.abach42.superhero.config.PathConfig;
+import com.abach42.superhero.config.api.OnCreate;
+import com.abach42.superhero.config.api.OnUpdate;
+import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.config.security.SecuredAdmin;
+import com.abach42.superhero.config.security.SecuredUser;
 import com.abach42.superhero.entity.dto.ErrorDetailedDto;
 import com.abach42.superhero.entity.dto.ErrorDto;
 import com.abach42.superhero.entity.dto.SuperheroDto;
@@ -31,11 +33,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Superhero API")
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
+@SecurityRequirement(name = "Bearer Authentication")
+@SecuredAdmin
 public class SuperheroController {
     private final SuperheroService superheroService;
 
@@ -80,6 +85,7 @@ public class SuperheroController {
             )
         )
     })
+    @SecuredUser
     @GetMapping
     public ResponseEntity<SuperheroListDto> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page)
             throws ApiException {
@@ -108,10 +114,11 @@ public class SuperheroController {
             )
         )
     })
+    @SecuredUser
     @GetMapping("/{id}")
     public ResponseEntity<SuperheroDto> getSuperhero(@PathVariable Long id) throws ApiException {
         return ResponseEntity.ok(superheroService.getSupherheroConverted(id));
-    }
+    } 
 
     @Operation(summary = "Add new superhero")
     @ApiResponses({
@@ -136,6 +143,15 @@ public class SuperheroController {
         @ApiResponse( 
             responseCode = "400",
             description = SuperheroService.SUPERHERO_NOT_CREATED_MSG,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
+        ),
+        @ApiResponse( 
+            responseCode = "403",
+            description = "Access Denied, when false user role",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(
@@ -180,6 +196,15 @@ public class SuperheroController {
                 schema = @Schema(
                     implementation = ErrorDto.class)
             )
+        ),
+        @ApiResponse( 
+            responseCode = "403",
+            description = "Access Denied, when false user role",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
         )
     })
     @PutMapping("/{id}")
@@ -203,6 +228,15 @@ public class SuperheroController {
         @ApiResponse( 
             responseCode = "404", 
             description = SuperheroService.SUPERHERO_NOT_FOUND_MSG,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    implementation = ErrorDto.class)
+            )
+        ),
+        @ApiResponse( 
+            responseCode = "403",
+            description = "Access Denied, when false user role",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(

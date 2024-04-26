@@ -22,12 +22,12 @@ public class DatabaseClearupService {
         this.superheroRepository = superheroRepository;
     }
 
-
     @Scheduled(cron = "${abach42.superhero.eraseRecordsMarkedAsDeletedAt}")
     public void ereaseRecordsMarkedAsDeleted() {
         logger.info("ERASE RECORDS marked as DELETED starts as scheduled");
         Long count = superheroRepository.countByDeletedIsTrue();
         logger.info("{} records found to delete", count);
+
         try {
             superheroRepository.deleteByDeletedIsTrue();
             logger.info("Successfully deleted! ERASE RECORDS terminated.");

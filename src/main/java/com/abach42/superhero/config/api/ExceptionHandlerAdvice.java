@@ -1,10 +1,11 @@
-package com.abach42.superhero.config;
+package com.abach42.superhero.config.api;
 
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +42,13 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(
             new ErrorDto(getStatusCodeNumber(exception.getStatusCode()), getError(exception), getMessage(exception), getPath(request)),         
                 exception.getStatusCode());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorDto> handleAccessDenied(AccessDeniedException exception, ServletWebRequest request) {
+        return new ResponseEntity<ErrorDto>(
+            new ErrorDto(getStatusCodeNumber(HttpStatus.FORBIDDEN), getError(HttpStatus.FORBIDDEN), exception.getMessage(), getPath(request)),
+                HttpStatus.FORBIDDEN);
     }
 
     private int getStatusCodeNumber(HttpStatusCode httpStatus) {

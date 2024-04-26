@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.4</version>
+    <version>3.2.5</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.abach42</groupId>
   <artifactId>superhero</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <name>superhero</name>
   <description>An RESTful API etude.</description>
   <properties>
@@ -29,6 +29,31 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-jose -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-jose</artifactId>
+        <version>6.2.4</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+  </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.shell/spring-shell-starter -->
     <dependency>
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
@@ -85,7 +110,12 @@
         <!-- https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/reference/html/build-tool-plugins-maven-plugin.html -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
+        <configuration>
+          <image>
+            <name>abach42.superhero</name>
+          </image>
+        </configuration>
       </plugin>
       <plugin>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
@@ -93,6 +123,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
         <dependencies>
+          <!-- caution, last update May 14, 2023-->
           <!-- https://mvnrepository.com/artifact/me.fabriciorby/maven-surefire-junit5-tree-reporter -->
           <dependency>
               <groupId>me.fabriciorby</groupId>
@@ -121,9 +152,10 @@
         <version>2.22.2</version>
       </plugin>
       <plugin>
+        <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.10</version>
+        <version>0.8.12</version>
         <executions> 
             <execution>
                 <goals>
