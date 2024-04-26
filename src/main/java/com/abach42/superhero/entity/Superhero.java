@@ -2,8 +2,7 @@ package com.abach42.superhero.entity;
 
 import java.time.LocalDate;
 
-import com.abach42.superhero.config.OnCreate;
-import com.abach42.superhero.config.OnUpdate;
+import com.abach42.superhero.config.api.OnCreate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Access;
@@ -14,7 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -23,7 +21,6 @@ public class Superhero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //TODO make unique, even in database
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
     private String alias;
@@ -41,7 +38,6 @@ public class Superhero {
     @NotNull(groups = OnCreate.class)
     private String gender;
 
-    @Null(groups = OnUpdate.class)
     private String occupation;
 
     @Column(length = 2048)

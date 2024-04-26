@@ -69,7 +69,7 @@ public class SuperheroService {
 
             return SuperheroDto.fromDomain(createdSuperhero);
         } catch (RuntimeException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG);
+            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG + e.getMessage());
         }
     }
 
@@ -98,7 +98,10 @@ public class SuperheroService {
         if (update.occupation() != null) {
             origin.setOccupation(update.occupation());
         }
-
+        if (update.originStory() != null) {
+            origin.setOriginStory(update.originStory());
+        }
+        
         Superhero savedSuperhero = superheroRepository.save(origin);
         return SuperheroDto.fromDomain(savedSuperhero);
     }

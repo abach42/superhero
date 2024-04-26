@@ -1,4 +1,4 @@
-package com.abach42.superhero.config;
+package com.abach42.superhero.config.api;
 
 /*
  * Concatenation of base path for api, to keep other resources in place and 
@@ -10,5 +10,6 @@ public final class PathConfig {
     protected final static String VERSION = "/v1";
     public final static String BASE_URI = ALIAS + VERSION;
 
+    public final static String TOKENS = BASE_URI;
     public final static String SUPERHEROES = BASE_URI + "/superheroes";
 }

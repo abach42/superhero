@@ -1,31 +1,53 @@
 @host = localhost
-# TODO https
-@port = 8888
-@sheme = http
+@port = 8443
+@sheme = https
 @domain = {{sheme}}://{{host}}:{{port}}
+
+### Get token Admin
+# @name login
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic admin@example.com foobar
+
+@token = {{login.response.body.*}}
+
+### Get token User
+# @name login
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic chris@example.com foobar
+
+@token = {{login.response.body.*}}
 
 ### Get all superheroes
 GET {{domain}}/api/v1/superheroes HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all superheroes with foolish page
+GET {{domain}}/api/v1/superheroes?page=666 HTTP/1.1
+Authorization: Bearer {{token}}
 
 ### Get all superheroes with page
-GET {{domain}}/api/v1/superheroes?page=11 HTTP/1.1
+GET {{domain}}/api/v1/superheroes?page=1 HTTP/1.1
+Authorization: Bearer {{token}}
 
 ### Get superhero 404
 GET {{domain}}/api/v1/superheroes/666 HTTP/1.1
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ### Get superhero
 GET {{domain}}/api/v1/superheroes/6 HTTP/1.1
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ### Add new superhero
 POST {{domain}}/api/v1/superheroes HTTP/1.1
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
- 
-  "realName": "Alex Admin ddbbb",
+ "alias": "foo",
+  "realName": "foo Admin ddbbb",
   "dateOfBirth": "1987-07-22",
   "gender": "Male",
   "occupation": "Administrator"
@@ -35,6 +57,7 @@ Content-Type: application/json
 POST {{domain}}/api/v1/superheroes HTTP/1.1
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
  {"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
 
@@ -42,6 +65,7 @@ Content-Type: application/json
 PUT {{domain}}/api/v1/superheroes/1111 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
 
@@ -56,6 +80,7 @@ Content-Type: application/json
 PUT {{domain}}/api/v1/superheroes/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
  "alias": "The Wise Owl",
@@ -67,3 +92,4 @@ Content-Type: application/json
 
 ### Delete superheo (mark as deleted)
 DELETE {{domain}}/api/v1/superheroes/4 HTTP/1.1
+Authorization: Bearer {{token}}

@@ -13,6 +13,7 @@ import com.abach42.superhero.entity.Superhero;
  * Yes, lombock would do...
  */
 public class SuperheroTest {
+    
     @Test
     @DisplayName("Superhero entity getters get and setters set.")
     public void testGettersAndSettersOfSuperheroEntity() {

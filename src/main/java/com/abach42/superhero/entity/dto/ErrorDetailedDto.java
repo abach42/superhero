@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(name = "errorDetail")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorDetailedDto extends ErrorDto {
     private List<ValidationError> errors;
@@ -16,6 +17,7 @@ public class ErrorDetailedDto extends ErrorDto {
         super(status, error, message, path);
     }
 
+    @Schema(name = "validationErrors")
     private static class ValidationError {
         @Schema(title = "field", example = "name")
         private final String field;

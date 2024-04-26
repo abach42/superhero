@@ -43,12 +43,12 @@ databaseChangeLog:
                   name: occupation
                   type: VARCHAR(100)
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: origin_story
                   type: TEXT
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: deleted
                   type: BOOLEAN

@@ -20,6 +20,15 @@ spring:
     liquibase:
         enabled: true
         change-log: classpath:/db/migrations/changelog-master.yaml
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    public-key: classpath:.certs/public.pem
+                    private-key: classpath:.certs/private.pem
+springdoc:
+    swagger-ui:
+        enabled: false
 debug: true
 abach42:
     superhero:

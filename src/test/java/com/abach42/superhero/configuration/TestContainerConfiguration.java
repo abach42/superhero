@@ -1,4 +1,4 @@
-package com.abach42.superhero.integration.configuration;
+package com.abach42.superhero.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;

@@ -6,10 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(name = "error")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonDeserialize(using = ErrorDtoDeserializer.class)
 public class ErrorDto {
-    @Schema(title = "HttpStatus", example = "666", format = "integer")
+    @Schema(title = "status", description = "http status number", example = "666", format = "integer")
     protected final Integer status;
 
     @Schema(title = "message", example = "Impossible status")
@@ -43,6 +44,4 @@ public class ErrorDto {
     public String getPath() {
         return path;
     }
-
-
 }

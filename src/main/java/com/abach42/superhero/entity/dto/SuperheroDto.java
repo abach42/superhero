@@ -2,8 +2,8 @@ package com.abach42.superhero.entity.dto;
 
 import java.time.LocalDate;
 
-import com.abach42.superhero.config.OnCreate;
-import com.abach42.superhero.config.OnUpdate;
+import com.abach42.superhero.config.api.OnCreate;
+import com.abach42.superhero.config.api.OnUpdate;
 import com.abach42.superhero.entity.Superhero;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -12,8 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-@Schema(name = "sperhero")
-public record SuperheroDto(
+@Schema(name = "superhero")
+public record SuperheroDto (
     @Schema(
         title = "superhero id", 
         example = "1", 
@@ -40,7 +40,7 @@ public record SuperheroDto(
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    String realName, //TODO admin only
+    String realName,
 
     @Schema(
         title = "birth date", 
@@ -62,14 +62,18 @@ public record SuperheroDto(
     )
     @NotNull(groups = OnCreate.class)
     String gender,
+
     @Schema(
         title = "occupation", 
         example = "Insurance employee", 
         description = "Current apparent profession that the public is supposed to believe is being practiced."
     )
-    
-    String occupation //TODO admin only
-    //TODO add origin story in case of admin role
+    String occupation,
+    @Schema(
+        title = "origin story", 
+        example = "Story of superhero."
+    )
+    String originStory
     ) {
         public static SuperheroDto fromDomain(Superhero superhero) {
             return new SuperheroDto(
@@ -78,7 +82,8 @@ public record SuperheroDto(
                     superhero.getRealName(),
                     superhero.getDateOfBirth(),
                     superhero.getGender(),
-                    superhero.getOccupation());
+                    superhero.getOccupation(),
+                    superhero.getOriginStory());
         }
 
         public static Superhero toDomain(SuperheroDto superheroDto) {
@@ -88,6 +93,6 @@ public record SuperheroDto(
                     superheroDto.dateOfBirth(),
                     superheroDto.gender(),
                     superheroDto.occupation(),
-                    null);
+                    superheroDto.originStory());
         }
-    }
+}
