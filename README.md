@@ -1,16 +1,22 @@
 # Superhero Spring Boot RESTful API
-An RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code. 
+A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code. 
 
 You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. You can run unit, functional and integrative tests using oci container solution ("Testconainers" feature of spring boot). 
 
 
 ![Swagger UI](src/main/resources/static/img/swg.png)
 
-## Start project in your OCI of docker environment 🐋
+## Start project in your docker environment 🐋
 
 👆 You will need docker/ docker-compose installed on your os. 
 
-🐋 tbd.
+`.bin/start.sh`
+
+This will make an image of project, start a docker network, initialize a postgre database and provide localhost, TLS at port 8443.
+
+* Use some rest client: `GET https://localhost:8443/api/v1/superheros/ HTTP/1.1` (Please use JWT).
+
+* See openapi definition at https://localhost:8443/swagger-ui/index.html . (Please write `index.html`, there is no redirect)
 
 ## Using JWT <img src="./src/main/resources/static/img/jwt_logo.svg" width="20">
 
@@ -26,21 +32,24 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
         GET https://localhost:8443/api/v1/superheroes HTTP/1.1
         Authorization: Bearer {{your-jwt-token}}
 
+* Administrator role: 
+  * user: admin@example.com
+  * password: foobar
+* User role: 
+  * user: chris@example.com
+  * password: foobar
+
 ## Developing (using hot swapping of code) 🔧
 
 1. You will need docker/ docker-compose installed on your os. 
 
 2. Start application: `.bin/mvn-spring-boot-run.sh`
-- Postgresql database will be started and fully initialized in a docker container.
+- Postgres database will be started and fully initialized in a docker container.
 - spring-boot will be started.
 
-3. Use some rest client: `GET https://localhost:8443/api/v1/superheros/ HTTP/1.1` (Please use JWT).
+3. Run test by `mvn clean test`.
 
-4. See openapi definition at https://localhost:8443/swagger-ui/index.html . (Please write `index.html`, there is no redirect)
-
-5. Run test by `mvn clean test`.
-
-6. Open database client on `psql postgresql://db:db@localhost:15432/db`.
+4. Open database client on `psql postgresql://db:db@localhost:15432/db`.
 
 ### Stop and Restart for Development ⚙️
 

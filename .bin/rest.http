@@ -21,7 +21,7 @@ Authorization: Basic chris@example.com foobar
 GET {{domain}}/api/v1/superheroes HTTP/1.1
 Authorization: Bearer {{token}}
 
-### Get all superheroes with foolish page
+### Get all superheroes with foolish page, will fail
 GET {{domain}}/api/v1/superheroes?page=666 HTTP/1.1
 Authorization: Bearer {{token}}
 
@@ -59,9 +59,9 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
- {"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
+{"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
 
-### Update superhero - should be ok
+### Update superhero - will be ok
 PUT {{domain}}/api/v1/superheroes/1111 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -74,7 +74,6 @@ Authorization: Bearer {{token}}
   "gender": "Male",
   "occupation": "Administrator"
 }
-
 
 ### Update superhero
 PUT {{domain}}/api/v1/superheroes/1 HTTP/1.1
