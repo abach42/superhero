@@ -1,5 +1,5 @@
 # Superhero Spring Boot RESTful API
-A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code. 
+A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code - to store contacts of superheroes.
 
 You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. You can run unit, functional and integrative tests using oci container solution ("Testconainers" feature of spring boot). 
 
@@ -14,7 +14,7 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 This will make an image of project, start a docker network, initialize a postgres database and provide localhost, TLS at port 8443.
 
-* Use some rest client: `GET https://localhost:8443/api/v1/superheros/ HTTP/1.1` (Please use JWT).
+* Use some rest client: `GET https://localhost:8443/api/v1/superheroes/ HTTP/1.1` (Please use JWT).
 
 * See openapi definition at https://localhost:8443/swagger-ui/index.html . (Please write `index.html`, there is no redirect)
 
@@ -53,8 +53,8 @@ This will make an image of project, start a docker network, initialize a postgre
 
 ### Stop and Restart for Development ⚙️
 
-1. You can stop database container by `.bin/stop-database-container.sh`.
-2. You can delete database container and loose all database changes by `.bin/delete-database-container.sh`, default schema and data will be restored next start.
+1. You can stop database container by `./.bin/stop-database-container.sh`.
+2. You can delete database container and loose all database changes by `./.bin/delete-database-container.sh`, default schema and data will be restored next start.
 
 ## Cleaning records 🧹
 
@@ -89,6 +89,6 @@ Manually:
 
 ## Plans for 0.8.0 ⏳
 
-* use other entities to complete object network
+* use other entities to complete object network and to get more endpoints
 * optimize jwt claim to better store user roles
 * refresh token
