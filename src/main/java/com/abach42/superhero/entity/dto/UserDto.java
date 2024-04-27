@@ -42,6 +42,7 @@ public record UserDto(
                 RoleEnum.getFromString(superheroUser.getRole()));
     }
 
+    //TODO: test admin, user unit
     public static enum RoleEnum {
         ADMIN(new String[]{"ADMIN", "USER"}),
         USER(new String[]{"USER"});

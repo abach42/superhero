@@ -71,6 +71,7 @@ Manually:
 * Database postgres + docker
 * JWT auth, roles
 * Tests (using testcontainers)
+* Pagination on listing
 * Soft-delete and scheduling to erase records
 
         👆 DELETE endpoint only marks record as deleted, use cleaning records to really delete records.
