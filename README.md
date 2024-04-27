@@ -65,7 +65,7 @@ Manually:
 - enter container or development console, wait for `shell:>`.
 - type `manually-erase-marked-as-deleted` to delete records, which are marked as `deleted` by API DELETE endpoint request.
 
-## Features 0.2.0 ✨
+## Features 0.7.0 ✨
 
 * Soft delete
 * Database postgres + docker
@@ -87,7 +87,7 @@ Manually:
 ##### Authentification
 * GET /api/v1/login
 
-## Plans for 0.3.0 ⏳
+## Plans for 0.8.0 ⏳
 
 * use other entities to complete object network
 * optimize jwt claim to better store user roles
