@@ -3,7 +3,7 @@ server:
     port: 8443
     ssl:
         key-store: classpath:.certs/abach42.superhero.p12
-        key-store-password: D00FDOOF
+        key-store-password: ${STORE_PASS}
     error:
         include-message: always
         include-binding-errors: always

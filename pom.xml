@@ -136,7 +136,7 @@
             <parallel>all</parallel>
             <reportFormat>plain</reportFormat>
             <consoleOutputReporter>
-              <disable>true</disable>
+              <disable>false</disable>
             </consoleOutputReporter>
             <!-- https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html#external-extensions-for-the-plugin -->
             <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">

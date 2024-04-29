@@ -36,6 +36,7 @@ public class SuperheroUser {
         required = true
     )
     @NotNull(groups = OnCreate.class)
+    //TODO: get spring own password hashing
     private String password;
 
     @Schema(
@@ -48,6 +49,15 @@ public class SuperheroUser {
     private String role;
     
     private Boolean deleted = false;
+
+    protected SuperheroUser() {
+    }
+
+    public SuperheroUser(String email, String password, String role) {
+        setEmail(email);
+        setPassword(password);
+        setRole(role);
+    }
 
     public long getId() {
         return id;

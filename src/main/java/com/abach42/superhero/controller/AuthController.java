@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping(path = PathConfig.TOKENS)
-//@SecurityRequirement(name = "Bearer Authentication")
 public class AuthController {
     private final TokenService tokenService;
 

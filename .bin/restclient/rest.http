@@ -17,6 +17,14 @@ Authorization: Basic chris@example.com foobar
 
 @token = {{login.response.body.*}}
 
+
+### Get token Admin
+# @name login
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic f@bar.org foobar
+
+@token = {{login.response.body.*}}
+
 ### Get all superheroes
 GET {{domain}}/api/v1/superheroes HTTP/1.1
 Authorization: Bearer {{token}}
@@ -46,11 +54,17 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
- "alias": "foo",
-  "realName": "foo Admin ddbbb",
-  "dateOfBirth": "1987-07-22",
+  "alias": "Mr. Incredible",
+  "realName": "Bob Parr",
+  "dateOfBirth": "1970-01-01",
   "gender": "Male",
-  "occupation": "Administrator"
+  "occupation": "Insurance employee",
+  "originStory": "Story of superhero.",
+  "user": {
+    "email": "f@bar.org",
+    "password": "foobar",
+    "role": "USER"
+  }
 }
 
 ### Add new superhero

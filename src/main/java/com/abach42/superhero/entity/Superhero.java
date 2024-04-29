@@ -4,14 +4,17 @@ import java.time.LocalDate;
 
 import com.abach42.superhero.config.api.OnCreate;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -45,6 +48,10 @@ public class Superhero {
 
     private Boolean deleted = false;
 
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    private SuperheroUser user; 
+
     protected Superhero() {
     }
 
@@ -54,13 +61,15 @@ public class Superhero {
             LocalDate dateOfBirth,
             String gender,
             String occupation,
-            String originStory) {
+            String originStory,
+            SuperheroUser user) {
         setAlias(alias);
         setRealName(realName);
         setDateOfBirth(dateOfBirth);
         setGender(gender);
         setOccupation(occupation);
         setOriginStory(originStory);
+        setUser(user);
     }
 
     public long getId() {
@@ -121,5 +130,14 @@ public class Superhero {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    
+    public SuperheroUser getUser() {
+        return user;
+    }
+
+    public void setUser(SuperheroUser user) {
+        this.user = user;
     }
 }

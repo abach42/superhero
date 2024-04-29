@@ -73,7 +73,9 @@ public record SuperheroDto (
         title = "origin story", 
         example = "Story of superhero."
     )
-    String originStory
+    String originStory,
+
+    UserDto user
     ) {
         public static SuperheroDto fromDomain(Superhero superhero) {
             return new SuperheroDto(
@@ -83,7 +85,8 @@ public record SuperheroDto (
                     superhero.getDateOfBirth(),
                     superhero.getGender(),
                     superhero.getOccupation(),
-                    superhero.getOriginStory());
+                    superhero.getOriginStory(),
+                    UserDto.fromDomain(superhero.getUser()));
         }
 
         public static Superhero toDomain(SuperheroDto superheroDto) {
@@ -93,6 +96,7 @@ public record SuperheroDto (
                     superheroDto.dateOfBirth(),
                     superheroDto.gender(),
                     superheroDto.occupation(),
-                    superheroDto.originStory());
+                    superheroDto.originStory(),
+                    UserDto.toDomain(superheroDto.user()));
         }
 }

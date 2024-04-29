@@ -28,8 +28,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 import com.abach42.superhero.entity.Superhero;
+import com.abach42.superhero.entity.SuperheroUser;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
+import com.abach42.superhero.entity.dto.UserDto;
 import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.repository.SuperheroRepository;
 import com.abach42.superhero.service.SuperheroService;
@@ -47,7 +49,7 @@ public class SuperheroServiceTest {
     public void setUp() {
         subject = new SuperheroService(superheroRepository, 10);
         superhero = new Superhero("foo", "bar", LocalDate.of(1970, 1, 1),
-                "Male", "foo", "foo");
+                "Male", "foo", "foo", new SuperheroUser("foo", "bar", "USER"));
     }
 
     @Test
@@ -132,21 +134,23 @@ public class SuperheroServiceTest {
     }
 
     private static Stream<Arguments> updateFieldByField() {
+        SuperheroUser user = new SuperheroUser("foo", "bar", "USER");
+        UserDto userDto = UserDto.fromDomain(user);
         return Stream.of(
-            Arguments.of(new SuperheroDto(1L, "updated", null, null, null, null, null),
-                         new Superhero("updated", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo")),
-            Arguments.of(new SuperheroDto(1L, null, "updated", null, null, null, null),
-                         new Superhero("foo", "updated", LocalDate.of(1970, 1, 1), "Male", "foo", "foo")),
-            Arguments.of(new SuperheroDto(1L, null, null, LocalDate.of(1999, 1, 1), null, null, null),
-                         new Superhero("foo", "bar", LocalDate.of(1999, 1, 1), "Male", "foo", "foo")),
-            Arguments.of(new SuperheroDto(1L, null, null, null, "updated", null, null),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "updated", "foo", "foo")),
-            Arguments.of(new SuperheroDto(1L, null, null, null, null, "updated", null),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "updated", "foo")),
-            Arguments.of(new SuperheroDto(1L, null, null, null, null, null, "updated"),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "updated")),
-            Arguments.of(new SuperheroDto(1L, null, null, null, null, null, null),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo"))
+            Arguments.of(new SuperheroDto(1L, "updated", null, null, null, null, null, userDto),
+                         new Superhero("updated", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user)),
+            Arguments.of(new SuperheroDto(1L, null, "updated", null, null, null, null, userDto),
+                         new Superhero("foo", "updated", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user)),
+            Arguments.of(new SuperheroDto(1L, null, null, LocalDate.of(1999, 1, 1), null, null, null, userDto),
+                         new Superhero("foo", "bar", LocalDate.of(1999, 1, 1), "Male", "foo", "foo", user)),
+            Arguments.of(new SuperheroDto(1L, null, null, null, "updated", null, null, userDto),
+                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "updated", "foo", "foo", user)),
+            Arguments.of(new SuperheroDto(1L, null, null, null, null, "updated", null, userDto),
+                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "updated", "foo", user)),
+            Arguments.of(new SuperheroDto(1L, null, null, null, null, null, "updated", userDto),
+                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "updated", user)),
+            Arguments.of(new SuperheroDto(1L, null, null, null, null, null, null, userDto),
+                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user))
         );
     }
 
@@ -172,7 +176,7 @@ public class SuperheroServiceTest {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
         
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.updateSuperhero(1L, new SuperheroDto(1L, null, null, null, null, null, null)));
+                () -> subject.updateSuperhero(1L, new SuperheroDto(1L, null, null, null, null, null, null, null)));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }

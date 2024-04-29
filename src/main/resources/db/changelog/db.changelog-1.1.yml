@@ -1,59 +1,74 @@
 databaseChangeLog:
-    - changeSet:
-        id: 1-superhero
-        author: me
-        changes:
-            - insert:
-                tableName: superhero
-                columns:
-                    - column:
-                        name: id
-                        value: 1
-                    - column:
-                        name: alias
-                        value: foo
-                    - column:
-                        name: real_name
-                        value: bar
-                    - column:
-                        name: date_of_birth
-                        value: 1970-01-01
-                    - column:
-                        name: gender
-                        value: Male
-                    - column:
-                        name: occupation
-                        value: foo
-                    - column:
-                        name: origin_story
-                        value: foo
-                    - column:
-                        name: deleted
-                        value: false
-            - insert:
-                tableName: superhero
-                columns:
-                    - column:
-                        name: id
-                        value: 2
-                    - column:
-                        name: alias
-                        value: foobar
-                    - column:
-                        name: real_name
-                        value: bar
-                    - column:
-                        name: date_of_birth
-                        value: 1970-01-01
-                    - column:
-                        name: gender
-                        value: Female
-                    - column:
-                        name: occupation
-                        value: foo
-                    - column:
-                        name: origin_story
-                        value: foo
-                    - column:
-                        name: deleted
-                        value: true
+  - changeSet:
+      id: 1-superhero
+      author: me
+      preConditions:
+        - onFail: HALT
+        - not:
+            - and: 
+              - tableExists:
+                  tableName: superhero
+              - tableExists:
+                  tableName: superhero_user
+      changes:
+        - createTable:
+            tableName: superhero
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_superhero_id
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    referencedTableName: superhero_user
+                    referencedColumnNames: id
+                    foreignKeyName: pk_superhero_user_id
+                    onDelete: CASCADE
+                    onUpdate: CASCADE
+              - column:
+                  name: alias
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: real_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_of_birth
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: occupation
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: origin_story
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        - addDefaultValue:
+            columnDataType: boolean
+            columnName: deleted
+            defaultValueBoolean: false
+            tableName: superhero
+              
+                                      

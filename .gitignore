@@ -34,3 +34,7 @@ build/
 ### VS Code ###
 .vscode/
 *.log
+
+# keys
+*.p12
+*.pem

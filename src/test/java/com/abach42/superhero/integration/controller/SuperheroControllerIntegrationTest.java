@@ -51,6 +51,7 @@ import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.dto.ErrorDto;
 import com.abach42.superhero.entity.dto.SuperheroDto;
+import com.abach42.superhero.entity.dto.UserDto;
 import com.abach42.superhero.repository.SuperheroRepository;
 import com.abach42.superhero.service.SuperheroService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -292,7 +293,8 @@ public class SuperheroControllerIntegrationTest {
             mockMvc.perform(
                         request(HttpMethod.POST, PATH)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt().authorities(authorities))
-                                .content(objectMapper.writeValueAsString(new SuperheroDto(null, "foo", "foo", LocalDate.of(1970,1,1), "foo", "foo", "foo")))
+                                .content(objectMapper.writeValueAsString(new SuperheroDto(null, "foo", "foo", LocalDate.of(1970,1,1), "foo",
+                                                 "foo", "foo", new UserDto("foo", "bar", "USER"))))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())

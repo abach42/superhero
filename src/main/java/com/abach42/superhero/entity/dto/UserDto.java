@@ -2,8 +2,10 @@ package com.abach42.superhero.entity.dto;
 
 import com.abach42.superhero.config.api.OnCreate;
 import com.abach42.superhero.entity.SuperheroUser;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import jakarta.validation.constraints.NotNull;
 
 @Schema(name = "user")
@@ -21,8 +23,10 @@ public record UserDto(
         title = "password", 
         example = "*****", 
         description = "Secret password to login.", 
-        required = true
+        required = true,
+        accessMode = AccessMode.WRITE_ONLY
     )
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull(groups = OnCreate.class)
     String password,
 
@@ -33,7 +37,7 @@ public record UserDto(
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    String[] role
+    String role
 ) {
     public static UserDto fromDomain(SuperheroUser superheroUser) {
         return new UserDto(
@@ -42,25 +46,32 @@ public record UserDto(
                 RoleEnum.getFromString(superheroUser.getRole()));
     }
 
-    //TODO: test admin, user unit
+    public static SuperheroUser toDomain(UserDto userDto) {
+        return new SuperheroUser(
+            userDto.email(),
+            userDto.password(),
+            userDto.role()
+        );
+    }
+
     public static enum RoleEnum {
-        ADMIN(new String[]{"ADMIN", "USER"}),
-        USER(new String[]{"USER"});
+        ADMIN("ADMIN"),
+        USER("USER");
 
-        private final String[] roles;
+        private final String role;
 
-        RoleEnum(String[] roles) {
-            this.roles = roles;
+        RoleEnum(String role) {
+            this.role = role;
         }
 
-        public String[] getRoles() {
-            return roles;
+        public String getRole() {
+            return role;
         }
 
-        public static String[] getFromString(String role) {
+        public static String getFromString(String role) {
             for (RoleEnum userRole : RoleEnum.values()) {
                 if (userRole.name().equalsIgnoreCase(role)) {
-                    return userRole.getRoles();
+                    return userRole.getRole();
                 }
             }
             throw new IllegalArgumentException("No matching role for " + role);

@@ -4,18 +4,18 @@
 ./.bin/authorization/generate-tls-key.sh
 ./.bin/authorization/generate-auth-keys.sh
 
-# starting application, code changes would be ignored
-# 1. building image of actual code state
-# 2. staring oci network database and java
-
 echo "--------------------------------------------------"
-echo " 🖼️ Build docker image of Spring Boot application"
+echo " 🥫 Start Database"
 echo "--------------------------------------------------"
 
-mvn -DskipTests spring-boot:build-image
+# starts just database container and then application by maven to be able to code hotswap
+export $(cat .env | xargs)
+cd ./src/main/resources/db/oci/
+docker-compose up -d
 
 echo "--------------------------------------------------"
-echo " 🐳 Start docker network"
+echo " 🌱 Start Spring Boot application"
 echo "--------------------------------------------------"
 
-docker-compose up
+cd -
+mvn clean spring-boot:run
