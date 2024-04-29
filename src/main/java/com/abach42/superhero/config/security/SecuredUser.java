@@ -14,7 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@Secured({SecuredUser.ROLE_USER})
+@Secured({SecuredUser.ROLE_USER, SecuredAdmin.ROLE_ADMIN})
 public @interface SecuredUser{
     public static final String ROLE_USER = "SCOPE_ROLE_USER";
 }

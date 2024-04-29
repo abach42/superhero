@@ -1,0 +1,48 @@
+databaseChangeLog:
+    - changeSet:
+        id: 1-superhero_user_data
+        author: me
+        preConditions:
+            - onFail: HALT
+            - or:
+                tableExists:
+                    tableName: superhero_user
+        changes:
+            - insert:
+                tableName: superhero_user
+                columns:
+                    - column:
+                        name: id
+                        value: 1
+                    - column:
+                        name: email
+                        value: foo@example.com
+                    - column:
+                        name: password
+                        # foobar
+                        value: '{bcrypt}$2a$12$anOoGoXF50pcBQMlUSDA..s7mJjQakVJ3dGXkQm3iRAiigRZWvts6'
+                    - column:
+                        name: role
+                        value: ADMIN
+                    - column:
+                        name: deleted
+                        value: false
+            - insert:
+                tableName: superhero_user
+                columns:
+                    - column:
+                        name: id
+                        value: 2
+                    - column:
+                        name: email
+                        value: bar@example.com
+                    - column:
+                        name: password
+                        # foobar
+                        value: '{bcrypt}$2a$12$4cAnXB4ziicHOuRiV4XVQOhCNr3w4N95Q07d3d1SNovRmLFfcPchS'
+                    - column:
+                        name: role
+                        value: USER
+                    - column:
+                        name: deleted
+                        value: true

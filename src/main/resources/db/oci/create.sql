@@ -4,7 +4,7 @@ CREATE TABLE superhero_user (
     id SERIAL PRIMARY KEY,
     email VARCHAR(64) UNIQUE NOT NULL,
     password VARCHAR(128) NOT NULL,
-    role VARCHAR(10),
+    role VARCHAR(10) DEFAULT 'USER',
     deleted BOOLEAN DEFAULT false
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE superhero (
     occupation VARCHAR(100),
     origin_story TEXT,
     deleted BOOLEAN DEFAULT false,
-    CONSTRAINT superhero_user FOREIGN KEY (user_id) REFERENCES superhero_user(id)
+    CONSTRAINT fk_superhero_user FOREIGN KEY (user_id) REFERENCES superhero_user(id)
 );
 
 CREATE TABLE skill (

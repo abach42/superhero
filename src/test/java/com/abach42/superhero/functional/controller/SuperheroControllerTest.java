@@ -49,6 +49,7 @@ import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
+import com.abach42.superhero.entity.SuperheroUser;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.service.SuperheroService;
@@ -165,7 +166,7 @@ public class SuperheroControllerTest {
     @DisplayName("POST " + PATH + " returns 422 on missing field in payload")
     @Validated(OnCreate.class)
     public void testAddSuperheroMissingField() throws Exception {
-        SuperheroDto failedSuperheroDto = new SuperheroDto(1L, null, null, null, null, null, null);
+        SuperheroDto failedSuperheroDto = new SuperheroDto(1L, null, null, null, null, null, null, null);
 
         given(superheroService.addSuperhero(failedSuperheroDto)).willReturn(failedSuperheroDto); 
         mockMvc.perform(
@@ -185,7 +186,8 @@ public class SuperheroControllerTest {
         superhero.setRealName("new");
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
 
-        Superhero inputSuperhero = new Superhero(null, "new", LocalDate.of(1917, 1, 1), "Male", "foo", "foo");
+        Superhero inputSuperhero = new Superhero(null, "new", LocalDate.of(1917, 1, 1), 
+                "Male", "foo", "foo", new SuperheroUser("foo", "bar", "USER") );
         SuperheroDto input = SuperheroDto.fromDomain(inputSuperhero);
 
         given(superheroService.updateSuperhero(anyLong(), any(SuperheroDto.class))).willReturn(expected);

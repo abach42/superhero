@@ -37,7 +37,7 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Suphero DTO validates not null constraints")
     public void testValidationOnCreateNotNull() {
-        SuperheroDto fialingSuperheroDto = new SuperheroDto(null, null, null, null, null, null, null);
+        SuperheroDto fialingSuperheroDto = new SuperheroDto(null, null, null, null, null, null, null, null);
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
@@ -49,7 +49,7 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Suphero DTO validation allows null")
     public void testValidationOnUpdateNull() {
-        SuperheroDto fialingSuperheroDto = new SuperheroDto(null, null, null, null, null, null, null);
+        SuperheroDto fialingSuperheroDto = new SuperheroDto(null, null, null, null, null, null, null, null);
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
