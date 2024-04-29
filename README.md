@@ -60,15 +60,15 @@ This will generate keys, make an image of project, start a docker network, initi
 
 ## Developing (using hot swapping of code) 🔧
 
-1. You will need docker/ docker-compose installed on your os. 
+1. You will need docker/ docker-compose installed on your os and Java 21.0.2
 
 2. Start application: `./.bin/dev/mvn-spring-boot-run.sh`
 - Postgres database will be started and fully initialized in a docker container.
 - spring-boot will be started.
 
-3. Run test by `mvn clean test`.
+1. Run test by `mvn clean test`.
 
-4. Open database client on `psql postgresql://db:db@localhost:15432/db`.
+2. Open database client on `psql postgresql://db:db@localhost:15432/db`.
 
 ### Stop and Restart for Development ⚙️
 
