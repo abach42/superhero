@@ -10,7 +10,7 @@ CREATE TABLE superhero_user (
 
 CREATE TABLE superhero (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES superhero_user(id),
+    user_id INT NOT NULL REFERENCES superhero_user(id) ON DELETE CASCADE,
     alias VARCHAR(100),
     real_name VARCHAR(100),
     date_of_birth DATE,

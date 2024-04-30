@@ -29,7 +29,7 @@ databaseChangeLog:
                     referencedColumnNames: id
                     foreignKeyName: pk_superhero_user_id
                     onDelete: CASCADE
-                    onUpdate: CASCADE
+                    nullable: false
               - column:
                   name: alias
                   type: VARCHAR(100)

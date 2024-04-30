@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.SuperheroUser;
 
 /*
  * Yes, lombock would do...
@@ -18,23 +18,14 @@ public class SuperheroTest {
     @Test
     @DisplayName("Superhero entity getters get and setters set.")
     public void testGettersAndSettersOfSuperheroEntity() {
-        SuperheroUser user = new SuperheroUser("foo", "bar", "USER");
+        Superhero superhero = TestDataConfiguration.getSuperheroStub();
 
-        Superhero superhero = new Superhero(
-                "Batman",
-                "Bruce Wayne",
-                LocalDate.of(1939, 5, 1),
-                "Male",
-                "Crimefighter",
-                "After witnessing the murder of his parents...", 
-                user);
-
-        assertEquals("Batman", superhero.getAlias());
-        assertEquals("Bruce Wayne", superhero.getRealName());
-        assertEquals(LocalDate.of(1939, 5, 1), superhero.getDateOfBirth());
+        assertEquals("foo", superhero.getAlias());
+        assertEquals("bar", superhero.getRealName());
+        assertEquals(LocalDate.of(1970, 1, 1), superhero.getDateOfBirth());
         assertEquals("Male", superhero.getGender());
-        assertEquals("Crimefighter", superhero.getOccupation());
-        assertEquals("After witnessing the murder of his parents...", superhero.getOriginStory());
+        assertEquals("foo", superhero.getOccupation());
+        assertEquals("foo", superhero.getOriginStory());
 
         superhero.setAlias("Superman");
         superhero.setRealName("Clark Kent");

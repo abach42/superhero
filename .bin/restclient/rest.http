@@ -21,7 +21,7 @@ Authorization: Basic chris@example.com foobar
 ### Get token Admin
 # @name login
 GET {{domain}}/api/v1/login HTTP/1.1
-Authorization: Basic f@bar.org foobar
+Authorization: Basic foo@bar.org foobar
 
 @token = {{login.response.body.*}}
 
@@ -61,7 +61,7 @@ Authorization: Bearer {{token}}
   "occupation": "Insurance employee",
   "originStory": "Story of superhero.",
   "user": {
-    "email": "f@bar.org",
+    "email": "foo@bar.org",
     "password": "foobar",
     "role": "USER"
   }

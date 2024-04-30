@@ -14,10 +14,7 @@ databaseChangeLog:
             - insert:
                 tableName: superhero
                 columns:
-                    - column:
-                        name: id
-                        value: 1
-                    - column:
+                    - column: 
                         name: user_id
                         value: 1
                     - column:
@@ -44,10 +41,7 @@ databaseChangeLog:
             - insert:
                 tableName: superhero
                 columns:
-                    - column:
-                        name: id
-                        value: 2
-                    - column:
+                    - column: 
                         name: user_id
                         value: 2
                     - column:
