@@ -3,10 +3,12 @@ package com.abach42.superhero.service;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.abach42.superhero.entity.Superhero;
@@ -23,13 +25,16 @@ public class SuperheroService {
     public static final String MAX_PAGE_EXEEDED_MSG = "The total page number has been exceeded.";
     public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
     public static final String SUPERHERO_NOT_CREATED_MSG = "Superhero could not be written.";
+    public static final String SUPERHERO_NOT_CREATED_MSG_CONSTRAINT = "Superhero could not be written, because email already exists.";
 
     private final SuperheroRepository superheroRepository;
     private final Integer defaultPageSize;
+    private final PasswordEncoder passwordEncoder;
 
-    public SuperheroService(SuperheroRepository superheroRepository, Integer defaultPageSize) {
+    public SuperheroService(SuperheroRepository superheroRepository, Integer defaultPageSize, PasswordEncoder passwordEncoder) {
         this.superheroRepository = superheroRepository;
         this.defaultPageSize = defaultPageSize;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) throws ApiException {
@@ -65,12 +70,20 @@ public class SuperheroService {
             Objects.requireNonNull(superheroDto);
 
             Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
+            newSuperhero.getUser().setPassword(encodePassword(newSuperhero));
+
             Superhero createdSuperhero = superheroRepository.save(newSuperhero);
 
             return SuperheroDto.fromDomain(createdSuperhero);
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG_CONSTRAINT);
         } catch (RuntimeException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG + e.getMessage());
+            throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG);
         }
+    }
+
+    private String encodePassword(Superhero newSuperhero) {
+        return passwordEncoder.encode(newSuperhero.getUser().getPassword());
     }
 
     /*

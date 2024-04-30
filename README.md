@@ -27,7 +27,7 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 ## Start project in your docker environment 🐋
 
-👆 You will need docker/ docker-compose installed on your os. 
+👆 You will need docker/ docker-compose installed on your os, and no Java.
 
 `.bin/start.sh`
 

@@ -17,8 +17,8 @@ public class SuperheroListDtoTest {
 
     @Test
     public void testFromPage() {
-        SuperheroDto superhero1 = SuperheroDto.fromDomain(TestDataConfiguration.DUMMY_SUPERHERO);
-        SuperheroDto superhero2 = SuperheroDto.fromDomain(TestDataConfiguration.DUMMY_SUPERHERO);
+        SuperheroDto superhero1 = SuperheroDto.fromDomain(TestDataConfiguration.getSuperheroStub());
+        SuperheroDto superhero2 = SuperheroDto.fromDomain(TestDataConfiguration.getSuperheroStub());
         
         List<SuperheroDto> superheroDtos = List.of(superhero1, superhero2);
         

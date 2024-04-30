@@ -5,7 +5,10 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,13 +23,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.SuperheroUser;
 import com.abach42.superhero.entity.dto.SuperheroDto;
@@ -41,15 +47,17 @@ public class SuperheroServiceTest {
     @Mock
     private SuperheroRepository superheroRepository;
 
+    @Spy
+    private PasswordEncoder passwordEncoder;
+
     private SuperheroService subject;
 
-    private  Superhero superhero;
+    private Superhero superhero;
     
     @BeforeEach
     public void setUp() {
-        subject = new SuperheroService(superheroRepository, 10);
-        superhero = new Superhero("foo", "bar", LocalDate.of(1970, 1, 1),
-                "Male", "foo", "foo", new SuperheroUser("foo", "bar", "USER"));
+        subject = new SuperheroService(superheroRepository, 10, passwordEncoder);
+        superhero = TestDataConfiguration.getSuperheroStubWithPassword();
     }
 
     @Test
@@ -116,12 +124,15 @@ public class SuperheroServiceTest {
     @Test
     @DisplayName("Add superhero returns Dto")
     void testAddSuperheroReturnsDto() {
+        given(passwordEncoder.encode(anyString())).willReturn("bar");
+
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
         given(superheroRepository.save(any(Superhero.class))).willReturn(superhero);
 
         SuperheroDto actual = subject.addSuperhero(expected);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        verify(passwordEncoder, times(1)).encode(anyString());
     }
 
     @Test
@@ -131,6 +142,22 @@ public class SuperheroServiceTest {
                 () -> subject.addSuperhero(null));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_CREATED_MSG);
+    }
+
+    @ParameterizedTest
+    @MethodSource("updateFieldByField")
+    @DisplayName("Update superhero field by field")
+    void testUpdateSuperheroUpdates(SuperheroDto givenUpdate, Superhero expected) {
+        given(superheroRepository.findById(anyLong())).willReturn(Optional.of(superhero));
+        given(superheroRepository.save(any(Superhero.class))).willReturn(expected);
+
+        SuperheroDto updatedSuperhero = subject.updateSuperhero(1L, givenUpdate);
+
+        assertThat(expected.getAlias()).isEqualTo(updatedSuperhero.alias());
+        assertThat(expected.getRealName()).isEqualTo(updatedSuperhero.realName());
+        assertThat(expected.getDateOfBirth()).isEqualTo(updatedSuperhero.dateOfBirth());
+        assertThat(expected.getGender()).isEqualTo(updatedSuperhero.gender());
+        assertThat(expected.getOccupation()).isEqualTo(updatedSuperhero.occupation());
     }
 
     private static Stream<Arguments> updateFieldByField() {
@@ -152,22 +179,6 @@ public class SuperheroServiceTest {
             Arguments.of(new SuperheroDto(1L, null, null, null, null, null, null, userDto),
                          new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user))
         );
-    }
-
-    @ParameterizedTest
-    @MethodSource("updateFieldByField")
-    @DisplayName("Update superhero field by field")
-    void testUpdateSuperheroUpdates(SuperheroDto givenUpdate, Superhero expected) {
-        given(superheroRepository.findById(anyLong())).willReturn(Optional.of(superhero));
-        given(superheroRepository.save(any(Superhero.class))).willReturn(expected);
-
-        SuperheroDto updatedSuperhero = subject.updateSuperhero(1L, givenUpdate);
-
-        assertThat(expected.getAlias()).isEqualTo(updatedSuperhero.alias());
-        assertThat(expected.getRealName()).isEqualTo(updatedSuperhero.realName());
-        assertThat(expected.getDateOfBirth()).isEqualTo(updatedSuperhero.dateOfBirth());
-        assertThat(expected.getGender()).isEqualTo(updatedSuperhero.gender());
-        assertThat(expected.getOccupation()).isEqualTo(updatedSuperhero.occupation());
     }
 
     @Test

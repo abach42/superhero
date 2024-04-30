@@ -36,7 +36,6 @@ public class SuperheroUser {
         required = true
     )
     @NotNull(groups = OnCreate.class)
-    //TODO: get spring own password hashing
     private String password;
 
     @Schema(

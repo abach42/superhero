@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -49,7 +48,6 @@ import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.controller.SuperheroController;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.SuperheroUser;
 import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.service.SuperheroService;
@@ -77,9 +75,7 @@ public class SuperheroControllerTest {
     @MockBean
     private SuperheroService superheroService;
 
-    private Superhero superhero;
-
-    private SuperheroDto superheroDto;
+    private SuperheroDto superheroDtoStub;
 
     @BeforeEach
     public void setUp() {
@@ -88,14 +84,13 @@ public class SuperheroControllerTest {
                         .apply(springSecurity()) 
                         .build();
                                 
-        this.superhero = TestDataConfiguration.DUMMY_SUPERHERO;
-        this.superheroDto = SuperheroDto.fromDomain(superhero);
+        this.superheroDtoStub = TestDataConfiguration.getSuperheroDtoStub();
     }
 
     @Test
     @DisplayName("GET " + PATH + " returns first page of superheroes")
     public void testGetAllSuperheroes() throws Exception {
-        SuperheroListDto expected = SuperheroListDto.fromPage(new PageImpl<>(List.of(superheroDto),
+        SuperheroListDto expected = SuperheroListDto.fromPage(new PageImpl<>(List.of(superheroDtoStub),
                 PageRequest.ofSize(1), 1L), 1L);
 
         given(superheroService.getAllSuperheros(null)).willReturn(expected);
@@ -114,7 +109,7 @@ public class SuperheroControllerTest {
     @Test
     @DisplayName("GET " + PATH + "/0" + " returns a superhero")
     public void testGetSuperhero() throws Exception {
-        SuperheroDto expected = superheroDto;
+        SuperheroDto expected = superheroDtoStub;
 
         given(superheroService.getSupherheroConverted(0L)).willReturn(expected);
 
@@ -134,12 +129,12 @@ public class SuperheroControllerTest {
     @Test
     @DisplayName("POST " + PATH + " results created")
     public void testAddSuperhero() throws Exception {
-        given(superheroService.addSuperhero(superheroDto)).willReturn(superheroDto);
+        given(superheroService.addSuperhero(superheroDtoStub)).willReturn(superheroDtoStub);
 
         MvcResult mvcResult = mockMvc.perform(
                         post(PATH)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
-                                .content(objectMapper.writeValueAsString(superheroDto))
+                                .content(objectMapper.writeValueAsString(superheroDtoStub))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())
@@ -149,7 +144,7 @@ public class SuperheroControllerTest {
         SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                 SuperheroDto.class);
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(superheroDto);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(superheroDtoStub);
         
         String locationHeader = mvcResult.getResponse().getHeader("Location");
         assertThat(locationHeader).isNotNull();
@@ -183,11 +178,14 @@ public class SuperheroControllerTest {
     @Test
     @DisplayName("PUT " + PATH + "/" + 0 + " upate updates only changed fields")
     public void testUpdateSuperhero() throws Exception {
-        superhero.setRealName("new");
-        SuperheroDto expected = SuperheroDto.fromDomain(superhero);
+        Superhero superheroStub = TestDataConfiguration.getSuperheroStub();
+        superheroStub.setRealName("changed");
+        SuperheroDto expected = SuperheroDto.fromDomain(superheroStub);
 
-        Superhero inputSuperhero = new Superhero(null, "new", LocalDate.of(1917, 1, 1), 
-                "Male", "foo", "foo", new SuperheroUser("foo", "bar", "USER") );
+        Superhero inputSuperhero = TestDataConfiguration.getSuperheroStub();
+        inputSuperhero.setAlias(null);
+        inputSuperhero.setRealName("changed");
+        
         SuperheroDto input = SuperheroDto.fromDomain(inputSuperhero);
 
         given(superheroService.updateSuperhero(anyLong(), any(SuperheroDto.class))).willReturn(expected);
@@ -211,12 +209,12 @@ public class SuperheroControllerTest {
     @Test
     @DisplayName("Controler action to soft delete superhero result ok")
     public void testSoftDeleteSuperhero() throws Exception {
-        given(superheroService.markSuperheroAsDeleted(anyLong())).willReturn(superheroDto);
+        given(superheroService.markSuperheroAsDeleted(anyLong())).willReturn(superheroDtoStub);
 
         MvcResult mvcResult = mockMvc.perform(
                         delete(PATH + "/" + 0)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
-                                .content(objectMapper.writeValueAsString(superheroDto))
+                                .content(objectMapper.writeValueAsString(superheroDtoStub))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())
@@ -226,7 +224,7 @@ public class SuperheroControllerTest {
         SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                 SuperheroDto.class);
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(superheroDto);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(superheroDtoStub);
     }
 
     @ParameterizedTest

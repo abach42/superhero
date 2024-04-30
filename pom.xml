@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.abach42</groupId>
   <artifactId>superhero</artifactId>
-  <version>0.7.1-SNAPSHOT</version>
+  <version>0.7.3-SNAPSHOT</version>
   <name>superhero</name>
   <description>An RESTful API etude.</description>
   <properties>
@@ -136,7 +136,7 @@
             <parallel>all</parallel>
             <reportFormat>plain</reportFormat>
             <consoleOutputReporter>
-              <disable>false</disable>
+              <disable>true</disable>
             </consoleOutputReporter>
             <!-- https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html#external-extensions-for-the-plugin -->
             <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">

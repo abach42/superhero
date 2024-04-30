@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,12 +20,17 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
 public class SuperheroDtoTest {
+    private SuperheroDto failingSuperheroDto;
+
+    @BeforeEach
+    public void setUp() {
+        this.failingSuperheroDto = TestDataConfiguration.getSuperheroDtoStubEmpty();
+    }
     
     @Test
     @DisplayName("Superhero can be mappted to it's DTO")
     public void testFromDomain() {
-        Superhero superhero = TestDataConfiguration.DUMMY_SUPERHERO;
-
+        Superhero superhero = TestDataConfiguration.getSuperheroStub();
         SuperheroDto superheroDto = SuperheroDto.fromDomain(superhero);
         
         assertEquals(superhero.getId(), superheroDto.id());
@@ -37,24 +43,20 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Suphero DTO validates not null constraints")
     public void testValidationOnCreateNotNull() {
-        SuperheroDto fialingSuperheroDto = new SuperheroDto(null, null, null, null, null, null, null, null);
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
-            fialingSuperheroDto, OnCreate.class
-        );
+                failingSuperheroDto, OnCreate.class);
         assertThat(constraintViolations).hasSize(4);
     }
 
     @Test
     @DisplayName("Suphero DTO validation allows null")
     public void testValidationOnUpdateNull() {
-        SuperheroDto fialingSuperheroDto = new SuperheroDto(null, null, null, null, null, null, null, null);
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
-            fialingSuperheroDto, OnUpdate.class
-        );
+                failingSuperheroDto, OnUpdate.class);
         assertThat(constraintViolations).hasSize(0);
     }
 }
