@@ -79,7 +79,7 @@ public class SkillProfileController {
         return ResponseEntity.ok(skillProfiles);
     }
     
-    @Operation(summary = "Get skill prifile of a superhero")
+    @Operation(summary = "Get skill profile of a superhero")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200", description = "Skill profile found.",
@@ -201,7 +201,7 @@ public class SkillProfileController {
             mediaType = "application/json", 
             schema =  @Schema(
                 // workaround waiting for io.swagger.v3.oas using groups
-                ref = SkillProfileDto.SkillProfileSwaggerPut.SKILLPROFILE,
+                ref = SkillProfileDto.SkillProfileSwaggerPut.SKILL_PROFILE_PUT,
                 example = "1"
             )
         )
