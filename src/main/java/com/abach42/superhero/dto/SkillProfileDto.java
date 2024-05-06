@@ -65,8 +65,8 @@ public record SkillProfileDto(
     }
 
     //workaround waiting for io.swagger.v3.oas using groups
-    @Schema(name = SkillProfileSwaggerPut.SKILLPROFILE)
+    @Schema(name = SkillProfileSwaggerPut.SKILL_PROFILE_PUT)
     public record SkillProfileSwaggerPut(Integer intensity){
-        public static final String SKILLPROFILE = "skillprofileput";
+        public static final String SKILL_PROFILE_PUT = "skill profile put";
     }
 }

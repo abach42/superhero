@@ -20,8 +20,8 @@ public class OpenApiCustomSchema {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().components(new Components()
-                .addSchemas(SkillProfileDto.SkillProfileSwaggerPut.SKILLPROFILE,
-                        getSchemaWithDifferentDescription(SkillProfileDto.SkillProfileSwaggerPut.class, SkillProfileDto.SkillProfileSwaggerPut.SKILLPROFILE)));
+                .addSchemas(SkillProfileDto.SkillProfileSwaggerPut.SKILL_PROFILE_PUT,
+                        getSchemaWithDifferentDescription(SkillProfileDto.SkillProfileSwaggerPut.class, SkillProfileDto.SkillProfileSwaggerPut.SKILL_PROFILE_PUT)));
     }
 
     private Schema<?> getSchemaWithDifferentDescription(Class<?>  className, String description) {
