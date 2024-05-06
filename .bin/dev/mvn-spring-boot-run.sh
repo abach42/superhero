@@ -5,7 +5,7 @@
 ./.bin/authorization/generate-auth-keys.sh
 
 echo "--------------------------------------------------"
-echo " 🥫 Start Database"
+echo " 🐋 Start Database"
 echo "--------------------------------------------------"
 
 # starts just database container and then application by maven to be able to code hotswap
@@ -14,7 +14,7 @@ cd ./src/main/resources/db/oci/
 docker-compose up -d
 
 echo "--------------------------------------------------"
-echo " 🌱 Start Spring Boot application"
+echo " 🌱 Start Spring Boot application 'mvn clean spring-boot:run'"
 echo "--------------------------------------------------"
 
 cd -

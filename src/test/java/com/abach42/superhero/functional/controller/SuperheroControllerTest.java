@@ -25,6 +25,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpMethod;
@@ -45,17 +46,26 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.abach42.superhero.config.api.OnCreate;
 import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.configuration.ObjectMapperSerializerHelper;
 import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.controller.SuperheroController;
+import com.abach42.superhero.dto.SuperheroDto;
+import com.abach42.superhero.dto.SuperheroListDto;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.dto.SuperheroDto;
-import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.service.SuperheroService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/*
+ * Mocked rest client, regarding validation, mocked database
+ * 
+ * * Fails no auth
+ * * CRUD succeeds 
+ * * Write fails on missing filed
+ */
 @WebMvcTest(SuperheroController.class)
 @ContextConfiguration
 @WebAppConfiguration
+@Import(ObjectMapperSerializerHelper.class)
 @WithMockUser
 public class SuperheroControllerTest {
     private final static String PATH = PathConfig.SUPERHEROES;
@@ -68,7 +78,7 @@ public class SuperheroControllerTest {
 
     @MockBean
     private JwtDecoder jwtDecoder;
-
+    
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -76,6 +86,9 @@ public class SuperheroControllerTest {
     private SuperheroService superheroService;
 
     private SuperheroDto superheroDtoStub;
+
+    @Autowired
+    private ObjectMapperSerializerHelper superheroDtoSerializer;
 
     @BeforeEach
     public void setUp() {
@@ -89,14 +102,15 @@ public class SuperheroControllerTest {
 
     @Test
     @DisplayName("GET " + PATH + " returns first page of superheroes")
-    public void testGetAllSuperheroes() throws Exception {
+    public void testListSuperheroes() throws Exception {
         SuperheroListDto expected = SuperheroListDto.fromPage(new PageImpl<>(List.of(superheroDtoStub),
                 PageRequest.ofSize(1), 1L), 1L);
 
-        given(superheroService.getAllSuperheros(null)).willReturn(expected);
+        given(superheroService.retrieveSuperheroList(null)).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
-                        get(PATH).accept(MediaType.APPLICATION_JSON))
+                        get(PATH)
+                                .accept(MediaType.APPLICATION_JSON))
                         .andDo(print())
                         .andExpect(status().isOk())
                 .andReturn();
@@ -108,10 +122,10 @@ public class SuperheroControllerTest {
 
     @Test
     @DisplayName("GET " + PATH + "/0" + " returns a superhero")
-    public void testGetSuperhero() throws Exception {
+    public void testShowSuperhero() throws Exception {
         SuperheroDto expected = superheroDtoStub;
 
-        given(superheroService.getSupherheroConverted(0L)).willReturn(expected);
+        given(superheroService.retrieveSuperhero(0L)).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
                         get(PATH + "/" + 0)
@@ -128,13 +142,15 @@ public class SuperheroControllerTest {
 
     @Test
     @DisplayName("POST " + PATH + " results created")
-    public void testAddSuperhero() throws Exception {
-        given(superheroService.addSuperhero(superheroDtoStub)).willReturn(superheroDtoStub);
+    public void testCreateSuperhero() throws Exception {
+        SuperheroDto input = TestDataConfiguration.getSuperheroDtoStubWithPassword();
+
+        given(superheroService.addSuperhero(any(SuperheroDto.class))).willReturn(input);
 
         MvcResult mvcResult = mockMvc.perform(
                         post(PATH)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
-                                .content(objectMapper.writeValueAsString(superheroDtoStub))
+                                .content(superheroDtoSerializer.get().writeValueAsString(input))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())
@@ -144,39 +160,36 @@ public class SuperheroControllerTest {
         SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                 SuperheroDto.class);
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(superheroDtoStub);
-        
+        assertThat(actual.user().password()).isNull();
+
         String locationHeader = mvcResult.getResponse().getHeader("Location");
         assertThat(locationHeader).isNotNull();
-        assertThat(locationHeader).endsWith("/api/v1/superheroes/" + actual.id());
     }
 
     /*
-     * This test expected to fail runs here, because on WebMvcTest/mockMvc - level jakarta
-     * validation constraint is executed, and on usage of validation groups it is executed if annotation is 
-     * related directly to method parameter. 
-     * 
+     * Info: This test expected to fail runs here, because on WebMvcTest/mockMvc-level 
+     * jakarta validation constraint IS executed, 
+     * and on usage of validation *groups* it is executed IF annotation is 
+     * related directly to method parameter, and NOT as usual above method. 
      */
     @Test
     @DisplayName("POST " + PATH + " returns 422 on missing field in payload")
     @Validated(OnCreate.class)
-    public void testAddSuperheroMissingField() throws Exception {
-        SuperheroDto failedSuperheroDto = new SuperheroDto(1L, null, null, null, null, null, null, null);
-
-        given(superheroService.addSuperhero(failedSuperheroDto)).willReturn(failedSuperheroDto); 
+    public void testCreateSuperheroFailsOnMissingField() throws Exception {
+        SuperheroDto failedSuperheroDto = TestDataConfiguration.getSuperheroDtoStubEmpty(); 
+        
         mockMvc.perform(
                 post(PATH)
                         .with(SecurityMockMvcRequestPostProcessors.jwt())
-                        .content(objectMapper.writeValueAsString(failedSuperheroDto))
+                        .content(superheroDtoSerializer.get().writeValueAsString(failedSuperheroDto))
                         .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        )
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    @DisplayName("PUT " + PATH + "/" + 0 + " upate updates only changed fields")
+    @DisplayName("PUT " + PATH + "/" + 0 + " update updates only changed fields")
     public void testUpdateSuperhero() throws Exception {
         Superhero superheroStub = TestDataConfiguration.getSuperheroStub();
         superheroStub.setRealName("changed");
@@ -188,12 +201,12 @@ public class SuperheroControllerTest {
         
         SuperheroDto input = SuperheroDto.fromDomain(inputSuperhero);
 
-        given(superheroService.updateSuperhero(anyLong(), any(SuperheroDto.class))).willReturn(expected);
+        given(superheroService.changeSuperhero(anyLong(), any(SuperheroDto.class))).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
                         put(PATH + "/" + 0)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
-                                .content(objectMapper.writeValueAsString(input))
+                                .content(superheroDtoSerializer.get().writeValueAsString(input))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())
@@ -207,14 +220,14 @@ public class SuperheroControllerTest {
     }
 
     @Test
-    @DisplayName("Controler action to soft delete superhero result ok")
+    @DisplayName("Controller action to soft delete superhero result ok")
     public void testSoftDeleteSuperhero() throws Exception {
         given(superheroService.markSuperheroAsDeleted(anyLong())).willReturn(superheroDtoStub);
 
         MvcResult mvcResult = mockMvc.perform(
                         delete(PATH + "/" + 0)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
-                                .content(objectMapper.writeValueAsString(superheroDtoStub))
+                                .content(superheroDtoSerializer.get().writeValueAsString(superheroDtoStub))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())

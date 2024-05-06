@@ -14,8 +14,8 @@ if [ -f "$env_file" ]; then
 
     # check if necessary env vars by user prompt already exist
     if [ -n "$STORE_PASS" ] && [ -n "$SPRING_DATASOURCE_PASSWORD" ]; then
-        echo "  ✅ STORE_PASS environment variable is set."
-        echo "  ✅ SPRING_DATASOURCE_PASSWORD environment variable is set."
+        echo "  🟢 STORE_PASS environment variable is set."
+        echo "  🟢 SPRING_DATASOURCE_PASSWORD environment variable is set."
         exit 0
     fi
 fi

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- TODO: this is not good example code, needed to be extracted, usage of java script frameworks... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superhero Skills Bar Chart</title>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body class="p-3">
+    <!-- Display superhero alias name above the chart -->
+    <div id="superheroAlias" class="mt-3 mb-2"></div>
+    <!-- Display origin story below the name -->
+    <div id="originStory" class="mb-4 col-6"></div>
+    <canvas id="skillsChart" width="400" height="400"></canvas>
+
+    <script>
+        // Base URL and API endpoint variables
+        const baseURL = "https://localhost:8443";
+        const apiEndpoint = "/api/v1";
+
+        // I apologize for placing password into code, but it is example and localhost TODO: delete this.
+        let username = 'chris@example.com';
+        let password = 'foobar';
+
+        let headers = new Headers();
+        headers.set('Authorization', 'Basic ' + btoa(username + ":" + password));
+        
+        // Step 1: Fetch access token
+        fetch(`${baseURL}${apiEndpoint}/login`, {
+            method: "GET",
+            headers: headers,
+        })
+        .then(response => {
+            // Check if the request was successful
+            if (!response.ok) {
+                throw new Error("Failed to fetch token");
+            }
+            // Read the response body as text
+            return response.text();
+        })
+        .then(token => {
+            // Step 2: Use the obtained token to fetch all skills
+            fetch(`${baseURL}${apiEndpoint}/skills`, { 
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(skillsData => {
+                const allSkills = skillsData.skills;
+
+                // Step 3: Get the superhero ID from the query parameter in the URL
+                const queryParams = new URLSearchParams(window.location.search);
+                const superheroId = parseInt(queryParams.get('id')) || 1;
+
+                // Step 4: Fetch superhero details to get alias name
+                fetch(`${baseURL}${apiEndpoint}/superheroes/${superheroId}`, { 
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(superheroData => {
+                    const superheroAlias = superheroData.alias;
+                    const originStory = superheroData.originStory;
+
+                    // Display superhero alias name
+                    document.getElementById('superheroAlias').innerText = `Superhero: ${superheroAlias}`;
+
+                    // Display origin story
+                    document.getElementById('originStory').innerText = `Origin Story: ${originStory}`;
+
+
+                    // Step 5: Use the obtained token to fetch skill profiles of the superhero
+                    fetch(`${baseURL}${apiEndpoint}/superheroes/${superheroId}/skillprofiles`, { 
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const skillProfiles = data.skillprofiles;
+
+                        // Initialize arrays for labels, data, and colors
+                        let skillNames = [];
+                        let intensities = [];
+                        const barColors = [];
+
+                        // Predefined array of colors
+                        const predefinedColors = [
+                            'rgba(255, 99, 132, 0.6)', // Red
+                            'rgba(54, 162, 235, 0.6)', // Blue
+                            'rgba(255, 206, 86, 0.6)', // Yellow
+                            'rgba(75, 192, 192, 0.6)', // Green
+                            'rgba(153, 102, 255, 0.6)', // Purple
+                            'rgba(255, 159, 64, 0.6)', // Orange
+                            'rgba(255, 0, 0, 0.6)',     // Light red
+                            'rgba(0, 255, 0, 0.6)',     // Light green
+                            'rgba(0, 0, 255, 0.6)',     // Light blue
+                            'rgba(255, 255, 0, 0.6)',   // Light yellow
+                            'rgba(255, 0, 255, 0.6)',   // Magenta
+                            'rgba(0, 255, 255, 0.6)',   // Cyan
+                            'rgba(128, 0, 0, 0.6)',     // Maroon
+                            'rgba(0, 128, 0, 0.6)',     // Green
+                            'rgba(0, 0, 128, 0.6)',     // Navy
+                            'rgba(128, 128, 0, 0.6)',   // Olive
+                            'rgba(128, 0, 128, 0.6)',   // Purple
+                        ];
+
+
+                        // Assign each skill a color based on its index in the predefined colors array
+                        allSkills.forEach((skill, index) => {
+                            skillNames.push(skill.name);
+                            intensities.push(0); // Default intensity is 0
+                            barColors.push(predefinedColors[index % predefinedColors.length]);
+                        });
+
+                        // Update intensities array based on the actual skill profiles
+                        skillProfiles.forEach(profile => {
+                            const index = allSkills.findIndex(skill => skill.id === profile.skill.id);
+                            if (index !== -1) {
+                                intensities[index] = profile.intensity;
+                            }
+                        });
+
+                        // Create an array of datasets with individual colors for each bar
+                        const datasets = [{
+                            label: 'Skill Intensity',
+                            data: intensities,
+                            backgroundColor: barColors,
+                            borderColor: barColors.map(color => color.replace('0.6', '1')), // Darker border color
+                            borderWidth: 1
+                        }];
+
+                        // Create chart using Chart.js
+                        const ctx = document.getElementById('skillsChart').getContext('2d');
+                        const skillsChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: skillNames,
+                                datasets: datasets
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    })
+                    .catch(error => console.error("Error fetching skill profiles:", error));
+                })
+                .catch(error => console.error("Error fetching superhero details:", error));
+            })
+            .catch(error => console.error("Error fetching skills:", error));
+        })
+        .catch(error => console.error("Error fetching access token:", error));
+    </script>
+</body>
+</html>

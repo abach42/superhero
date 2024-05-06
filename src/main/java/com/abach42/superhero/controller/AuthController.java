@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Superhero authentification")
+@Tag(name = "Superhero authentication")
 @SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping(path = PathConfig.TOKENS)
@@ -36,7 +36,7 @@ public class AuthController {
             headers =  @Header(
                 name = "Authorization", 
                 required = true, 
-                description = "Set email and passwort to Authorization header."
+                description = "Set email and password to Authorization header."
                 )
             ),
         @ApiResponse( 
@@ -46,7 +46,7 @@ public class AuthController {
         )
     })
     @GetMapping("/login")
-    public ResponseEntity<String> getToken(Authentication authentication) {
+    public ResponseEntity<String> showToken(Authentication authentication) {
         String token = tokenService.generateToken(authentication);
         return ResponseEntity.ok().body(token);
     }

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import com.abach42.superhero.entity.dto.ErrorDetailedDto;
-import com.abach42.superhero.entity.dto.ErrorDto;
+import com.abach42.superhero.dto.ErrorDetailedDto;
+import com.abach42.superhero.dto.ErrorDto;
 import com.abach42.superhero.exception.ApiException;
 
 @ControllerAdvice

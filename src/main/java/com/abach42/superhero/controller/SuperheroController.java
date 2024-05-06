@@ -14,16 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.abach42.superhero.config.api.OnCreate;
 import com.abach42.superhero.config.api.OnUpdate;
 import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.config.security.SecuredAdmin;
 import com.abach42.superhero.config.security.SecuredUser;
-import com.abach42.superhero.entity.dto.ErrorDetailedDto;
-import com.abach42.superhero.entity.dto.ErrorDto;
-import com.abach42.superhero.entity.dto.SuperheroDto;
-import com.abach42.superhero.entity.dto.SuperheroListDto;
+import com.abach42.superhero.dto.ErrorDetailedDto;
+import com.abach42.superhero.dto.ErrorDto;
+import com.abach42.superhero.dto.SuperheroDto;
+import com.abach42.superhero.dto.SuperheroListDto;
 import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.service.SuperheroService;
 
@@ -77,7 +78,7 @@ public class SuperheroController {
         ),
         @ApiResponse(
             responseCode = "422", 
-            description = SuperheroService.MAX_PAGE_EXEEDED_MSG, 
+            description = SuperheroService.MAX_PAGE_EXCEEDED_MSG, 
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(
@@ -87,9 +88,9 @@ public class SuperheroController {
     })
     @SecuredUser
     @GetMapping
-    public ResponseEntity<SuperheroListDto> getAllSuperheroesPaginated(@RequestParam(required = false) Integer page)
+    public ResponseEntity<SuperheroListDto> listSuperheroesPaginated(@RequestParam(required = false) Integer page)
             throws ApiException {
-        SuperheroListDto superheroes = superheroService.getAllSuperheros(page);
+        SuperheroListDto superheroes = superheroService.retrieveSuperheroList(page);
         return ResponseEntity.ok(superheroes);
     }
 
@@ -116,8 +117,8 @@ public class SuperheroController {
     })
     @SecuredUser
     @GetMapping("/{id}")
-    public ResponseEntity<SuperheroDto> getSuperhero(@PathVariable Long id) throws ApiException {
-        return ResponseEntity.ok(superheroService.getSupherheroConverted(id));
+    public ResponseEntity<SuperheroDto> showSuperhero(@PathVariable Long id) throws ApiException {
+        return ResponseEntity.ok(superheroService.retrieveSuperhero(id));
     } 
 
     @Operation(summary = "Add new superhero")
@@ -161,11 +162,10 @@ public class SuperheroController {
     })
     @PostMapping
     public ResponseEntity<SuperheroDto> createSuperhero(@Validated(OnCreate.class) @RequestBody SuperheroDto superheroDto)
-            throws ApiException, MethodArgumentNotValidException {
+                throws ApiException, MethodArgumentNotValidException {
         SuperheroDto createdSuperheroDto = superheroService.addSuperhero(superheroDto);
-        return ResponseEntity.created(
-                URI.create(PathConfig.SUPERHEROES + "/" + createdSuperheroDto.id()))
-                .body(createdSuperheroDto);
+        URI uri = UriComponentsBuilder.fromUriString(PathConfig.SUPERHEROES + "/{id}" ).build(createdSuperheroDto.id());
+        return ResponseEntity.created(uri).body(createdSuperheroDto);
     }
 
     @Operation(summary = "Update existing superhero")
@@ -208,9 +208,9 @@ public class SuperheroController {
         )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable(required = true) Long id,
+    public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable Long id,
             @Validated(OnUpdate.class) @RequestBody SuperheroDto superheroDto) throws ApiException {
-        SuperheroDto updatedSuperheroDto = superheroService.updateSuperhero(id, superheroDto);
+        SuperheroDto updatedSuperheroDto = superheroService.changeSuperhero(id, superheroDto);
         return ResponseEntity.ok(updatedSuperheroDto);
     }
 

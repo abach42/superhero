@@ -23,36 +23,17 @@ CREATE TABLE superhero (
 
 CREATE TABLE skill (
     skill_id SERIAL PRIMARY KEY,
-    skill_name VARCHAR(100) NOT NULL,
-    deleted BOOLEAN DEFAULT false
+    skill_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE skill_profile (
     skill_profile_id SERIAL PRIMARY KEY,
-    superhero_id INT REFERENCES superhero(id),
-    skill_id INT REFERENCES Skill(skill_id),
+    superhero_id INT,
+    skill_id INT,
     intensity NUMERIC NOT NULL,
-    deleted BOOLEAN DEFAULT false,
     CONSTRAINT fk_superhero FOREIGN KEY (superhero_id) REFERENCES superhero(id),
-    CONSTRAINT fk_skill FOREIGN KEY (skill_id) REFERENCES Skill(skill_id)
-);
-
-CREATE TABLE rescue_action (
-    rescue_action_id SERIAL PRIMARY KEY,
-    superhero_initiator_id INT REFERENCES superhero(id),
-    action VARCHAR(100) NOT NULL,
-    description TEXT,
-    deleted BOOLEAN DEFAULT false,
-    CONSTRAINT fk_superhero_initiator_rescue FOREIGN KEY (superhero_initiator_id) REFERENCES superhero(id)
-);
-
-CREATE TABLE participation (
-    participation_id SERIAL PRIMARY KEY,
-    rescue_action_id INT REFERENCES rescue_action(rescue_action_id),
-    superhero_id INT REFERENCES superhero(id),
-    deleted BOOLEAN DEFAULT false,
-    CONSTRAINT fk_rescue_action FOREIGN KEY (rescue_action_id) REFERENCES rescue_action(rescue_action_id),
-    CONSTRAINT fk_superhero_participation FOREIGN KEY (superhero_id) REFERENCES superhero(id)
+    CONSTRAINT fk_skill FOREIGN KEY (skill_id) REFERENCES Skill(skill_id),
+    CONSTRAINT unique_superhero_skill UNIQUE (superhero_id, skill_id)
 );
 
 INSERT INTO skill (skill_name) VALUES
@@ -112,42 +93,37 @@ VALUES
 (15, 'The Empathetic Eagle', 'Ella Empathy', '1984-09-12', 'Female', 'Therapist', 'Ella Empathy can feel the pain of others and uses her powers to heal both physically and emotionally.'),
 (16, 'The Wise Wizard', 'Walter Wisdom', '1960-11-20', 'Male', 'Librarian', 'Walter Wisdom''s vast knowledge of ancient texts and magical artifacts makes him a formidable ally in the fight against evil.');
 
--- Assigning random skills to superheroes
 INSERT INTO skill_profile (superhero_id, skill_id, intensity)
-SELECT id, skill_id, FLOOR(RANDOM() * 5) + 1 FROM superhero CROSS JOIN skill ORDER BY RANDOM() LIMIT 15;
-
-INSERT INTO rescue_action (superhero_initiator_id, action, description)
 VALUES
-(1, 'Rescue at the Burning Building', 'Captain Courageous saves a group of trapped civilians from a burning building.'),
-(2, 'High-Speed Chase', 'Speedster foils a bank robbery by apprehending the criminals in a high-speed chase.'),
-(3, 'Kindness Campaign', 'The Kindness Knight spreads positivity and kindness throughout the city, inspiring others to do the same.'),
-(4, 'Crisis Intervention', 'Doctor Empathy provides emotional support and counseling to survivors of a natural disaster.'),
-(5, 'Wisdom Seminar', 'The Wise Owl hosts a seminar on wisdom and knowledge, teaching valuable life lessons to attendees.'),
-(6, 'Artistic Rescue', 'Creative Genius uses her creative skills to design a solution to a city-wide problem.'),
-(7, 'Gentle Giant''s Construction Effort', 'The Gentle Giant assists in the construction of a new community center, using his strength to lift heavy materials.'),
-(8, 'Loyalty Test', 'Lady Loyalty stays true to her principles and refuses to betray her friends even under pressure.'),
-(9, 'Peacekeeping Negotiation', 'The Peacekeeper mediates a tense standoff between rival gangs, preventing violence and finding a peaceful resolution.'),
-(10, 'Generosity Gala', 'The Generous Guardian hosts a charity gala to raise funds for local charities and support those in need.'),
-(11, 'Courageous Cat''s Rescue Mission', 'The Courageous Cat rescues a group of stranded hikers from a treacherous mountain trail.'),
-(12, 'Swift Water Rescue', 'The Swift Swimmer saves a child from drowning in a fast-moving river.'),
-(13, 'Kind-hearted Knight''s Volunteer Day', 'The Kind-hearted Knight organizes a volunteer day to clean up a local park and plant trees.'),
-(14, 'Empathetic Eagle''s Therapy Session', 'The Empathetic Eagle provides therapy and emotional support to individuals struggling with mental health issues.'),
-(15, 'Wise Wizard''s Library Restoration', 'The Wise Wizard uses his knowledge of ancient spells to restore a magical library to its former glory.');
-
-INSERT INTO participation (rescue_action_id, superhero_id)
-VALUES
-(1, 2),
-(2, 10),
-(3, 4),
-(4, 6),
-(5, 7),
-(6, 9),
-(7, 11),
-(8, 14),
-(9, 3),
-(10, 8),
-(11, 1),
-(12, 5),
-(13, 12),
-(14, 15),
-(15, 13);
+-- Insert skill profiles for 'The Administrator'
+(1, 1, 4), (1, 7, 2), (1, 11, 5), (1, 15, 3), (1, 5, 4), (1, 10, 1),
+-- Insert skill profiles for 'Captain Courageous'
+(2, 6, 3), (2, 7, 5), (2, 12, 2), (2, 16, 4), (2, 1, 3), (2, 11, 5), (2, 14, 2),
+-- Insert skill profiles for 'Speedster'
+(3, 2, 5), (3, 10, 4), (3, 15, 3), (3, 16, 2), (3, 5, 1), (3, 9, 5), (3, 13, 3),
+-- Insert skill profiles for 'The Kindness Knight'
+(4, 5, 5), (4, 7, 4), (4, 9, 3), (4, 15, 2), (4, 1, 4), (4, 3, 3), (4, 8, 5), (4, 14, 1),
+-- Insert skill profiles for 'Doctor Empathy'
+(5, 7, 5), (5, 9, 4), (5, 10, 3), (5, 11, 2), (5, 2, 5), (5, 4, 3), (5, 12, 4), (5, 15, 1),
+-- Insert skill profiles for 'The Wise Owl'
+(6, 6, 5), (6, 10, 4), (6, 11, 3), (6, 16, 2), (6, 3, 5), (6, 8, 2), (6, 13, 4), (6, 14, 3),
+-- Insert skill profiles for 'Creative Genius'
+(7, 11, 5), (7, 12, 4), (7, 13, 3), (7, 16, 2), (7, 2, 4), (7, 4, 3), (7, 5, 2), (7, 8, 5),
+-- Insert skill profiles for 'The Gentle Giant'
+(8, 1, 5), (8, 7, 4), (8, 9, 3), (8, 15, 2), (8, 3, 5), (8, 6, 3), (8, 10, 4), (8, 14, 1),
+-- Insert skill profiles for 'Lady Loyalty'
+(9, 7, 5), (9, 9, 4), (9, 11, 3), (9, 16, 2), (9, 1, 3), (9, 4, 4), (9, 12, 5), (9, 15, 1),
+-- Insert skill profiles for 'The Peacekeeper'
+(10, 10, 5), (10, 11, 4), (10, 13, 3), (10, 15, 2), (10, 2, 5), (10, 3, 3), (10, 7, 4), (10, 9, 1),
+-- Insert skill profiles for 'The Generous Guardian'
+(11, 9, 5), (11, 11, 4), (11, 12, 3), (11, 16, 2), (11, 1, 2), (11, 5, 3), (11, 13, 4), (11, 14, 1),
+-- Insert skill profiles for 'The Courageous Cat'
+(12, 1, 5), (12, 7, 4), (12, 12, 3), (12, 16, 2), (12, 2, 5), (12, 4, 3), (12, 9, 4), (12, 15, 1),
+-- Insert skill profiles for 'The Swift Swimmer'
+(13, 2, 5), (13, 11, 4), (13, 12, 3), (13, 16, 2), (13, 6, 5), (13, 8, 3), (13, 9, 4), (13, 15, 1),
+-- Insert skill profiles for 'The Kind-hearted Knight'
+(14, 5, 5), (14, 7, 4), (14, 11, 3), (14, 16, 2), (14, 2, 4), (14, 3, 3), (14, 10, 5), (14, 13, 1),
+-- Insert skill profiles for 'The Empathetic Eagle'
+(15, 7, 5), (15, 11, 4), (15, 15, 3), (15, 16, 2), (15, 1, 3), (15, 6, 4), (15, 12, 5), (15, 14, 1),
+-- Insert skill profiles for 'The Wise Wizard'
+(16, 6, 5), (16, 10, 4), (16, 11, 3), (16, 16, 2), (16, 2, 5), (16, 5, 3), (16, 9, 4), (16, 13, 1);

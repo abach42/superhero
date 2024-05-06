@@ -11,6 +11,5 @@ import jakarta.annotation.Nonnull;
 
 @Repository
 public interface SuperheroUserRepository extends JpaRepository<SuperheroUser, Long>{
-    
     public Optional<SuperheroUser> findOneByEmailAndDeletedIsFalse(@Nonnull String email);
 }

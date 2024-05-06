@@ -5,16 +5,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.abach42.superhero.entity.dto.UserDto;
+import com.abach42.superhero.dto.SuperheroUserDto;
 import com.abach42.superhero.service.SuperheroUserService;
 
 @Configuration(proxyBeanMethods = false)
 public class UserDetailsServiceConfig {
 
     @Bean
-    UserDetailsService userDetailsService(SuperheroUserService superheroUserService) {
+    public UserDetailsService userDetailsService(SuperheroUserService superheroUserService) {
         return email -> {
-            UserDto userDto = superheroUserService.getSuperheroConverted(email);
+            SuperheroUserDto userDto = superheroUserService.retrieveSuperheroUser(email);
             return User.withUsername(userDto.email())
                 .password(userDto.password())
                 .roles(userDto.role())

@@ -61,7 +61,7 @@ Authorization: Bearer {{token}}
   "occupation": "Insurance employee",
   "originStory": "Story of superhero.",
   "user": {
-    "email": "foo@bar.org",
+    "email": "foooooo@bar.org",
     "password": "foobar",
     "role": "USER"
   }
@@ -105,4 +105,48 @@ Authorization: Bearer {{token}}
 
 ### Delete superheo (mark as deleted)
 DELETE {{domain}}/api/v1/superheroes/4 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all skills
+GET {{domain}}/api/v1/skills HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get skill
+GET {{domain}}/api/v1/skills/1 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get skill profile 
+GET {{domain}}/api/v1/superheroes/1/skillprofiles HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get skill profile 
+GET {{domain}}/api/v1/superheroes/1/skillprofiles/15 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Add skill profile to superhero
+POST {{domain}}/api/v1/superheroes/1/skillprofiles HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "intensity": 2,
+  "skill": {
+    "id": 22
+  }
+}
+
+### Update skill profile for superhero
+PUT {{domain}}/api/v1/superheroes/1/skillprofiles/15 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "intensity": 4
+}
+
+### really delete skill profile to superhero
+DELETE {{domain}}/api/v1/superheroes/1/skillprofiles/15 HTTP/1.1
+Content-Type: application/json
 Authorization: Bearer {{token}}

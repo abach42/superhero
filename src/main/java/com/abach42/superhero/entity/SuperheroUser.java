@@ -12,6 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Part of aggregate root {@link Superhero} 1:1, representing `User` of spring security. 
+ * {@link com.abach42.superhero.config.security.UserDetailsServiceConfig}
+ * Password hidden when display in response body. 
+ */
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "superhero_user")

@@ -4,12 +4,8 @@ databaseChangeLog:
       author: me
       preConditions:
         - onFail: HALT
-        - not:
-            - and: 
-              - tableExists:
-                  tableName: superhero
-              - tableExists:
-                  tableName: superhero_user
+        - tableExists:
+            tableName: superhero_user
       changes:
         - createTable:
             tableName: superhero
@@ -70,5 +66,3 @@ databaseChangeLog:
             columnName: deleted
             defaultValueBoolean: false
             tableName: superhero
-              
-                                      
