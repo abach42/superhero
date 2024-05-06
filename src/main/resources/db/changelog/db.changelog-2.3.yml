@@ -1,0 +1,50 @@
+databaseChangeLog:
+    - changeSet:
+        id: 2-skill_profile-data
+        author: me
+        preConditions:
+            - onFail: HALT
+            - and: 
+                - tableExists:
+                    tableName: superhero
+                - tableExists:
+                    tableName: skill
+                - tableExists:
+                    tableName: skill_profile
+        changes:
+            - insert:
+                tableName: skill_profile
+                columns:
+                    - column: 
+                        name: superhero_id
+                        value: 1
+                    - column: 
+                        name: skill_id
+                        value: 2
+                    - column: 
+                        name: intensity
+                        value: 1
+            - insert:
+                tableName: skill_profile
+                columns:
+                    - column: 
+                        name: superhero_id
+                        value: 1
+                    - column: 
+                        name: skill_id
+                        value: 1
+                    - column: 
+                        name: intensity
+                        value: 1
+            - insert:
+                tableName: skill_profile
+                columns:
+                    - column: 
+                        name: superhero_id
+                        value: 2
+                    - column: 
+                        name: skill_id
+                        value: 1
+                    - column: 
+                        name: intensity
+                        value: 2

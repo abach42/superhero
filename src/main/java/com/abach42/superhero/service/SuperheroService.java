@@ -11,9 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.abach42.superhero.dto.SuperheroDto;
+import com.abach42.superhero.dto.SuperheroListDto;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.dto.SuperheroDto;
-import com.abach42.superhero.entity.dto.SuperheroListDto;
 import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.repository.SuperheroRepository;
 
@@ -22,7 +22,7 @@ import jakarta.annotation.Nullable;
 @Service
 public class SuperheroService {
     public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found.";
-    public static final String MAX_PAGE_EXEEDED_MSG = "The total page number has been exceeded.";
+    public static final String MAX_PAGE_EXCEEDED_MSG = "The total page number has been exceeded.";
     public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
     public static final String SUPERHERO_NOT_CREATED_MSG = "Superhero could not be written.";
     public static final String SUPERHERO_NOT_CREATED_MSG_CONSTRAINT = "Superhero could not be written, because email already exists.";
@@ -37,14 +37,14 @@ public class SuperheroService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public SuperheroListDto getAllSuperheros(@Nullable Integer pageNumber) throws ApiException {
+    public SuperheroListDto retrieveSuperheroList(@Nullable Integer pageNumber) throws ApiException {
         Page<SuperheroDto> superheroPage = superheroRepository
                 .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize, Sort.by("id")))
                 .map(SuperheroDto::fromDomain);
 
         if (pageNumber != null && pageNumber > superheroPage.getTotalPages()) {
             throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXEEDED_MSG, superheroPage.getTotalPages(),
+                    String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXCEEDED_MSG, superheroPage.getTotalPages(),
                             pageNumber));
         }
 
@@ -55,12 +55,12 @@ public class SuperheroService {
         return SuperheroListDto.fromPage(superheroPage, superheroRepository.count());
     }
 
-    public SuperheroDto getSupherheroConverted(Long id) throws ApiException {
+    public SuperheroDto retrieveSuperhero(Long id) throws ApiException {
         Superhero superhero = getSuperhero(id);
         return SuperheroDto.fromDomain(superhero);
     }
 
-    private Superhero getSuperhero(Long id) throws ApiException {
+    public Superhero getSuperhero(Long id) throws ApiException {
         return superheroRepository.findById(id).orElseThrow(
                 () -> new ApiException(HttpStatus.NOT_FOUND, SUPERHERO_NOT_FOUND_MSG + id));
     }
@@ -70,7 +70,8 @@ public class SuperheroService {
             Objects.requireNonNull(superheroDto);
 
             Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
-            newSuperhero.getUser().setPassword(encodePassword(newSuperhero));
+            String encodedPassword = passwordEncoder.encode(newSuperhero.getUser().getPassword());
+            newSuperhero.getUser().setPassword(encodedPassword);
 
             Superhero createdSuperhero = superheroRepository.save(newSuperhero);
 
@@ -82,10 +83,6 @@ public class SuperheroService {
         }
     }
 
-    private String encodePassword(Superhero newSuperhero) {
-        return passwordEncoder.encode(newSuperhero.getUser().getPassword());
-    }
-
     /*
      * TODO: Merge and write manually superheroDTO, using `JPA automatic dirty checking`
      * by not merging a null value.
@@ -93,9 +90,10 @@ public class SuperheroService {
      * * get this merge done by framework solution, but including *Dto
      * * @Transactional over here to enable dirty checking
      */
-    public SuperheroDto updateSuperhero(Long id, SuperheroDto update) throws ApiException {
+    public SuperheroDto changeSuperhero(Long id, SuperheroDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
 
+        // this is manual dirty checking, todo see above
         if (update.alias() != null) {
             origin.setAlias(update.alias());
         }
@@ -122,6 +120,7 @@ public class SuperheroService {
     public SuperheroDto markSuperheroAsDeleted(Long id) throws ApiException {
         Superhero superhero = getSuperhero(id);
         superhero.setDeleted(true);
+        superhero.getUser().setDeleted(true);
 
         superheroRepository.save(superhero);
 

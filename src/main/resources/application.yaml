@@ -61,4 +61,4 @@ abach42:
         # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
         # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight
 logging.level.web: TRACE
-logging.level.org.springframework.web: DEBUG
+logging.level.org.springframework.web: TRACE

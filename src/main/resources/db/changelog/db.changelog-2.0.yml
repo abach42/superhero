@@ -1,12 +1,11 @@
 databaseChangeLog:
     - changeSet:
-        id: 1-superhero_user_data
+        id: 2-superhero_user-data
         author: me
         preConditions:
             - onFail: HALT
-            - or:
-                tableExists:
-                    tableName: superhero_user
+            - tableExists:
+                tableName: superhero_user
         changes:
             - insert:
                 tableName: superhero_user

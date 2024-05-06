@@ -33,11 +33,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.abach42.superhero.configuration.TestDataConfiguration;
+import com.abach42.superhero.dto.SuperheroDto;
+import com.abach42.superhero.dto.SuperheroListDto;
+import com.abach42.superhero.dto.SuperheroUserDto;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.entity.SuperheroUser;
-import com.abach42.superhero.entity.dto.SuperheroDto;
-import com.abach42.superhero.entity.dto.SuperheroListDto;
-import com.abach42.superhero.entity.dto.UserDto;
 import com.abach42.superhero.exception.ApiException;
 import com.abach42.superhero.repository.SuperheroRepository;
 import com.abach42.superhero.service.SuperheroService;
@@ -62,61 +62,61 @@ public class SuperheroServiceTest {
 
     @Test
     @DisplayName("Get all heroes, get first page of heroes by null page")
-    public void testGetAllHerores() {
+    public void testRetrieveSuperheroList() {
         Page<Superhero> page = new PageImpl<>(List.of(superhero), PageRequest.ofSize(1), 1L);
 
         given(superheroRepository.findAll(PageRequest.of(0, 10, Sort.by(Sort.Order.asc("id")))))
                 .willReturn(page);
         given(superheroRepository.count()).willReturn(1L);
 
-        SuperheroListDto actual = subject.getAllSuperheros(null);
+        SuperheroListDto actual = subject.retrieveSuperheroList(null);
 
         assertNotNull(actual);
     }
 
     @Test
-    @DisplayName("Get all heroes, throws unprocessable, beause of pageNumber is higher than total pages")
-    void testGetAllHeroesThrowsUnprocessableEntity() {
+    @DisplayName("Get all heroes, throws unprocessable, because of pageNumber is higher than total pages")
+    void testRetrieveSuperheroListThrowsUnprocessableEntity() {
         Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L);
 
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
 
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.getAllSuperheros(2));
+                () -> subject.retrieveSuperheroList(2));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        assertThat(exception.getMessage()).containsSequence(SuperheroService.MAX_PAGE_EXEEDED_MSG);
+        assertThat(exception.getMessage()).containsSequence(SuperheroService.MAX_PAGE_EXCEEDED_MSG);
     }
 
     @Test
-    @DisplayName("Get all heroes throws notfound, because superheroPage is empty")
-    void testGetAllHeroesThrowsNotFound() {
+    @DisplayName("Get all heroes throws not found, because superheroPage is empty")
+    void testRetrieveSuperheroListThrowsNotFound() {
         Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L);
 
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
 
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.getAllSuperheros(null));
+                () -> subject.retrieveSuperheroList(null));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHEROES_NOT_FOUND_MSG);
     }
 
     @Test
     @DisplayName("Get a superhero converted to Dto by id")
-    void testGetSuperhero() {
+    void testRetrieveSuperhero() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.of(superhero));
         SuperheroDto expected = SuperheroDto.fromDomain(superhero);
-        SuperheroDto actual = subject.getSupherheroConverted(1L);
+        SuperheroDto actual = subject.retrieveSuperhero(1L);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
-    @DisplayName("Get a superhero throws not found, beause not exists")
-    void testGetSuperheroThrowsNotFound() {
+    @DisplayName("Get a superhero throws not found, because not exists")
+    void testRetrieveSuperheroThrowsNotFound() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
         
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.getSupherheroConverted(1L));
+                () -> subject.retrieveSuperhero(1L));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }
@@ -151,7 +151,7 @@ public class SuperheroServiceTest {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.of(superhero));
         given(superheroRepository.save(any(Superhero.class))).willReturn(expected);
 
-        SuperheroDto updatedSuperhero = subject.updateSuperhero(1L, givenUpdate);
+        SuperheroDto updatedSuperhero = subject.changeSuperhero(1L, givenUpdate);
 
         assertThat(expected.getAlias()).isEqualTo(updatedSuperhero.alias());
         assertThat(expected.getRealName()).isEqualTo(updatedSuperhero.realName());
@@ -162,7 +162,7 @@ public class SuperheroServiceTest {
 
     private static Stream<Arguments> updateFieldByField() {
         SuperheroUser user = new SuperheroUser("foo", "bar", "USER");
-        UserDto userDto = UserDto.fromDomain(user);
+        SuperheroUserDto userDto = SuperheroUserDto.fromDomain(user);
         return Stream.of(
             Arguments.of(new SuperheroDto(1L, "updated", null, null, null, null, null, userDto),
                          new Superhero("updated", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user)),
@@ -182,12 +182,12 @@ public class SuperheroServiceTest {
     }
 
     @Test
-    @DisplayName("Update superhero throws not found, beause not exists")
+    @DisplayName("Update superhero throws not found, because not exists")
     void testUpdateSuperheroThrowsNotFound() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
         
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.updateSuperhero(1L, new SuperheroDto(1L, null, null, null, null, null, null, null)));
+                () -> subject.changeSuperhero(1L, new SuperheroDto(1L, null, null, null, null, null, null, null)));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }
@@ -199,6 +199,7 @@ public class SuperheroServiceTest {
         
         Superhero expected = superhero;
         expected.setDeleted(true);
+        expected.getUser().setDeleted(true);
         given(superheroRepository.save(any(Superhero.class))).willReturn(superhero);
         
         SuperheroDto actual = subject.markSuperheroAsDeleted(1L);
@@ -207,7 +208,7 @@ public class SuperheroServiceTest {
     }
 
     @Test
-    @DisplayName("Mark superhero soft deleted throws not found, beause not exists")
+    @DisplayName("Mark superhero soft deleted throws not found, because not exists")
     void testMarkSuperheroSoftDeletedThrowsNotFound() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
         

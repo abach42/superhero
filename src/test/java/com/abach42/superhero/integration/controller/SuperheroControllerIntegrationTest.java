@@ -45,18 +45,23 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.config.security.SecuredAdmin;
 import com.abach42.superhero.config.security.SecuredUser;
-import com.abach42.superhero.configuration.ObjectMapperTestHelper;
+import com.abach42.superhero.configuration.ObjectMapperSerializerHelper;
 import com.abach42.superhero.configuration.TestContainerConfiguration;
 import com.abach42.superhero.configuration.TestDataConfiguration;
+import com.abach42.superhero.dto.ErrorDto;
+import com.abach42.superhero.dto.SuperheroDto;
 import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.dto.ErrorDto;
-import com.abach42.superhero.entity.dto.SuperheroDto;
 import com.abach42.superhero.repository.SuperheroRepository;
 import com.abach42.superhero.service.SuperheroService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * End to end test with real database and mock client
+ * 
+ * * Validations: Null fails
+ * * Validations: Non null fails (missing field, missing payload)
+ * * CRUD not found fails
+ * * Write for admin only test
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,8 +70,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class SuperheroControllerIntegrationTest {
     private final static String PATH = PathConfig.SUPERHEROES;
-
-    private static final int TOTAL_PAGES = 1;
 
     @Autowired
     private MockMvc mockMvc;
@@ -80,16 +83,21 @@ public class SuperheroControllerIntegrationTest {
     private RequestPostProcessor allAuthorities = SecurityMockMvcRequestPostProcessors.jwt()
                         .authorities(new SimpleGrantedAuthority(SecuredAdmin.ROLE_ADMIN),
                                 new SimpleGrantedAuthority(SecuredUser.ROLE_USER)); 
-                                
+              
     @Autowired
-    ObjectMapperTestHelper objectMapperTestHelper;
-
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ObjectMapperSerializerHelper superheroDtoSerializer;
 
     @BeforeEach
     public void setUp() {
-        this.objectMapper = objectMapperTestHelper.get();
         this.superhero = TestDataConfiguration.getSuperheroStub();
+    }
+
+    private ErrorDto getErrorDtoFromResultPayload(MvcResult mvcResult) throws IOException {
+        ErrorDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorDto.class);
+        return actual;
     }
 
     @Nested
@@ -99,8 +107,8 @@ public class SuperheroControllerIntegrationTest {
     class NoDatabaseChangeTest {
 
         @Test
-        @DisplayName("GET " + PATH + "?page=999 (mockmvc + db) get all superheros page number too high")
-        public void testGetAllSuperherosFailsWhenPageNotExists() throws Exception {
+        @DisplayName("GET " + PATH + "?page=999 (mockmvc + db) list superheros fails when page number to high")
+        public void testListSuperheroesFailsWhenPageNotExists() throws Exception {
                 int failPage = 999; // assuming test data have max 998 pages
 
                 MvcResult mvcResult = mockMvc.perform(
@@ -111,106 +119,124 @@ public class SuperheroControllerIntegrationTest {
                         .andExpect(status().isUnprocessableEntity())
                         .andReturn();
 
-                ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
+                ErrorDto actual = getErrorDtoFromResultPayload(mvcResult);
                 assertThat(actual).usingRecursiveComparison()
                         .isEqualTo(new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                                 HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
-                                SuperheroService.MAX_PAGE_EXEEDED_MSG + " Total: " + TOTAL_PAGES + ", requested: " + failPage + ".",
+                                SuperheroService.MAX_PAGE_EXCEEDED_MSG + " Total: 1, requested: " + failPage + ".",
                                 PATH));
         }
 
         @Test
-        @DisplayName("POST " + PATH + " (mockmvc + db) add new superhero fails when missing field")
-        public void testAddSuperheroFailsWhenMissingFieldInPayload() throws Exception {
-                Superhero failingSuperhero = superhero;
-                failingSuperhero.setAlias(null);
+        @DisplayName("GET " + PATH + " (mockmvc + db) list superheroes fails when not found")
+        public void testListSuperherosFailsWhenNoSuperhero() throws Exception {
+                superheroRepository.deleteAll();
 
-                mockMvc.perform(
-                                post(PATH)
-                                        .content(objectMapper.writeValueAsString(SuperheroDto.fromDomain(failingSuperhero)))
-                                        .accept(MediaType.APPLICATION_JSON)
-                                        .contentType(MediaType.APPLICATION_JSON)
-                                        .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                MvcResult mvcResult = mockMvc.perform(
+                        get(PATH).accept(MediaType.APPLICATION_JSON)
+                                .with(allAuthorities))
                         .andDo(print())
-                        .andExpect(status().isUnprocessableEntity());
+                        .andExpect(status().isNotFound())
+                        .andReturn();
+
+                ErrorDto actual = getErrorDtoFromResultPayload(mvcResult);
+                assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHEROES_NOT_FOUND_MSG, PATH));
         }
-    
+        
         @Test
-        @DisplayName("POST " + PATH + " (mockmvc + db) add new superhero fails when missing")
-        public void testAddSuperheroFailsWhenEmptyPayload() throws Exception {
-                mockMvc.perform(
-                                post(PATH)
-                                .content(objectMapper.writeValueAsString(null))
+        @DisplayName("GET " + PATH + "/1 (mockmvc + db) show a superhero fails when not found")
+        public void testShowSuperheroFailsWhenNoSuperhero() throws Exception {
+                superheroRepository.deleteAll();
+
+                MvcResult mvcResult = mockMvc.perform(
+                        get(PATH + "/" + 1)
                                 .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                                .with(allAuthorities))
                         .andDo(print())
-                        .andExpect(status().isBadRequest());
+                        .andExpect(status().isNotFound())
+                        .andReturn();
+
+                ErrorDto actual = getErrorDtoFromResultPayload(mvcResult);
+                assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHERO_NOT_FOUND_MSG + 1, PATH + "/" + 1));
         }
-
-        @Test
-        @DisplayName("PUT " + PATH  + "/1 (mockmvc + db) update superhero fails when missing field")
-        public void testUpdateSuperheroFailsWhenMissingFieldInPayload() throws Exception {
-                mockMvc.perform(
-                        put(PATH + "/" + 1)
-                                .content(objectMapper.writeValueAsString(null))
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .with(SecurityMockMvcRequestPostProcessors.jwt()))
-                        .andDo(print())
-                        .andExpect(status().isBadRequest());
-        }
-    }
-
-    @Test
-    @DisplayName("GET " + PATH + " (mockmvc + db) get all supeheroes not found")
-    public void testGetAllSuperherosFailsWhenNoSuperhero() throws Exception {
-        superheroRepository.deleteAll();
-
-        MvcResult mvcResult = mockMvc.perform(
-                    get(PATH).accept(MediaType.APPLICATION_JSON)
-                            .with(allAuthorities))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
-        assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHEROES_NOT_FOUND_MSG, PATH));
-    }
-
-    private ErrorDto getErrorDtoFromResutPayload(MvcResult mvcResult)
-                    throws IOException {
-            ErrorDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorDto.class);
-            return actual;
     }
     
     @Test
-    @DisplayName("GET "+ PATH + "/1 (mockmvc + db) get a superhero not found")
-    public void testGetSuperheroFailsWhenNoSuperhero() throws Exception {
-        superheroRepository.deleteAll();
+    @DisplayName("POST " + PATH + " (mockmvc + db) create superhero fails when missing field")
+    public void testCreateSuperheroFailsWhenMissingFieldInPayload() throws Exception {
+            Superhero failingSuperhero = superhero;
+            failingSuperhero.setAlias(null);
 
-        MvcResult mvcResult = mockMvc.perform(
-                    get(PATH + "/" + 1)
+            mockMvc.perform(
+                            post(PATH)
+                                    .content(superheroDtoSerializer.get().writeValueAsString(SuperheroDto.fromDomain(failingSuperhero)))
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                    .andDo(print())
+                    .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @DisplayName("POST " + PATH + " (mockmvc + db) create superhero fails when missing payload")
+    public void testCreateSuperheroFailsWhenEmptyPayload() throws Exception {
+            mockMvc.perform(
+                            post(PATH)
+                            .content(objectMapper.writeValueAsString(null))
                             .accept(MediaType.APPLICATION_JSON)
-                            .with(allAuthorities))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
-        assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHERO_NOT_FOUND_MSG + 1, PATH + "/" + 1));
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("PUT "+ PATH + "/1 (mockmvc + db) update superhero not found")
+    @DisplayName("POST " + PATH + " (mockmvc + db) create superhero skill profile returns created link")
+    public void testCreateSuperheroSkillProfileReturnsCreatedLink() throws Exception {
+            MvcResult mvcResult = mockMvc.perform(
+                            post(PATH)
+                                            .content(superheroDtoSerializer.get().writeValueAsString(
+                                                            TestDataConfiguration.getSuperheroDtoStubWithPassword()))
+                                            .accept(MediaType.APPLICATION_JSON)
+                                            .contentType(MediaType.APPLICATION_JSON)
+                                            .with(allAuthorities))
+                            .andDo(print())
+                            .andExpect(status().is2xxSuccessful())
+                            .andReturn();
+
+            SuperheroDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                            SuperheroDto.class);
+
+            String locationHeader = mvcResult.getResponse().getHeader("Location");
+            assertThat(locationHeader).endsWith(PATH + "/" + actual.id());
+    }
+
+    @Test
+    @DisplayName("PUT " + PATH  + "/1 (mockmvc + db) update superhero fails when missing field")
+    public void testUpdateSuperheroFailsWhenMissingFieldInPayload() throws Exception {
+            mockMvc.perform(
+                    put(PATH + "/" + 1)
+                            .content(objectMapper.writeValueAsString(null))
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+    }
+    
+    
+
+
+    @Test
+    @DisplayName("PUT " + PATH + "/1 (mockmvc + db) update superhero fails when not found")
     public void testUpdateSuperheroFailsWhenNoSuperheroFound() throws Exception {
         superheroRepository.deleteAll();
 
         MvcResult mvcResult = mockMvc.perform(
                     put(PATH + "/" + 1)
-                            .content(objectMapper.writeValueAsString(SuperheroDto.fromDomain(superhero)))
+                            .content(superheroDtoSerializer.get().writeValueAsString(SuperheroDto.fromDomain(superhero)))
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .with(allAuthorities))
@@ -218,14 +244,14 @@ public class SuperheroControllerIntegrationTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
+        ErrorDto actual = getErrorDtoFromResultPayload(mvcResult);
         assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHERO_NOT_FOUND_MSG + 1,
                 PATH + "/" + 1));
     }
 
     @Test
-    @DisplayName("DELETE " + PATH + "/1 (mockmvc + db) soft delete superhero not found")
+    @DisplayName("DELETE " + PATH + "/1 (mockmvc + db) soft delete superhero fails when not found")
     public void testSoftDeleteSuperheroFailsWhenNotFound() throws Exception {
         superheroRepository.deleteAll();
 
@@ -238,7 +264,7 @@ public class SuperheroControllerIntegrationTest {
                         .andExpect(status().isNotFound())
                         .andReturn();
 
-        ErrorDto actual = getErrorDtoFromResutPayload(mvcResult);
+        ErrorDto actual = getErrorDtoFromResultPayload(mvcResult);
         assertThat(actual).usingRecursiveComparison().isEqualTo(new ErrorDto(HttpStatus.NOT_FOUND.value(),
                         HttpStatus.NOT_FOUND.getReasonPhrase(), SuperheroService.SUPERHERO_NOT_FOUND_MSG + 1,
                         PATH + "/" + 1));
@@ -250,30 +276,47 @@ public class SuperheroControllerIntegrationTest {
     @DisplayName("Test Roles")
     class RolesTest {
 
-        @ParameterizedTest
-        @MethodSource("bothRolesProvider")
-        @DisplayName("GET " + PATH + " (mockmvc + db) according to roles")
-        public void testGetAll(Collection<GrantedAuthority> authorities, ResultMatcher status) throws Exception {
-                mockMvc.perform(
-                                request(HttpMethod.GET, PATH)
-                                                .with(SecurityMockMvcRequestPostProcessors.jwt()
-                                                                .authorities(authorities))
-                                                .accept(MediaType.APPLICATION_JSON))
-                                .andDo(print())
-                                .andExpect(status);
-        }
+        @Nested
+        @NestedTestConfiguration(EnclosingConfiguration.INHERIT)
+        @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+        @DisplayName("Test Roles no database change")
+        class RolesTestNoDatabaseChange{
+                //duplicated test on another layer, just for example here
+                @ParameterizedTest
+                @MethodSource("bothRolesProvider")
+                @DisplayName("GET " + PATH + " (mockmvc + db) according to roles")
+                public void testGetAll(Collection<GrantedAuthority> authorities, ResultMatcher status) throws Exception {
+                        mockMvc.perform(
+                                        request(HttpMethod.GET, PATH)
+                                                        .with(SecurityMockMvcRequestPostProcessors.jwt()
+                                                                        .authorities(authorities))
+                                                        .accept(MediaType.APPLICATION_JSON))
+                                        .andDo(print())
+                                        .andExpect(status);
+                }
 
-        @ParameterizedTest
-        @MethodSource("bothRolesProvider")
-        @DisplayName("GET " + PATH + "/1 (mockmvc + db) according to roles")
-        public void testGet(Collection<GrantedAuthority> authorities, ResultMatcher status) throws Exception {
-                mockMvc.perform(
-                                request(HttpMethod.GET, PATH + "/" + 1)
-                                                .with(SecurityMockMvcRequestPostProcessors.jwt()
-                                                                .authorities(authorities))
-                                                .accept(MediaType.APPLICATION_JSON))
-                                .andDo(print())
-                                .andExpect(status);
+                //duplicated test on another layser, just for example here
+                @ParameterizedTest
+                @MethodSource("bothRolesProvider")
+                @DisplayName("GET " + PATH + "/1 (mockmvc + db) according to roles")
+                public void testGet(Collection<GrantedAuthority> authorities, ResultMatcher status) throws Exception {
+                        mockMvc.perform(
+                                        request(HttpMethod.GET, PATH + "/" + 1)
+                                                        .with(SecurityMockMvcRequestPostProcessors.jwt()
+                                                                        .authorities(authorities))
+                                                        .accept(MediaType.APPLICATION_JSON))
+                                        .andDo(print())
+                                        .andExpect(status);
+                }
+
+                private static Stream<Arguments> bothRolesProvider() {
+                        return Stream.of(
+                                        Arguments.of(Arrays.asList(new SimpleGrantedAuthority(SecuredUser.ROLE_USER)),
+                                                        MockMvcResultMatchers.status().is2xxSuccessful()),
+                                        Arguments.of(Arrays.asList(new SimpleGrantedAuthority(SecuredAdmin.ROLE_ADMIN),
+                                                        new SimpleGrantedAuthority(SecuredUser.ROLE_USER)),
+                                                        MockMvcResultMatchers.status().is2xxSuccessful()));
+                }
         }
 
         @ParameterizedTest
@@ -283,8 +326,8 @@ public class SuperheroControllerIntegrationTest {
                 mockMvc.perform(
                         request(HttpMethod.POST, PATH)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt().authorities(authorities))
-                                .content(objectMapper
-                                        .writeValueAsString(TestDataConfiguration.getSuperheoDtoStupWithPaword()))
+                                .content(superheroDtoSerializer.get()
+                                                .writeValueAsString(TestDataConfiguration.getSuperheroDtoStubWithPassword()))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -299,7 +342,7 @@ public class SuperheroControllerIntegrationTest {
                                 request(HttpMethod.PUT, PATH + "/" + 1)
                                                 .with(SecurityMockMvcRequestPostProcessors.jwt()
                                                                 .authorities(authorities))
-                                                .content(objectMapper
+                                                .content(superheroDtoSerializer.get()
                                                                 .writeValueAsString(SuperheroDto.fromDomain(superhero)))
                                                 .accept(MediaType.APPLICATION_JSON)
                                                 .contentType(MediaType.APPLICATION_JSON))
@@ -325,15 +368,6 @@ public class SuperheroControllerIntegrationTest {
                 return Stream.of(
                                 Arguments.of(Arrays.asList(new SimpleGrantedAuthority(SecuredUser.ROLE_USER)),
                                                 MockMvcResultMatchers.status().isForbidden()),
-                                Arguments.of(Arrays.asList(new SimpleGrantedAuthority(SecuredAdmin.ROLE_ADMIN),
-                                                new SimpleGrantedAuthority(SecuredUser.ROLE_USER)),
-                                                MockMvcResultMatchers.status().is2xxSuccessful()));
-        }
-
-        private static Stream<Arguments> bothRolesProvider() {
-                return Stream.of(
-                                Arguments.of(Arrays.asList(new SimpleGrantedAuthority(SecuredUser.ROLE_USER)),
-                                                MockMvcResultMatchers.status().is2xxSuccessful()),
                                 Arguments.of(Arrays.asList(new SimpleGrantedAuthority(SecuredAdmin.ROLE_ADMIN),
                                                 new SimpleGrantedAuthority(SecuredUser.ROLE_USER)),
                                                 MockMvcResultMatchers.status().is2xxSuccessful()));

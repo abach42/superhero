@@ -112,8 +112,8 @@ public class Superhero {
         return occupation;
     }
 
-    public void setOccupation(String occupateion) {
-        this.occupation = occupateion;
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
     }
 
     public String getOriginStory() {

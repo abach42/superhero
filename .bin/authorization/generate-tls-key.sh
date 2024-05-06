@@ -14,8 +14,8 @@ env_file=".env"
 export $(cat .env | xargs)
 
 if [ -f "$path/$keystore_file" ]  && [ -n "$STORE_PASS" ]; then
-    echo "  ✅ Keystore '$path/$keystore_file' exists."
-    echo "  ✅ STORE_PASS environment variable is set."
+    echo "  🟢 Keystore '$path/$keystore_file' exists."
+    echo "  🟢 STORE_PASS environment variable is set."
     exit 0
 fi
 

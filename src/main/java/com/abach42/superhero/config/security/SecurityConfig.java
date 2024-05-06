@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    
     @Bean
     @Order(1)
     SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
@@ -35,7 +36,7 @@ public class SecurityConfig {
     SecurityFilterChain documentationResourceFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll());
+                        .requestMatchers("/chart.html","/swagger-ui/**", "/v3/api-docs/**").permitAll());
         return http.build();
     }
 }

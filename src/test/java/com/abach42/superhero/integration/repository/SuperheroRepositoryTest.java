@@ -21,6 +21,9 @@ import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Superhero;
 import com.abach42.superhero.repository.SuperheroRepository;
 
+/*
+ * Test real database starting docker container
+ */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TestContainerConfiguration.class)
@@ -36,7 +39,7 @@ public class SuperheroRepositoryTest {
     @DisplayName("Tests for counting superheroes")
     class CountTest {
         @Test
-        @DisplayName("count superheroes dos not count soft deleted")
+        @DisplayName("count superheroes does not count soft deleted")
         void testCountDoesNotCountSoftDeleted() {
             assertThat(subject.count()).isEqualTo(1L);
             assertThat(subject.countByDeletedIsTrue()).isEqualTo(1L);
@@ -53,6 +56,7 @@ public class SuperheroRepositoryTest {
         @DisplayName("find all superheroes does not find soft deleted")
         void testFindByIdDoesNotFindSoftDeleted() {
             assertThat(subject.findById(1L).isPresent()).isTrue();
+            assertThat(subject.findById(2L).isPresent()).isFalse();
         }
     }
 
@@ -78,7 +82,7 @@ public class SuperheroRepositoryTest {
     @Test
     @DisplayName("update existing superhero")
     @Transactional
-    void testUPdateSuperhero() {
+    void testUpdateSuperhero() {
         Superhero superhero = subject.findById(1L).get();
         superhero.setAlias("new");
         Superhero updatedSuperhero = subject.save(superhero);

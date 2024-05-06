@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-skill
+      author: me
+      changes:
+        - createTable:
+            tableName: skill
+            columns:
+              - column:
+                  autoIncrement: true
+                  name: skill_id
+                  type: BIGSERIAL
+              - column:
+                  name: skill_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false

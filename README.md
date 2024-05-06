@@ -1,50 +1,43 @@
 # Superhero Spring Boot RESTful API
 A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code - to store contacts of superheroes.
 
-You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. You can run unit, functional and integrative tests using oci container solution ("Testconainers" feature of spring boot). 
+You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. You can run unit, functional and integrative tests using oci container solution ("Testcontainers" feature of spring boot). 
 
 ![Swagger UI](src/main/resources/static/img/swg.png)
 
-## Features 0.7.0 ✨
+## Features 0.8.* ✨
 
 * JWT auth, user roles
-* Tests (using testcontainers)
+* Tests (using testcontainers, liquibase), > 90%
 * Database postgres + docker
 * Pagination on listing
-* Soft delete
-* Scheduling to erase soft deleted records
-
-#### Endpoints
-##### Superheroes
-* GET /api/v1/superheroes
-* GET /api/v1/superheroes/{id}
-* POST /api/v1/superheroes
-* PUT /api/v1/superheroes/{id}
-* DELETE /api/v1/superheroes/{id} 
-
-##### Authentification
-* GET /api/v1/login
+* Soft delete for superhero and user, cleaning database scheduler (to be discussed)
 
 ## Start project in your docker environment 🐋
 
-👆 You will need docker/ docker-compose installed on your os, and no Java.
+👆 You will need docker/ docker-compose installed on your OS.
 
-`.bin/start.sh`
+Start with `.bin/start.sh`
 
-This will generate keys, make an image of project, start a docker network, initialize a postgres database and provide localhost, TLS at port 8443.
+
+This will generate keys, make an image of Java project (using own Java installation on container, ignoring your installation), start a docker network, initialize a postgres database and provide localhost, TLS at port 8443.
+
+### Go on using 
 
 * Use some rest client: `GET https://localhost:8443/api/v1/superheroes/ HTTP/1.1` (Please use JWT).
 
-* See openapi definition at https://localhost:8443/swagger-ui/index.html . (Please write `index.html`, there is no redirect)
+* See OpenAPI definition at https://localhost:8443/swagger-ui/index.html . (Please write `index.html`, there is no redirect)
+
+* See a chart of superhero skills (id: 1 - 16) https://localhost:8443/chart.html?id=1
 
 ## Using JWT <img src="./src/main/resources/static/img/jwt_logo.svg" width="20">
 
-1. Get a token by authentification
+1. Get a token by authentication
 
         GET https://localhost:8443/api/v1/login HTTP/1.1
         Authorization: Basic admin@example.com foobar
 
-2. You will receive an authorisation as JWT in payload of response body. 
+2. You will receive an authorization as JWT in payload of response body. 
 
 3. Use JWT 
 
@@ -60,34 +53,46 @@ This will generate keys, make an image of project, start a docker network, initi
 
 ## Developing (using hot swapping of code) 🔧
 
-1. You will need docker/ docker-compose installed on your os and Java 21.0.2
+👆 You will need docker/ docker-compose installed on your OS and Java 21.0.2
 
-2. Start application: `./.bin/dev/mvn-spring-boot-run.sh`
-- Postgres database will be started and fully initialized in a docker container.
-- spring-boot will be started.
+* Start application: `./.bin/dev/mvn-spring-boot-run.sh`
+  - Postgres database will be started and fully initialized in a docker container.
+  - Spring-boot will be started.
 
-1. Run test by `mvn clean test`.
+* Run test by `mvn clean test`.
 
-2. Open database client on `psql postgresql://db:db@localhost:15432/db`.
+* Open database client on `psql postgresql://db:db@localhost:15432/db`.
 
 ### Stop and Restart for Development ⚙️
 
-1. You can stop database container by `./.bin/dev/stop-database-container.sh`.
-2. You can delete database container and loose all database changes by `./.bin/dev/delete-database-container.sh`, default schema and data will be restored next start.
+* You can stop database container by `./.bin/dev/stop-database-container.sh`.
+* You can delete database container and lose all database changes by `./.bin/dev/delete-database-container.sh`, default schema and data will be restored next start.
 
-## Cleaning records 🧹
+## Endpoints
 
-        👆 DELETE endpoint only marks record as deleted, use cleaning records to really delete records.
+### Authentication
+* GET /api/v1/login
 
-A sheduler will do the job for you.
+### Superheroes
+* GET /api/v1/superheroes
+* GET /api/v1/superheroes/{id}
+* POST /api/v1/superheroes
+* PUT /api/v1/superheroes/{id}
+* DELETE /api/v1/superheroes/{id} 
 
-Manually: 
-- activate shell by configuration `spring.shell.interactive.enabled: true`.
-- enter container or development console, wait for `shell:>`.
-- type `manually-erase-marked-as-deleted` to delete records, which are marked as `deleted` by API DELETE endpoint request.
+### Skills
+* GET /api/v1/skills
+* GET /api/v1/skills/{id}
 
-## Plans for 0.8.0 ⏳
+### Skill profile
+* GET /api/v1/superheroes/{superheroId}/skillprofiles
+* GET /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
+* POST /api/v1/superheroes/{superheroId}/skillprofiles
+* PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
+* DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 
-* use other entities to complete object network and to get more endpoints
-* optimize jwt claim to better store user roles
-* refresh token
+## Plans for 0.9.0 ⏳
+
+* End to end test API against Swagger doc
+* Optimize JWT claim to better store user roles
+* Refresh token

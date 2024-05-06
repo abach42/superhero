@@ -2,11 +2,6 @@ databaseChangeLog:
   - changeSet:
       id: 1-superhero_user
       author: me
-      preConditions:
-        - onFail: HALT
-        - not:
-          - tableExists:
-              tableName: superhero_user
       changes:
         - createTable:
             tableName: superhero_user

@@ -12,4 +12,6 @@ public final class PathConfig {
 
     public final static String TOKENS = BASE_URI;
     public final static String SUPERHEROES = BASE_URI + "/superheroes";
+    public final static String SKILLS = BASE_URI + "/skills";
+    public final static String SKILLPROFILES = SUPERHEROES + "/{superheroId}" + "/skillprofiles";
 }

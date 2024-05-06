@@ -4,19 +4,19 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import com.abach42.superhero.service.DatabaseClearupService;
+import com.abach42.superhero.service.DatabaseCleanupService;
 
 @Profile("!test")
 @ShellComponent
 public class EraseDeletedRecords {
-    DatabaseClearupService databaseClearupService; 
+    DatabaseCleanupService databaseCleanupService; 
 
-    public EraseDeletedRecords(DatabaseClearupService databaseClearupService) {
-        this.databaseClearupService = databaseClearupService;
+    public EraseDeletedRecords(DatabaseCleanupService databaseCleanupService) {
+        this.databaseCleanupService = databaseCleanupService;
     }
 
     @ShellMethod("Manually start to erase records which are marked as deleted.")
     public void manuallyEraseMarkedAsDeleted() {
-        databaseClearupService.ereaseRecordsMarkedAsDeleted();
+        databaseCleanupService.eraseRecordsMarkedAsDeleted();
     }
 }

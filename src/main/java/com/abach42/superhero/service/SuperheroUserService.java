@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.abach42.superhero.dto.SuperheroUserDto;
 import com.abach42.superhero.entity.SuperheroUser;
-import com.abach42.superhero.entity.dto.UserDto;
 import com.abach42.superhero.exception.UserNotFoundException;
 import com.abach42.superhero.repository.SuperheroUserRepository;
 
@@ -17,8 +17,8 @@ public class SuperheroUserService {
         this.superheroUserRepository = superheroUserRepository;
     }
 
-    public UserDto getSuperheroConverted(String email) {
+    public SuperheroUserDto retrieveSuperheroUser(String email) {
         Optional<SuperheroUser> user = superheroUserRepository.findOneByEmailAndDeletedIsFalse(email);
-        return UserDto.fromDomain(user.orElseThrow(() -> new UserNotFoundException(email)));
+        return SuperheroUserDto.fromDomain(user.orElseThrow(() -> new UserNotFoundException(email)));
     }
 }

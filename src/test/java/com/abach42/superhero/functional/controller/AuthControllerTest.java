@@ -30,7 +30,10 @@ import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.controller.AuthController;
 import com.abach42.superhero.service.TokenService;
 
-
+/*
+ * Mocked rest client, regarding validation, mocked database
+ * 
+ */
 @WebMvcTest(AuthController.class)
 @ContextConfiguration
 @WebAppConfiguration
