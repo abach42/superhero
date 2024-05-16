@@ -27,7 +27,7 @@ public class SkillRepositoryTest {
     
     @Test
     @DisplayName("count skills available")
-    void testCountDoesNotCountSoftDeleted() {
+    public void testCountDoesNotCountSoftDeleted() {
         assertThat(subject.count()).isEqualTo(3L);
     }
 }

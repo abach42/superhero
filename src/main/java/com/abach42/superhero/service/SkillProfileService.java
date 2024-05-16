@@ -40,7 +40,7 @@ public class SkillProfileService {
     public SkillProfileListDto retrieveSuperheroSkillProfileList(Long superheroId) throws ApiException {
         List<SkillProfileDto> profileList = skillProfileRepository.findBySuperheroIdOrderBySkillId(superheroId).stream()
                 .map(SkillProfileDto::fromDomain).toList();
-        if (profileList.size() == 0) {
+        if (profileList.isEmpty()) {
             throw new ApiException(HttpStatus.NOT_FOUND, SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG + superheroId);
         }
 
@@ -72,8 +72,6 @@ public class SkillProfileService {
             throw new ApiException(e.getStatusCode(), e.getReason());
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG);
-        } catch (RuntimeException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG);
         }
     }
 
@@ -96,8 +94,6 @@ public class SkillProfileService {
         } catch (ApiException e) {
             throw new ApiException(e.getStatusCode(), e.getReason());
         } catch (DataIntegrityViolationException e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, SKILL_PROFILE_SUPERHERO_NOT_UPDATED_MSG);
-        } catch (RuntimeException e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, SKILL_PROFILE_SUPERHERO_NOT_UPDATED_MSG);
         }
     }

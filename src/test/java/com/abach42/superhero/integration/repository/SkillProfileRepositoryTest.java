@@ -31,7 +31,7 @@ public class SkillProfileRepositoryTest {
 
     @Test
     @DisplayName("find by superhero id returns skill profiles ordered by skill id")
-    void testFindBySuperheroIdOrderBySkillId() {
+    public void testFindBySuperheroIdOrderBySkillId() {
         List<SkillProfile> actual = subject.findBySuperheroIdOrderBySkillId(1L);
         assertThat(actual.size()).isEqualTo(2);
 
@@ -40,7 +40,7 @@ public class SkillProfileRepositoryTest {
 
     @Test
     @DisplayName("find by superhero id and skill id returns one skill")
-    void testFindBySuperheroIdAndSkillId() {
+    public void testFindBySuperheroIdAndSkillId() {
         Optional<SkillProfile> actual = subject.findBySuperheroIdAndSkillId(1L, 1L);
 
         assertThat(actual).isNotEmpty();

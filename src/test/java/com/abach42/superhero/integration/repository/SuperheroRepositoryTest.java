@@ -40,21 +40,21 @@ public class SuperheroRepositoryTest {
     class CountTest {
         @Test
         @DisplayName("count superheroes does not count soft deleted")
-        void testCountDoesNotCountSoftDeleted() {
+        public void testCountDoesNotCountSoftDeleted() {
             assertThat(subject.count()).isEqualTo(1L);
             assertThat(subject.countByDeletedIsTrue()).isEqualTo(1L);
         }
     
         @Test
         @DisplayName("find all superheroes does not find soft deleted")
-        void testFindAllDoesNotFindSoftDeleted() {
+        public void testFindAllDoesNotFindSoftDeleted() {
             assertThat(subject.findAll()).size().isEqualTo(1);
             assertThat(subject.findAll(Pageable.ofSize(1)).getNumberOfElements()).isEqualTo(1);
         }
     
         @Test
         @DisplayName("find all superheroes does not find soft deleted")
-        void testFindByIdDoesNotFindSoftDeleted() {
+        public void testFindByIdDoesNotFindSoftDeleted() {
             assertThat(subject.findById(1L).isPresent()).isTrue();
             assertThat(subject.findById(2L).isPresent()).isFalse();
         }
@@ -63,7 +63,7 @@ public class SuperheroRepositoryTest {
     @Test
     @DisplayName("delete by deleted is true, erases record of soft deleted")
     @Transactional
-    void testDeleteByDeletedErases() {
+    public void testDeleteByDeletedErases() {
         subject.deleteByDeletedIsTrue();
         assertThat(subject.count()).isEqualTo(1L);
             assertThat(subject.countByDeletedIsTrue()).isEqualTo(0);
@@ -72,7 +72,7 @@ public class SuperheroRepositoryTest {
     @Test
     @DisplayName("add new superhero")
     @Transactional
-    void testAddNewSuperhero() {
+    public void testAddNewSuperhero() {
         Superhero superheroStub = TestDataConfiguration.getSuperheroStubWithPassword();
         subject.save(superheroStub);
 
@@ -82,7 +82,7 @@ public class SuperheroRepositoryTest {
     @Test
     @DisplayName("update existing superhero")
     @Transactional
-    void testUpdateSuperhero() {
+    public void testUpdateSuperhero() {
         Superhero superhero = subject.findById(1L).get();
         superhero.setAlias("new");
         Superhero updatedSuperhero = subject.save(superhero);

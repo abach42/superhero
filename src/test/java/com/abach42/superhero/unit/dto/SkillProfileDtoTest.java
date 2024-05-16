@@ -20,7 +20,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
 public class SkillProfileDtoTest {
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     @DisplayName("Skill can be mapped to it's DTO")

@@ -21,7 +21,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
 public class SuperheroDtoTest {
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     @DisplayName("Superhero can be mapped to it's DTO")
