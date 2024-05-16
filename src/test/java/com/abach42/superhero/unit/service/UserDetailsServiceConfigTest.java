@@ -18,7 +18,7 @@ import com.abach42.superhero.dto.SuperheroUserDto;
 import com.abach42.superhero.service.SuperheroUserService;
 
 @ExtendWith(MockitoExtension.class)
-class UserDetailsServiceConfigTest {
+public class UserDetailsServiceConfigTest {
 
     @Mock
     private SuperheroUserService superheroUserService;
@@ -26,14 +26,14 @@ class UserDetailsServiceConfigTest {
     private UserDetailsServiceConfig userDetailsServiceConfig;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userDetailsServiceConfig = new UserDetailsServiceConfig();
+        this.userDetailsServiceConfig = new UserDetailsServiceConfig();
     }
 
     @Test
     @DisplayName("User details service returns correct user details")
-    void userDetailsServiceReturnsCorrectUserDetails() {
+    public void userDetailsServiceReturnsCorrectUserDetails() {
         SuperheroUserDto mockUserDto = new SuperheroUserDto("test@example.com", "password123", "USER");
         given(superheroUserService.retrieveSuperheroUser(anyString())).willReturn(mockUserDto);
 

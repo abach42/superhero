@@ -1,19 +1,18 @@
 package com.abach42.superhero.unit.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -41,7 +40,7 @@ public class SkillProfileServiceTest {
     private SuperheroService superheroService;
 
     @Mock
-    private SkillService skillService;
+    private SkillService skillService; // used by Mockito injection
 
     @InjectMocks
     private SkillProfileService subject;
@@ -86,11 +85,10 @@ public class SkillProfileServiceTest {
     @DisplayName("Add Superhero skill profile throws")
     public void testAddSuperheroSkillProfileThrows() {
         given(skillProfileRepository.save(any(SkillProfile.class)))
-            .willThrow(new DataIntegrityViolationException("boo"), new RuntimeException("boo"));
+            .willThrow(new DataIntegrityViolationException("boo"));
 
         ApiException exception = assertThrows(ApiException.class, 
                 () -> subject.addSuperheroSkillProfile(1L, TestDataConfiguration.getSkillProfileDtoStub()));
-        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -115,14 +113,14 @@ public class SkillProfileServiceTest {
     @DisplayName("Change Superhero skill profile throws")
     public void testChangeSuperheroSkillProfileThrows() {
         given(superheroService.getSuperhero(anyLong())).willReturn(TestDataConfiguration.getSuperheroStub());
-        given(skillProfileRepository.findBySuperheroIdAndSkillId(anyLong(), anyLong())).willReturn(Optional.of(TestDataConfiguration.getSkillProfileStub()));
-
-        given(skillProfileRepository.save(TestDataConfiguration.getSkillProfileStub()))
-            .willThrow(new DataIntegrityViolationException("boo"), new RuntimeException("boo"));
+        SkillProfile skillProfileStub = TestDataConfiguration.getSkillProfileStub();
+        given(skillProfileRepository.findBySuperheroIdAndSkillId(anyLong(), anyLong())).willReturn(Optional.of(skillProfileStub));
+    
+        given(skillProfileRepository.save(skillProfileStub))
+            .willThrow(new DataIntegrityViolationException("boo"));
 
         ApiException exception = assertThrows(ApiException.class, 
                 () -> subject.changeSuperheroSkillProfile(1L, 1L, TestDataConfiguration.getSkillProfileDtoStub()));
-        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }

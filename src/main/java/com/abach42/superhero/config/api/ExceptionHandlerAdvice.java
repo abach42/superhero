@@ -46,7 +46,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDto> handleAccessDenied(AccessDeniedException exception, ServletWebRequest request) {
-        return new ResponseEntity<ErrorDto>(
+        return new ResponseEntity<>(
             new ErrorDto(getStatusCodeNumber(HttpStatus.FORBIDDEN), getError(HttpStatus.FORBIDDEN), exception.getMessage(), getPath(request)),
                 HttpStatus.FORBIDDEN);
     }
@@ -69,6 +69,6 @@ public class ExceptionHandlerAdvice {
     }
 
     private String getPath(ServletWebRequest request) {
-        return request.getRequest().getRequestURI().toString();
+        return request.getRequest().getRequestURI();
     }
 }

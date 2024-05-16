@@ -4,7 +4,6 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -162,7 +161,7 @@ public class SuperheroController {
     })
     @PostMapping
     public ResponseEntity<SuperheroDto> createSuperhero(@Validated(OnCreate.class) @RequestBody SuperheroDto superheroDto)
-                throws ApiException, MethodArgumentNotValidException {
+                throws ApiException {
         SuperheroDto createdSuperheroDto = superheroService.addSuperhero(superheroDto);
         URI uri = UriComponentsBuilder.fromUriString(PathConfig.SUPERHEROES + "/{id}" ).build(createdSuperheroDto.id());
         return ResponseEntity.created(uri).body(createdSuperheroDto);

@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import com.abach42.superhero.entity.Skill;
 import com.abach42.superhero.entity.SkillProfile;
 
-class SkillProfileTest {
+public class SkillProfileTest {
 
     @Test
     @DisplayName("Test constructor and getter")
-    void constructorAndGettersWorkCorrectly() {
+    public void constructorAndGettersWorkCorrectly() {
         Long superheroId = 1L;
         Integer intensity = 5;
         Skill skill = new Skill("foo");
@@ -27,7 +27,7 @@ class SkillProfileTest {
     @Test
     
     @DisplayName("Test setter")
-    void settersWorkCorrectly() {
+    public void settersWorkCorrectly() {
         SkillProfile skillProfile = new SkillProfile(1L, 5, new Skill("foo"));
         Long newSuperheroId = 2L;
         Integer newIntensity = 3;
