@@ -27,7 +27,7 @@ public class SuperheroUserServiceTest {
     private SuperheroUserRepository superheroUserRepository;
 
     @InjectMocks
-    private SuperheroUserService superheroUserService;
+    private SuperheroUserService subject;
 
     @Test
     @DisplayName("Get superhero can be converted")
@@ -38,7 +38,7 @@ public class SuperheroUserServiceTest {
 
         given(superheroUserRepository.findOneByEmailAndDeletedIsFalse(email)).willReturn(Optional.of(superheroUser));
 
-        SuperheroUserDto dto = superheroUserService.retrieveSuperheroUser(email);
+        SuperheroUserDto dto = subject.retrieveSuperheroUser(email);
         assertNotNull(dto);
         assertThat(email).isEqualTo(dto.email());
     }
@@ -49,6 +49,6 @@ public class SuperheroUserServiceTest {
         String email = "test@example.com";
         given(superheroUserRepository.findOneByEmailAndDeletedIsFalse(email)).willReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> superheroUserService.retrieveSuperheroUser(email));
+        assertThrows(UserNotFoundException.class, () -> subject.retrieveSuperheroUser(email));
     }
 }

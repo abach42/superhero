@@ -30,7 +30,7 @@ public class SkillServiceTest {
     private SkillRepository skillRepository;
 
     @InjectMocks
-    private SkillService skillService;
+    private SkillService subject;
 
 
     @Test
@@ -39,7 +39,7 @@ public class SkillServiceTest {
         List<Skill> skills = Collections.emptyList();
         given(skillRepository.findAll()).willReturn(skills);
 
-        ApiException exception = assertThrows(ApiException.class, () -> skillService.getSkillList());
+        ApiException exception = assertThrows(ApiException.class, () -> subject.getSkillList());
         assertThat(HttpStatus.NOT_FOUND).isEqualTo(exception.getStatusCode());
     }
 
@@ -50,7 +50,7 @@ public class SkillServiceTest {
         Skill skill = new Skill("Flying");
         given(skillRepository.findById(skillId)).willReturn(Optional.of(skill));
 
-        SkillDto dto = skillService.getSkillConverted(skillId);
+        SkillDto dto = subject.getSkillConverted(skillId);
         assertNotNull(dto);
         assertThat(skill.getName()).isEqualTo(dto.name());
     }
