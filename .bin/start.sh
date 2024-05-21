@@ -18,4 +18,4 @@ echo "--------------------------------------------------"
 echo " 🐳 Start docker network"
 echo "--------------------------------------------------"
 
-docker-compose up
+docker compose up

@@ -11,7 +11,7 @@ echo "--------------------------------------------------"
 # starts just database container and then application by maven to be able to code hotswap
 export $(cat .env | xargs)
 cd ./src/main/resources/db/oci/
-docker-compose up -d
+docker compose up -d
 
 echo "--------------------------------------------------"
 echo " 🌱 Start Spring Boot application 'mvn clean spring-boot:run'"

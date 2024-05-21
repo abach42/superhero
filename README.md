@@ -15,7 +15,7 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 ## Start project in your docker environment 🐋
 
-👆 You will need docker/ docker-compose installed on your OS.
+👆 You will need docker/ docker compose V2 installed on your OS.
 
 Start with `.bin/start.sh`
 
@@ -53,7 +53,7 @@ This will generate keys, make an image of Java project (using own Java installat
 
 ## Developing (using hot swapping of code) 🔧
 
-👆 You will need docker/ docker-compose installed on your OS and Java 21.0.2
+👆 You will need docker/ docker compose V2 installed on your OS and Java 21.0.2
 
 * Start application: `./.bin/dev/mvn-spring-boot-run.sh`
   - Postgres database will be started and fully initialized in a docker container.
