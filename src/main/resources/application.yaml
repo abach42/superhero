@@ -9,7 +9,13 @@ server:
         include-binding-errors: always
         include-stacktrace: on-param
         include-exception: false
+    servlet:
+        session:
+            cookie:
+                same-site: "none"
 spring:
+    mvc:
+        log-request-details: true
     config:
         activate:
             on-profile: default
@@ -41,6 +47,8 @@ spring:
                 jwt:
                     public-key: classpath:.certs/public.pem
                     private-key: classpath:.certs/private.pem
+    codec:
+        log-request-details: true
 springdoc:
     swagger-ui:
         enabled: true
@@ -54,6 +62,8 @@ logging:
             hibernate:
                 SQL: DEBUG
                 orm.jdbc.bind: TRACE
+            springframework:
+                web: DEBUG
 abach42:
     superhero:
         eraseRecordsMarkedAsDeletedAt: "0 0 0 ? * SAT" 
