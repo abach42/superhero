@@ -3,6 +3,9 @@
 @sheme = https
 @domain = {{sheme}}://{{host}}:{{port}}
 
+### Prefilght
+OPTIONS {{domain}}/api/v1/login HTTP/1.1
+
 ### Get token Admin
 # @name login
 GET {{domain}}/api/v1/login HTTP/1.1
