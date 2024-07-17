@@ -1,4 +1,16 @@
 spring.application.name: superhero
+com.abach42.superhero.cors:
+  allowed-origins: 
+    - http://localhost:3000
+    - https://localhost:3001
+  allowed-methods: 
+    - '*'
+  allowed-headers:
+    - '*'
+  exposed-headers: 
+    - '*'
+  allow-credentials: true
+  maxAge: 3600
 server:
     port: 8443
     ssl:
