@@ -29,6 +29,10 @@ Authorization: Basic foo@bar.org foobar
 @token = {{login.response.body.*}}
 
 ### Get all superheroes
+GET {{domain}}/api/v1/refresh-token HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all superheroes
 GET {{domain}}/api/v1/superheroes HTTP/1.1
 Authorization: Bearer {{token}}
 

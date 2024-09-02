@@ -30,7 +30,8 @@ public class TokenService {
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("scope", scope)
+                //todo danger !! divide into jwt for "action" and refresh token for "refresh" (right now both tokens work for both)
+                .claim("scope", scope + " action refresh")
                 .claim("aud", "messaging")
                 .claim("allowed", "authentication")
                 .build();
