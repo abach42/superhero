@@ -47,6 +47,14 @@ public class AuthController {
     })
     @GetMapping("/login")
     public ResponseEntity<String> showToken(Authentication authentication) {
+        //todo return refresh token as well, by dividing generateToken into strategy
+        String token = tokenService.generateToken(authentication);
+        return ResponseEntity.ok().body(token);
+    }
+
+    @GetMapping("/refresh-token")
+    ResponseEntity<String> refreshToken(Authentication authentication) {
+        //todo return refresh token as well, by dividing generateToken into strategy
         String token = tokenService.generateToken(authentication);
         return ResponseEntity.ok().body(token);
     }
