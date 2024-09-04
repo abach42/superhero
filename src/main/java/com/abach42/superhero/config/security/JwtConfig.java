@@ -56,7 +56,7 @@ public class JwtConfig {
 
         @Override
         public OAuth2TokenValidatorResult validate(Jwt jwt) {
-            if (jwt.getClaim("allowed").equals("authentication")) {
+            if (jwt.getClaim("azp").equals("superhero")) {
                 return OAuth2TokenValidatorResult.success();
             } else {
                 return OAuth2TokenValidatorResult.failure(error);

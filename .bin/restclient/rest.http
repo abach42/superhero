@@ -11,29 +11,23 @@ OPTIONS {{domain}}/api/v1/login HTTP/1.1
 GET {{domain}}/api/v1/login HTTP/1.1
 Authorization: Basic admin@example.com foobar
 
-@jwt = {{login.response.body.jwt}}
-@refreshToken = = {{login.response.body.refreshToken}}
+@jwt = {{login.response.body.access_token}}
+@token = {{login.response.body.refresh_token}}
 
 ### Get token User
-# @name login
-GET {{domain}}/api/v1/login HTTP/1.1
-Authorization: Basic chris@example.com foobar
-
-@jwt = {{login.response.body.jwt}}
-@refreshToken = = {{login.response.body.refreshToken}}
+# #@name login
+# GET {{domain}}/api/v1/login HTTP/1.1
+# Authorization: Basic chris@example.com foobar
 
 
 ### Get token Admin
-# @name login
-GET {{domain}}/api/v1/login HTTP/1.1
-Authorization: Basic foo@bar.org foobar
-
-@jwt = {{login.response.body.jwt}}
-@refreshToken = = {{login.response.body.refreshToken}}
+# #@name login
+# GET {{domain}}/api/v1/login HTTP/1.1
+# Authorization: Basic foo@bar.org foobar
 
 ### Get all superheroes
 GET {{domain}}/api/v1/refresh-token HTTP/1.1
-Authorization: Bearer {{refreshToken}}
+Authorization: Bearer {{token}}
 
 ### Get all superheroes
 GET {{domain}}/api/v1/superheroes HTTP/1.1

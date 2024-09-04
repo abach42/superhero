@@ -20,7 +20,7 @@ public class TokenService {
         String jwt = retrieveJwt(authentication);
         String refreshToken = retrieveRefreshToken(authentication);
 
-        return new TokenDto(jwt, refreshToken);
+        return new TokenDto(jwt, "Bearer", JwtTokenGenerator.EXP * 60, refreshToken);
     }
  
     private String retrieveJwt(Authentication authentication) {

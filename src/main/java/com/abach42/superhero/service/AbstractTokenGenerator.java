@@ -31,9 +31,9 @@ public abstract class AbstractTokenGenerator {
                 .issuedAt(now)
                 .expiresAt(now.plus(getExpirationMinutes(), ChronoUnit.MINUTES))
                 .subject(authentication.getName())
-                .claim("scope", scope + getScope())
+                .claim("scope", scope + " " + getScope())
+                .claim("azp", "superhero")
                 .claim("aud", "messaging")
-                .claim("allowed", "authentication")
                 .build();
         
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
