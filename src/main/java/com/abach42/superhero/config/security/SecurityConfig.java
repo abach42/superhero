@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/login").authenticated()
-                        .requestMatchers("api/v1/refresh-token").access(hasScope(RefreshTokenGenerator.SCOPE))
+                        .requestMatchers("/api/v1/refresh-token").access(hasScope(RefreshTokenGenerator.SCOPE))
                         .requestMatchers("/api/v1/superheroes", 
                                 "/api/v1/superheroes/**").access(hasScope(JwtTokenGenerator.SCOPE))
                         .anyRequest().denyAll())

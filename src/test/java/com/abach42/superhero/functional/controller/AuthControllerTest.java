@@ -1,6 +1,5 @@
 package com.abach42.superhero.functional.controller;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -28,7 +27,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.controller.AuthController;
-import com.abach42.superhero.dto.SkillListDto;
 import com.abach42.superhero.dto.TokenDto;
 import com.abach42.superhero.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,7 +76,7 @@ public class AuthControllerTest {
     @DisplayName("Login authenticated returns token")
     @WithMockUser
     public void testGetSuperheroAuthenticatedReturnsJwt() throws Exception {
-        TokenDto expected = new TokenDto("foo", "bar");
+        TokenDto expected = new TokenDto("foo", "Bearer", 1000, "bar");
         given(tokenService.generateTokenPair(any(Authentication.class))).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
