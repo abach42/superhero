@@ -90,4 +90,6 @@ public class AuthControllerTest {
                 TokenDto.class);
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
+
+    //todo test jwt and refresh token by security
 }
