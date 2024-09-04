@@ -14,6 +14,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.abach42.superhero.config.security.AppConfiguration.CorsConfigurationProperties;
+import com.abach42.superhero.service.JwtTokenGenerator;
+import com.abach42.superhero.service.RefreshTokenGenerator;
+
 import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
 
 
@@ -33,9 +36,9 @@ public class SecurityConfig {
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/login").authenticated()
-                        .requestMatchers("api/v1/refresh-token").access(hasScope("refresh"))
-                        .requestMatchers("/api/v1/superheroes").access(hasScope("action"))
-                        .requestMatchers("/api/v1/superheroes/**").access(hasScope("action"))
+                        .requestMatchers("api/v1/refresh-token").access(hasScope(RefreshTokenGenerator.SCOPE))
+                        .requestMatchers("/api/v1/superheroes", 
+                                "/api/v1/superheroes/**").access(hasScope(JwtTokenGenerator.SCOPE))
                         .anyRequest().denyAll())
                 .oauth2ResourceServer((oauth2) -> oauth2
                         .jwt(Customizer.withDefaults()))

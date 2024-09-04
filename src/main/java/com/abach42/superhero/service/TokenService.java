@@ -1,41 +1,33 @@
 package com.abach42.superhero.service;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
-
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+
+import com.abach42.superhero.dto.TokenDto;
 
 @Service
 public class TokenService {
-    private final JwtEncoder jwtEncoder;
+    AbstractTokenGenerator jwTokenGenerator;
+    AbstractTokenGenerator refresTokenGenerator;
 
-    public TokenService(JwtEncoder jwtEncoder) {
-        this.jwtEncoder = jwtEncoder;
+    TokenService(AbstractTokenGenerator jwTokenGenerator, 
+        AbstractTokenGenerator refresTokenGenerator) {
+        this.jwTokenGenerator = jwTokenGenerator;
+        this.refresTokenGenerator = refresTokenGenerator;
     }
 
-    public String generateToken(Authentication authentication) {
-        Instant now = Instant.now();
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+    public TokenDto generateTokenPair(Authentication authentication) {
+        String jwt = retrieveJwt(authentication);
+        String refreshToken = retrieveRefreshToken(authentication);
 
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(authentication.getName())
-                //todo danger !! divide into jwt for "action" and refresh token for "refresh" (right now both tokens work for both)
-                .claim("scope", scope + " action refresh")
-                .claim("aud", "messaging")
-                .claim("allowed", "authentication")
-                .build();
-        
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return new TokenDto(jwt, refreshToken);
+    }
+ 
+    private String retrieveJwt(Authentication authentication) {
+        return jwTokenGenerator.generate(authentication);
+    }
+
+    private String retrieveRefreshToken(Authentication authentication) {
+        return refresTokenGenerator.generate(authentication);
     }
 }
