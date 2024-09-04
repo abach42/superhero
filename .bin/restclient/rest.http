@@ -25,8 +25,16 @@ Authorization: Basic admin@example.com foobar
 # GET {{domain}}/api/v1/login HTTP/1.1
 # Authorization: Basic foo@bar.org foobar
 
-### Get all superheroes
+### Refresh Token
 GET {{domain}}/api/v1/refresh-token HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Refresh Token with jwt does not work
+GET {{domain}}/api/v1/refresh-token HTTP/1.1
+Authorization: Bearer {{jwt}}
+
+### Get all superheroes with refresh token does not work
+GET {{domain}}/api/v1/superheroes HTTP/1.1
 Authorization: Bearer {{token}}
 
 ### Get all superheroes
