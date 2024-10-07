@@ -1,0 +1,151 @@
+@host = localhost
+@port = 8443
+@sheme = https
+@domain = {{sheme}}://{{host}}:{{port}}
+
+### Prefilght
+OPTIONS {{domain}}/api/v1/login HTTP/1.1
+
+### Get token Admin
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic admin@example.com foobar
+
+> {% client.global.set("token", response.body); %}
+
+### Get token User
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic chris@example.com foobar
+
+> {% client.global.set("token", response.body); %}
+
+### Get token Admin
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic foo@bar.org foobar
+
+> {% client.global.set("token", response.body); %}
+
+### Get all superheroes
+GET {{domain}}/api/v1/superheroes HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all superheroes with foolish page, will fail
+GET {{domain}}/api/v1/superheroes?page=666 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all superheroes with page
+GET {{domain}}/api/v1/superheroes?page=1 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get superhero 404
+GET {{domain}}/api/v1/superheroes/666 HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get superhero
+GET {{domain}}/api/v1/superheroes/6 HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Add new superhero
+POST {{domain}}/api/v1/superheroes HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "alias": "Mr. Incredible",
+  "realName": "Bob Parr",
+  "dateOfBirth": "1970-01-01",
+  "gender": "Male",
+  "occupation": "Insurance employee",
+  "originStory": "Story of superhero.",
+  "user": {
+    "email": "foooooo@bar.org",
+    "password": "foobar",
+    "role": "USER"
+  }
+}
+
+### Add new superhero
+POST {{domain}}/api/v1/superheroes HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
+
+### Update superhero - will be ok
+PUT {{domain}}/api/v1/superheroes/1111 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+
+  "realName": "Alex Admin ddbbb",
+  "dateOfBirth": "1987-07-22",
+  "gender": "Male",
+  "occupation": "Administrator"
+}
+
+### Update superhero
+PUT {{domain}}/api/v1/superheroes/1 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "alias": "The Wise Owl",
+  "realName": "Alex Admin ddbbb",
+  "dateOfBirth": "1987-07-22",
+  "gender": "Male",
+  "occupation": "Administrator"
+}
+
+### Delete superheo (mark as deleted)
+DELETE {{domain}}/api/v1/superheroes/4 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all skills
+GET {{domain}}/api/v1/skills HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get skill
+GET {{domain}}/api/v1/skills/1 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get skill profile 
+GET {{domain}}/api/v1/superheroes/1/skillprofiles HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get skill profile 
+GET {{domain}}/api/v1/superheroes/1/skillprofiles/15 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Add skill profile to superhero
+POST {{domain}}/api/v1/superheroes/1/skillprofiles HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "intensity": 2,
+  "skill": {
+    "id": 22
+  }
+}
+
+### Update skill profile for superhero
+PUT {{domain}}/api/v1/superheroes/1/skillprofiles/15 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "intensity": 4
+}
+
+### really delete skill profile to superhero
+DELETE {{domain}}/api/v1/superheroes/1/skillprofiles/15 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
