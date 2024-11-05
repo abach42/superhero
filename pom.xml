@@ -118,11 +118,11 @@
             <name>abach42.superhero</name>
           </image>
             <environmentVariables>
-                <SPRING_DATASOURCE_USERNAME>db</SPRING_DATASOURCE_USERNAME>
-                <SPRING_DATASOURCE_NAME>db</SPRING_DATASOURCE_NAME>
-                <SPRING_DATASOURCE_URL>jdbc:postgresql://localhost:15432/db</SPRING_DATASOURCE_URL>
-                <STORE_PASS>123456</STORE_PASS>
-                <SPRING_DATASOURCE_PASSWORD>db</SPRING_DATASOURCE_PASSWORD>
+                <SPRING_DATASOURCE_USERNAME>${env.SPRING_DATASOURCE_USERNAME}</SPRING_DATASOURCE_USERNAME>
+                <SPRING_DATASOURCE_NAME>${env.SPRING_DATASOURCE_NAME}</SPRING_DATASOURCE_NAME>
+                <SPRING_DATASOURCE_URL>${env.SPRING_DATASOURCE_URL}</SPRING_DATASOURCE_URL>
+                <STORE_PASS>${env.STORE_PASS}</STORE_PASS>
+                <SPRING_DATASOURCE_PASSWORD>${env.SPRING_DATASOURCE_PASSWORD}</SPRING_DATASOURCE_PASSWORD>
             </environmentVariables>
         </configuration>
       </plugin>
