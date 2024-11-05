@@ -42,6 +42,7 @@ public class JwtConfig {
     JwtDecoder jwtDecoder() throws JOSEException {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
 
+        //notice: documentation purpose only
         OAuth2TokenValidator<Jwt> validators = new DelegatingOAuth2TokenValidator<>(
             new JwtClaimValidator<List<String>>("aud", aud -> aud.contains("messaging")),
             new CustomValidator()
