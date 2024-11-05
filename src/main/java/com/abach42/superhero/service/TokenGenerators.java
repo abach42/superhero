@@ -5,15 +5,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TokenGenerators {
+    
     @Bean
     AbstractTokenGenerator jwTokenGenerator() {
         return new JwtTokenGenerator();
     }
 
     @Bean
-    AbstractTokenGenerator refresTokenGenerator() {
+    AbstractTokenGenerator refreshTokenGenerator() {
         return new RefreshTokenGenerator();
     }
-
-    
 }

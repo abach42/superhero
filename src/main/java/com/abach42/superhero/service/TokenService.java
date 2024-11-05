@@ -8,12 +8,12 @@ import com.abach42.superhero.dto.TokenDto;
 @Service
 public class TokenService {
     AbstractTokenGenerator jwTokenGenerator;
-    AbstractTokenGenerator refresTokenGenerator;
+    AbstractTokenGenerator refreshTokenGenerator;
 
     TokenService(AbstractTokenGenerator jwTokenGenerator, 
-        AbstractTokenGenerator refresTokenGenerator) {
+        AbstractTokenGenerator refreshTokenGenerator) {
         this.jwTokenGenerator = jwTokenGenerator;
-        this.refresTokenGenerator = refresTokenGenerator;
+        this.refreshTokenGenerator = refreshTokenGenerator;
     }
 
     public TokenDto generateTokenPair(Authentication authentication) {
@@ -28,6 +28,6 @@ public class TokenService {
     }
 
     private String retrieveRefreshToken(Authentication authentication) {
-        return refresTokenGenerator.generate(authentication);
+        return refreshTokenGenerator.generate(authentication);
     }
 }
