@@ -91,7 +91,7 @@ This will generate keys, make an image of Java project (using own Java installat
 * PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 
-## New for 0.8.0 ✨
+## New for 0.9.0 ✨
 * Refresh token
 
 ## Plans for 0.10.0 ⏳
