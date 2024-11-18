@@ -1,6 +1,5 @@
 package com.abach42.superhero.functional.controller;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -28,7 +27,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.controller.AuthController;
+import com.abach42.superhero.dto.TokenDto;
 import com.abach42.superhero.service.TokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * Mocked rest client, regarding validation, mocked database
@@ -48,6 +49,9 @@ public class AuthControllerTest {
 
     @MockBean
     private TokenService tokenService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
 	public void setup() {
@@ -72,7 +76,8 @@ public class AuthControllerTest {
     @DisplayName("Login authenticated returns token")
     @WithMockUser
     public void testGetSuperheroAuthenticatedReturnsJwt() throws Exception {
-        given(tokenService.generateToken(any(Authentication.class))).willReturn("foo");
+        TokenDto expected = new TokenDto("foo", "Bearer", 1000, "bar");
+        given(tokenService.generateTokenPair(any(Authentication.class))).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
                         get(PATH + "/login")
@@ -81,8 +86,10 @@ public class AuthControllerTest {
                         .andExpect(status().isOk())
                 .andReturn();
 
-         
-        String actual = mvcResult.getResponse().getContentAsString();
-        assertThat(actual).isEqualTo("foo");
+        TokenDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                TokenDto.class);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
+
+    //todo test jwt and refresh token by security
 }

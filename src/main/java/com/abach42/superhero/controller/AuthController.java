@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.dto.TokenDto;
 import com.abach42.superhero.service.TokenService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,8 +47,13 @@ public class AuthController {
         )
     })
     @GetMapping("/login")
-    public ResponseEntity<String> showToken(Authentication authentication) {
-        String token = tokenService.generateToken(authentication);
-        return ResponseEntity.ok().body(token);
+    public ResponseEntity<TokenDto> showToken(Authentication authentication) {
+        return ResponseEntity.ok().body(tokenService.generateTokenPair(authentication));
+    }
+
+    @GetMapping("/refresh-token")
+    ResponseEntity<TokenDto> refreshToken(Authentication authentication) {
+        //validate incoming refresh token against a persistence
+        return ResponseEntity.ok().body(tokenService.generateTokenPair(authentication));
     }
 }
