@@ -1,21 +1,23 @@
 services:
   database:
-    extends:
-      file: ./src/main/resources/db/oci/docker-compose.yml
-      service: postgres-db
+    container_name: superhero-database
+    image: postgres:latest
+    restart: no
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_USER: db
+      POSTGRES_PASSWORD: db
+      POSTGRES_DB: db
+    volumes:
+      - ./src/main/resources/db/oci/.data/:/var/lib/posgresql/data/
+      - ./src/main/resources/db/oci/create.sql:/docker-entrypoint-initdb.d/create.sql
   application:
     build: .
     image: abach42.superhero:latest
-    env_file: 
-      - .env
     container_name: superhero-server
-    restart: always
+    restart: no
     ports:
       - "8443:8443"
     depends_on:
       - database
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://database/db
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - STORE_PASS=${STORE_PASS}

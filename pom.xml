@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.5</version>
+    <version>3.4.1</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.abach42</groupId>
@@ -16,6 +16,72 @@
   <properties>
     <java.version>21</java.version>
   </properties>
+  <profiles>
+    <profile>
+      <!-- 🚀 default development profile, localhost 🏡, docker 🐳, postgres 🐘
+          👆 usage: ./mvnw clean spring-boot:run -Dskiptests -Pdefault
+      -->
+      <id>default</id>
+      <properties>
+          <spring.profiles>default</spring.profiles>
+      </properties>
+      <activation>
+          <activeByDefault>true</activeByDefault>
+      </activation>
+      <!-- dependencies>todo: put your dependencies for profile here...</dependencies -->
+      <build>
+          <plugins>
+              <!-- Exec Maven Plugin for running 🐋 Docker Compose in the 'develop' profile -->
+              <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin/3.5.0 -->
+              <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>exec-maven-plugin</artifactId>
+                  <version>3.4.1</version>
+                  <executions>
+                    <execution>
+                      <id>echo-message</id>
+                      <phase>initialize</phase>
+                      <goals>
+                        <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                        <executable>echo</executable>
+                        <arguments>
+                          <argument>-e</argument>
+                          <argument>" *******************************************\n"</argument>
+                          <argument>"**** starting postgres docker container ***\n"</argument>
+                          <argument>"*******************************************"</argument>
+                        </arguments>
+                      </configuration>
+                    </execution>
+                    <execution>
+                      <id>start-docker-containers</id>
+                      <phase>initialize</phase>
+                      <goals>
+                        <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                        <executable>docker-compose</executable>
+                        <arguments>
+                          <argument>-f</argument>
+                          <argument>./src/main/resources/db/oci/docker-compose.yml</argument>
+                          <argument>up</argument>
+                          <argument>-d</argument>
+                        </arguments>
+                      </configuration>
+                    </execution>
+                  </executions>
+              </plugin>
+          </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>container</id>
+      <properties>
+          <spring.profiles>container</spring.profiles>
+      </properties>
+    </profile>
+  </profiles>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -117,13 +183,6 @@
           <image>
             <name>abach42.superhero</name>
           </image>
-            <environmentVariables>
-                <SPRING_DATASOURCE_USERNAME>${env.SPRING_DATASOURCE_USERNAME}</SPRING_DATASOURCE_USERNAME>
-                <SPRING_DATASOURCE_NAME>${env.SPRING_DATASOURCE_NAME}</SPRING_DATASOURCE_NAME>
-                <SPRING_DATASOURCE_URL>${env.SPRING_DATASOURCE_URL}</SPRING_DATASOURCE_URL>
-                <STORE_PASS>${env.STORE_PASS}</STORE_PASS>
-                <SPRING_DATASOURCE_PASSWORD>${env.SPRING_DATASOURCE_PASSWORD}</SPRING_DATASOURCE_PASSWORD>
-            </environmentVariables>
         </configuration>
       </plugin>
       <plugin>

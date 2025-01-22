@@ -8,27 +8,13 @@ echo "--------------------------------------------------"
 
 keystore_file="abach42.superhero.p12"
 path="src/main/resources/.certs"
-env_file=".env"
 
-# get env vars from .env
-export $(cat .env | xargs)
-
-if [ -f "$path/$keystore_file" ]  && [ -n "$STORE_PASS" ]; then
-    echo "  🟢 Keystore '$path/$keystore_file' exists."
-    echo "  🟢 STORE_PASS environment variable is set."
-    exit 0
-fi
-
-# Check if the keystore file exists and delete
+# Check if the keystore file exists then stop
 if [ -f "$path/$keystore_file" ]; then
-    rm $path/$keystore_file
-fi
-
-# Check if STORE_PASS environment variable is set
-if [ -z "$STORE_PASS" ]; then
-    echo "  ⛔ Error: STORE_PASS environment variable is not set. Cannot generate keystore without storepass."
+    echo "  🟢 keystore file already exists."
     exit 1
 fi
+
 
 # Determine the path for keytool depending on OS
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -60,7 +46,7 @@ echo "The keystore file '$keystore_file' does not exist. Creating a new one..."
         -storetype PKCS12 \
         -keystore $path/$keystore_file \
         -validity 365 \
-        -storepass $STORE_PASS
+        -storepass onlyForLocalhost123
 
 # Check if the keystore file exists 
 if [ -f "$path/$keystore_file" ]; then
@@ -69,3 +55,7 @@ else
     echo "  ⛔ Error: '$path/$keystore_file' not created."
     exit 1
 fi
+
+echo "--------------------------------------------------"
+echo " End 🗝️ Building TLS key"
+echo "--------------------------------------------------"
