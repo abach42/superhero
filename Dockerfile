@@ -4,7 +4,7 @@ WORKDIR /build
 
 COPY . /build
 
-RUN mvn clean install -DskipTests
+RUN mvn clean install -Pcontainer -DskipTests
 
 COPY target/*.jar /build/project.jar
 
