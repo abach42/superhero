@@ -11,7 +11,7 @@ echo "--------------------------------------------------"
 echo " 🖼️ Build docker image of Spring Boot application"
 echo "--------------------------------------------------"
 
-./mvnw clean package -DskipTests -Pcontainer spring-boot:build-image
+./mvnw clean -DskipTests -Pcontainer spring-boot:build-image
 
 echo "--------------------------------------------------"
 echo " 🐳 Start docker network"
