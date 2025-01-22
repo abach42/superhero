@@ -17,7 +17,7 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 👆 You will need docker/ docker compose V2 installed on your OS.
 
-Start with `.bin/start.sh`
+Start with `bin/start.sh`
 
 
 This will generate keys, make an image of Java project (using own Java installation on container, ignoring your installation), start a docker network, initialize a postgres database and provide localhost, TLS at port 8443.
@@ -55,18 +55,13 @@ This will generate keys, make an image of Java project (using own Java installat
 
 👆 You will need docker/ docker compose V2 installed on your OS and Java 21.0.2
 
-* Start application: `./.bin/dev/mvn-spring-boot-run.sh`
+* Start application: `./bin/dev/start.sh`
   - Postgres database will be started and fully initialized in a docker container.
   - Spring-boot will be started.
 
 * Run test by `mvn clean test`.
 
 * Open database client on `psql postgresql://db:db@localhost:15432/db`.
-
-### Stop and Restart for Development ⚙️
-
-* You can stop database container by `./.bin/dev/stop-database-container.sh`.
-* You can delete database container and lose all database changes by `./.bin/dev/delete-database-container.sh`, default schema and data will be restored next start.
 
 ## Endpoints
 

@@ -1,0 +1,10 @@
+spring:
+    config:
+        activate:
+            on-profile: container
+    datasource:
+        # runs internal of docker network
+        url: jdbc:postgresql://database:5432/db
+        # credentaial use only for localhost (production: change and use .env)
+        username: db
+        password: db
