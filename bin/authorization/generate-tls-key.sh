@@ -55,7 +55,3 @@ else
     echo "  ⛔ Error: '$path/$keystore_file' not created."
     exit 1
 fi
-
-echo "--------------------------------------------------"
-echo " End 🗝️ Building TLS key"
-echo "--------------------------------------------------"

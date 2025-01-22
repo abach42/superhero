@@ -23,8 +23,3 @@ if [ ! -f "$path/$private_key" ] || [ ! -f "$path/$public_key" ]; then
 else
     echo "  🟢 Key auth files already exist."
 fi
-
-
-echo "--------------------------------------------------"
-echo " End 🔐 Building auth keys"
-echo "--------------------------------------------------"
