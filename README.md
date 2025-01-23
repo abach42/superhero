@@ -1,6 +1,8 @@
 # Superhero Spring Boot RESTful API
 A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code - to store contacts of superheroes.
 
+🚀 Start with `bin/start.sh` (more information below)
+
 You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. You can run unit, functional and integrative tests using oci container solution ("Testcontainers" feature of spring boot). 
 
 ![Swagger UI](src/main/resources/static/img/swg.png)
@@ -13,14 +15,17 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 * Pagination on listing
 * Soft delete for superhero and user, cleaning database scheduler (to be discussed)
 
-## Start project in your docker environment 🐋
+## New for 0.9.0 ✨
+* Refresh token
 
-👆 You will need docker/ docker compose V2 installed on your OS.
+## Start project in your docker environment 🚀
+
+👆 You will need 🐋 docker/ docker compose V2 installed on your OS.
 
 Start with `bin/start.sh`
 
 
-This will generate keys, make an image of Java project (using own Java installation on container, ignoring your installation), start a docker network, initialize a postgres database and provide localhost, TLS at port 8443.
+This will generate keys, make an image of Java project,  initialize a postgres database as docker container and provide localhost, TLS at port 8443.
 
 ### Go on using 
 
@@ -63,6 +68,10 @@ This will generate keys, make an image of Java project (using own Java installat
 
 * Open database client on `psql postgresql://db:db@localhost:15432/db`.
 
+## Usind docker deployment
+
+Start `bin/oci/start.sh`
+
 ## Endpoints
 
 ### Authentication
@@ -85,9 +94,6 @@ This will generate keys, make an image of Java project (using own Java installat
 * POST /api/v1/superheroes/{superheroId}/skillprofiles
 * PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
-
-## New for 0.9.0 ✨
-* Refresh token
 
 ## Plans for 0.10.0 ⏳
 

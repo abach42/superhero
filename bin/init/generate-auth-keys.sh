@@ -1,9 +1,4 @@
 #!/bin/sh
-
-echo "--------------------------------------------------"
-echo " 🔐 Building auth keys"
-echo "--------------------------------------------------"
-
 # Define file names
 private_key="private.pem"
 public_key="public.pem"
