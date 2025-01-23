@@ -36,12 +36,25 @@ server:
         session:
             cookie:
                 same-site: "none"
+        # Static resources: In a stand-alone web application, the default servlet from the container is not enabled.
+        # The servlet container will serve static resources from the static paths 
+        # (e.g., /static, /public, /resources, or /META-INF/resources).
+        register-default-servlet: true
 spring:
-    mvc:
-        log-request-details: true
     config:
         activate:
             on-profile: default
+    mvc:
+        log-request-details: true
+        # Static resources: By default, resources are mapped on /**, 
+        # For instance, relocating all resources to /resources/** can be achieved
+        static-path-pattern: "/**"
+    web:
+        resources:
+            # You can also customize the static resource locations, replacing the default values with a list of directory 
+            # locations). The root servlet context 
+            # path, "/", is automatically added as a location as well.
+            static-locations: classpath:/public/, classpath:/static/
     main:
         banner-mode: off
     shell:
