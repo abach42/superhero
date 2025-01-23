@@ -5,6 +5,6 @@ import java.security.interfaces.RSAPublicKey;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "spring.security.oauth2.resourceserver.jwt")
+@ConfigurationProperties(prefix = "com.abach42.superhero.security.jwt")
 public record RsaKeyProperties(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
 }
