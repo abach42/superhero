@@ -37,8 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/login").authenticated()
                         .requestMatchers("/api/v1/refresh-token").access(hasScope(RefreshTokenGenerator.SCOPE))
-                        .requestMatchers("/api/v1/superheroes", 
-                                "/api/v1/superheroes/**").access(hasScope(JwtTokenGenerator.SCOPE))
+                        .requestMatchers("/api/v1/**").access(hasScope(JwtTokenGenerator.SCOPE))
                         .anyRequest().denyAll())
                 .oauth2ResourceServer((oauth2) -> oauth2
                         .jwt(Customizer.withDefaults()))

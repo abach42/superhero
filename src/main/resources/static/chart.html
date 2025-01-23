@@ -10,12 +10,31 @@
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- todo extract to css file -->
+    <style>
+        /* Ensure the container takes up full viewport height */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            max-width: 90%;
+            max-height: 70%;
+        }
+    </style>
 </head>
 <body class="p-3">
     <!-- Display superhero alias name above the chart -->
     <div id="superheroAlias" class="mt-3 mb-2"></div>
     <!-- Display origin story below the name -->
-    <div id="originStory" class="mb-4 col-6"></div>
+    <div id="originStory" class="mb-4"></div>
     <canvas id="skillsChart" width="400" height="400"></canvas>
 
     <script>
@@ -40,10 +59,13 @@
             if (!response.ok) {
                 throw new Error("Failed to fetch token");
             }
-            // Read the response body as text
-            return response.text();
+            // Read the response body as json
+            return response.json();
         })
-        .then(token => {
+        .then(tokenResponse => {
+            //extract access_token from response (ignoring refresh_token possibilites)
+            const token = tokenResponse.access_token; 
+
             // Step 2: Use the obtained token to fetch all skills
             fetch(`${baseURL}${apiEndpoint}/skills`, { 
                 method: "GET",
