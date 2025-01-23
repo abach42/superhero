@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abach42.superhero.config.api.PathConfig;
-import com.abach42.superhero.config.security.SecuredAdmin;
 import com.abach42.superhero.config.security.SecuredUser;
 import com.abach42.superhero.dto.ErrorDto;
 import com.abach42.superhero.dto.SkillDto;
