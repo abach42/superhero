@@ -1,5 +1,7 @@
 package com.abach42.superhero.config.security;
 
+import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +18,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.abach42.superhero.config.security.AppConfiguration.CorsConfigurationProperties;
 import com.abach42.superhero.service.JwtTokenGenerator;
 import com.abach42.superhero.service.RefreshTokenGenerator;
-
-import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
-
 
 @Configuration
 @EnableWebSecurity
@@ -50,10 +49,23 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    SecurityFilterChain documentationResourceFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain staticResourceFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/chart.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll());
+                        .requestMatchers(
+                            // documentation
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            // chart example
+                            "/chart.html",
+                            "/static/**", 
+                            // react spa
+                            "/index.html", 
+                            "/public/**",
+                            "/logo*.png", 
+                            "favicon.ico").permitAll()
+                        .anyRequest().denyAll());
+
         return http.build();
     }
 
