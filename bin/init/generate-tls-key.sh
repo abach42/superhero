@@ -1,9 +1,4 @@
 #!/bin/bash
-
-echo "--------------------------------------------------"
-echo " 🗝️ Building TLS key"
-echo "--------------------------------------------------"
-
 # to be able to use https, we do need this and the storepass variable in .env
 
 keystore_file="abach42.superhero.p12"

@@ -1,20 +1,15 @@
 #!/bin/bash
+# Script to run Maven with specified parameters
 
-./bin/authorization/generate-tls-key.sh
-./bin/authorization/generate-auth-keys.sh
+# Navigate to the directory containing the mvnw file
+cd "$(dirname "$0")/.." || exit
 
-# Starting application; code changes would be ignored
-# 1. Build image of actual code state
-# 2. Start OCI network database and Java
-
-echo "--------------------------------------------------"
-echo " 🖼️ Build docker image of Spring Boot application"
-echo "--------------------------------------------------"
-
-./mvnw clean -DskipTests -Pcontainer spring-boot:build-image
+source ./bin/init/init.sh
 
 echo "--------------------------------------------------"
-echo " 🐳 Start docker network"
+echo " 🪴  starting spring on default profile, skipping tests"
 echo "--------------------------------------------------"
 
-docker compose up
+# you can add -PmyProfile 
+$mvn clean spring-boot:run -DskipTests \
+    -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
