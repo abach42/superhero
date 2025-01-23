@@ -15,9 +15,9 @@ Authorization: Basic admin@example.com foobar
 @token = {{login.response.body.refresh_token}}
 
 ### Get token User
-# #@name login
-# GET {{domain}}/api/v1/login HTTP/1.1
-# Authorization: Basic chris@example.com foobar
+#@name login
+GET {{domain}}/api/v1/login HTTP/1.1
+Authorization: Basic chris@example.com foobar
 
 
 ### Get token Admin

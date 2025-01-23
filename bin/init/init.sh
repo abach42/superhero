@@ -18,7 +18,7 @@ echo " ✔️  Building auth keys"
 echo "--------------------------------------------------"
 
 echo "--------------------------------------------------"
-echo " 🗝️ Building TLS key"
+echo " 🗝️  Building TLS key"
 echo "--------------------------------------------------"
 
 "$PROJECT_ROOT/bin/init/generate-tls-key.sh"

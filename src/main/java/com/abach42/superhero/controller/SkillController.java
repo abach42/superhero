@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.config.security.SecuredAdmin;
 import com.abach42.superhero.config.security.SecuredUser;
 import com.abach42.superhero.dto.ErrorDto;
 import com.abach42.superhero.dto.SkillDto;
@@ -58,7 +59,6 @@ public class SkillController {
             )
         )
     })
-    @SecuredUser
     @GetMapping
     public ResponseEntity<SkillListDto> listSkills() throws ApiException {
         SkillListDto skills = skillService.getSkillList();
@@ -87,7 +87,6 @@ public class SkillController {
             )
         )
     })
-    @SecuredUser
     @GetMapping("/{id}")
     public ResponseEntity<SkillDto> showSkill(@PathVariable Long id) throws ApiException {
         return ResponseEntity.ok(skillService.getSkillConverted(id));
