@@ -23,7 +23,7 @@ public class DatabaseCleanupService {
     }
 
     //TODO test by Logback
-    @Scheduled(cron = "${abach42.superhero.eraseRecordsMarkedAsDeletedAt}")
+    @Scheduled(cron = "${com.abach42.superhero.erase-soft-deleted-at}")
     public void eraseRecordsMarkedAsDeleted() {
         logger.info("ERASE RECORDS marked as DELETED starts as scheduled");
         Long count = superheroRepository.countByDeletedIsTrue();

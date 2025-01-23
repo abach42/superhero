@@ -1,67 +1,35 @@
 package com.abach42.superhero.config.security;
-import java.util.List;
+import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimValidator;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(RsaKeyProperties.class)
+@Profile("container")
 public class JwtConfig {
+    public static final MacAlgorithm MAC_ALGORITHM = MacAlgorithm.HS256;
 
-    private final RsaKeyProperties rsaKeys;
-
-    public JwtConfig(RsaKeyProperties rsaKeys) {
-        this.rsaKeys = rsaKeys;
-    }
+    @Value("${com.abach42.superhero.security.jwt.token-secret}")
+    private String tokenSecret;
 
     @Bean
     JwtEncoder jwtEncoder() {
-        return new NimbusJwtEncoder(
-                new ImmutableJWKSet<>(
-                    new JWKSet(
-                        new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build())));
+        return new NimbusJwtEncoder(new ImmutableSecret<>(tokenSecret.getBytes()));
     }
 
     @Bean
-    JwtDecoder jwtDecoder() throws JOSEException {
-        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
-
-        //notice: documentation purpose only
-        OAuth2TokenValidator<Jwt> validators = new DelegatingOAuth2TokenValidator<>(
-            new JwtClaimValidator<List<String>>("aud", aud -> aud.contains("messaging")),
-            new CustomValidator()
-        );
-        
-        jwtDecoder.setJwtValidator(validators);
-        return jwtDecoder;
-    }
-
-    static class CustomValidator implements OAuth2TokenValidator<Jwt> {
-        OAuth2Error error = new OAuth2Error("12345", "not allowed action", null);
-
-        @Override
-        public OAuth2TokenValidatorResult validate(Jwt jwt) {
-            if (jwt.getClaim("azp").equals("superhero")) {
-                return OAuth2TokenValidatorResult.success();
-            } else {
-                return OAuth2TokenValidatorResult.failure(error);
-            }
-        }
+    JwtDecoder jwtDecoder() {
+        byte[] bytes = tokenSecret.getBytes();
+        SecretKeySpec originalKey = new SecretKeySpec(bytes, 0, bytes.length,"RSA");
+        return NimbusJwtDecoder.withSecretKey(originalKey).macAlgorithm(MAC_ALGORITHM).build();
     }
 }

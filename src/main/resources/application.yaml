@@ -1,19 +1,30 @@
-com.abach42.superhero.cors:
-  allowed-origins: 
-    - http://localhost:3000
-    - https://localhost:3001
-  allowed-methods: 
-    - '*'
-  allowed-headers:
-    - '*'
-  exposed-headers: 
-    - '*'
-  allow-credentials: true
-  maxAge: 3600
+com.abach42.superhero:
+    cors:
+        allowed-origins: 
+            - http://localhost:3000
+            - https://localhost:3001
+        allowed-methods: 
+            - '*'
+        allowed-headers:
+            - '*'
+        exposed-headers: 
+            - '*'
+        allow-credentials: true
+        maxAge: 3600
+    security:
+        jwt:
+            public-key: "classpath:.certs/public.pem"
+            private-key: "classpath:.certs/private.pem"
+            # must be at least 256 bits
+            token-secret: ~
+    erase-soft-deleted-at: "0 0 0 ? * SAT" 
+    # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
+    # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
+    # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight
 server:
     port: 8443
     ssl:
-        key-store: classpath:.certs/abach42.superhero.p12
+        key-store: "classpath:.certs/abach42.superhero.p12"
         # credentaial use only for localhost (production: change and use .env)
         key-store-password: onlyForLocalhost123
     error:
@@ -54,12 +65,6 @@ spring:
         web:    
             pageable: 
                 default-page-size: 5
-    security:
-        oauth2:
-            resourceserver:
-                jwt:
-                    public-key: classpath:.certs/public.pem
-                    private-key: classpath:.certs/private.pem
     codec:
         log-request-details: true
 springdoc:
@@ -77,11 +82,5 @@ logging:
                 orm.jdbc.bind: TRACE
             springframework:
                 web: DEBUG
-abach42:
-    superhero:
-        eraseRecordsMarkedAsDeletedAt: "0 0 0 ? * SAT" 
-        # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
-        # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
-        # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight
 logging.level.web: TRACE
 logging.level.org.springframework.web: TRACE
