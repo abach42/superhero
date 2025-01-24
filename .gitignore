@@ -39,3 +39,5 @@ build/
 # keys
 *.p12
 *.pem
+
+src\main\resources\public
