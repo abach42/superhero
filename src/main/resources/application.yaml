@@ -94,6 +94,6 @@ logging:
                 SQL: DEBUG
                 orm.jdbc.bind: TRACE
             springframework:
-                web: DEBUG
-logging.level.web: TRACE
-logging.level.org.springframework.web: TRACE
+                web: TRACE
+        web: TRACE
+        org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
