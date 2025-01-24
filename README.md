@@ -7,7 +7,9 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 ![Swagger UI](src/main/resources/static/img/swg.png)
 
-## Features 0.8.* ✨
+## Changelog 📜
+
+### Features 0.8.* ✨
 
 * JWT auth, user roles
 * Tests (using testcontainers, liquibase), > 90%
@@ -15,8 +17,11 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 * Pagination on listing
 * Soft delete for superhero and user, cleaning database scheduler (to be discussed)
 
-## New for 0.9.0 ✨
+### Features 0.9.* ✨
 * Refresh token
+
+### New for 0.10.* ✨
+* Deployment for static websites inside of Springs Webserver, SPA
 
 ## Start project in your docker environment 🚀
 
@@ -95,7 +100,7 @@ Start `bin/oci/start.sh`
 * PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 
-## Plans for 0.10.0 ⏳
+## Plans for 0.11.0 ⏳
 
 * End to end test API against Swagger doc
 * Optimize JWT claim to better store user roles
