@@ -40,4 +40,4 @@ build/
 *.p12
 *.pem
 
-src\main\resources\public
+src/main/resources/public
