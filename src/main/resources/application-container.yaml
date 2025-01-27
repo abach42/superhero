@@ -1,8 +1,3 @@
-com.abach42.superhero:
-    security:
-        jwt:
-            # must be at least 256 bits
-            token-secret: ks9lg8pubax3ctmw9aq4pz4vduxllqq4
 spring:
     config:
         activate:

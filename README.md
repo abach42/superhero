@@ -73,9 +73,29 @@ This will generate keys, make an image of Java project,  initialize a postgres d
 
 * Open database client on `psql postgresql://db:db@localhost:15432/db`.
 
-## Usind docker deployment
+## Using docker deployment
 
 Start `bin/oci/start.sh`
+
+## Using asymmetric key encryption for JWT
+
+1) Run bin/init/generate-auth-keys.sh (consider to enable it in bin/init/init.sh)
+2) Set com.abach42.superhero.security.jwt.symmetric to false
+3) Set com.abach42.superhero.security.jwt.public-key and *.private-key paths
+
+e.g: 
+
+```yaml
+com.abach42.superhero:
+    ...
+    security:
+        jwt:
+            public-key: "classpath:.certs/public.pem"
+            private-key: "classpath:.certs/private.pem"
+            symmetric: false
+```
+
+Both variants held in code for documentation purpose. 
 
 ## Endpoints
 

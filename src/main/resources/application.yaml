@@ -13,10 +13,14 @@ com.abach42.superhero:
         maxAge: 3600
     security:
         jwt:
-            public-key: "classpath:.certs/public.pem"
-            private-key: "classpath:.certs/private.pem"
-            # must be at least 256 bits
-            token-secret: ~
+            ## documentation purpose here: asymmetric key 
+            ## public-key: "classpath:.certs/public.pem"
+            ## private-key: "classpath:.certs/private.pem"
+            
+            # must be at least 256 bits, 
+            # caution: never commit key in production, consider to use env var
+            token-secret: ks9lg8pubax3ctmw9aq4pz4vduxllqq4
+            symmetric: true
     erase-soft-deleted-at: "0 0 0 ? * SAT" 
     # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
     # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight

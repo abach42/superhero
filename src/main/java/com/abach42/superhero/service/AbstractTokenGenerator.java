@@ -2,6 +2,7 @@ package com.abach42.superhero.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Component;
 public abstract class AbstractTokenGenerator {
     @Autowired
     private JwtEncoder jwtEncoder;
+
+    @Autowired
+    private Function<JwtClaimsSet, JwtEncoderParameters> jwtParamBuilder;
 
     abstract int getExpirationMinutes();
     abstract String getScope();
@@ -36,6 +40,6 @@ public abstract class AbstractTokenGenerator {
                 .claim("aud", "messaging")
                 .build();
         
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return this.jwtEncoder.encode(jwtParamBuilder.apply(claims)).getTokenValue();
     }
 } 
