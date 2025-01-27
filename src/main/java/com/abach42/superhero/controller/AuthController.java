@@ -53,7 +53,6 @@ public class AuthController {
 
     @GetMapping("/refresh-token")
     ResponseEntity<TokenDto> refreshToken(Authentication authentication) {
-        //validate incoming refresh token against a persistence
         return ResponseEntity.ok().body(tokenService.generateTokenPair(authentication));
     }
 }
