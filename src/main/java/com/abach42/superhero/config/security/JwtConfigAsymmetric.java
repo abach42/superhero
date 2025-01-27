@@ -1,18 +1,21 @@
 package com.abach42.superhero.config.security;
 import java.util.List;
+import java.util.function.Function;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimValidator;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
@@ -21,19 +24,20 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 
+@ConditionalOnProperty( name = "com.abach42.superhero.security.jwt.symmetric", 
+    havingValue = "false")
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RsaKeyProperties.class)
-@Profile("!container")
-public class JwtConfigDual {
+public class JwtConfigAsymmetric {
 
     private final RsaKeyProperties rsaKeys;
 
-    public JwtConfigDual(RsaKeyProperties rsaKeys) {
+    public JwtConfigAsymmetric(RsaKeyProperties rsaKeys) {
         this.rsaKeys = rsaKeys;
     }
 
     @Bean
-    JwtEncoder jwtEncoderDual() {
+    JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(
                 new ImmutableJWKSet<>(
                     new JWKSet(
@@ -41,7 +45,12 @@ public class JwtConfigDual {
     }
 
     @Bean
-    JwtDecoder jwtDecoderDual() throws JOSEException {
+    Function<JwtClaimsSet, JwtEncoderParameters> jwtParamBuilder() {
+       return JwtEncoderParameters::from;
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() throws JOSEException {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
 
         //notice: documentation purpose only

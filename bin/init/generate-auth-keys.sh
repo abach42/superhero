@@ -1,5 +1,5 @@
 #!/bin/sh
-# Define file names
+# Define file names for asymmetric key, please see README.md
 private_key="private.pem"
 public_key="public.pem"
 
