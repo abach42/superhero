@@ -19,8 +19,7 @@ public class SkillProfileService {
 
     public static final String SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG = "Skill profiles not found for superhero by id ";
     public static final String SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG = "Skill profile not found for superhero";
-    public static final BiFunction<Long, Long, String> SKILL_PROFILE_SUPERHERO_NOT_FOUND_FN = (superheroId,
-            skillId) -> String.format(
+    public static final BiFunction<Long, Long, String> SKILL_PROFILE_SUPERHERO_NOT_FOUND_FN = (superheroId, skillId) -> String.format(
             SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG + " by superhero id %d and skill id %d",
             superheroId, skillId);
     public static final String SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG = "Skill profile for superhero could not be written.";
@@ -31,8 +30,7 @@ public class SkillProfileService {
     private final SkillService skillService;
 
     public SkillProfileService(SkillProfileRepository skillProfileRepository,
-            @Lazy SuperheroService superheroService,
-            @Lazy SkillService skillService) {
+            @Lazy SuperheroService superheroService, @Lazy SkillService skillService) {
         this.skillProfileRepository = skillProfileRepository;
         this.superheroService = superheroService;
         this.skillService = skillService;
@@ -41,8 +39,7 @@ public class SkillProfileService {
     public SkillProfileListDto retrieveSuperheroSkillProfileList(Long superheroId)
             throws ApiException {
         List<SkillProfileDto> profileList = skillProfileRepository.findBySuperheroIdOrderBySkillId(
-                        superheroId).stream()
-                .map(SkillProfileDto::fromDomain).toList();
+                superheroId).stream().map(SkillProfileDto::fromDomain).toList();
         if (profileList.isEmpty()) {
             throw new ApiException(HttpStatus.NOT_FOUND,
                     SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG + superheroId);
@@ -71,8 +68,7 @@ public class SkillProfileService {
 
             Skill skill = skillService.getSkill(skillProfileDto.skill().id());
             SkillProfile newSkillProfile = new SkillProfile(superheroId,
-                    skillProfileDto.intensity(),
-                    skill);
+                    skillProfileDto.intensity(), skill);
 
             SkillProfile createdSkillProfile = skillProfileRepository.save(newSkillProfile);
             return SkillProfileDto.fromDomain(createdSkillProfile);

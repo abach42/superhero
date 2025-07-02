@@ -45,9 +45,8 @@ server:
         # (e.g., /static, /public, /resources, or /META-INF/resources).
         register-default-servlet: true
 spring:
-    config:
-        activate:
-            on-profile: default
+    profiles:
+        active: @spring.profiles@
     mvc:
         log-request-details: true
         # Static resources: By default, resources are mapped on /**, 
