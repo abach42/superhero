@@ -1,5 +1,6 @@
 package com.abach42.superhero.service;
 
+import com.abach42.superhero.repository.SuperheroRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -8,12 +9,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.abach42.superhero.repository.SuperheroRepository;
-
 @Profile("!test")
 @Service
 @EnableScheduling
 public class DatabaseCleanupService {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final SuperheroRepository superheroRepository;
@@ -34,7 +34,9 @@ public class DatabaseCleanupService {
             logger.info("Successfully deleted! ERASE RECORDS terminated.");
         } catch (DataAccessException e) {
             Long countAgain = superheroRepository.countByDeletedIsTrue();
-            logger.error("Records not deleted. {} records marked as deleted left, cause: {}", countAgain, e.getMessage());
+            logger.error("Records not deleted. {} records marked as deleted left, cause: {}",
+                    countAgain,
+                    e.getMessage());
         }
     }
 }

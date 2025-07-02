@@ -9,9 +9,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.configuration.TestDataConfiguration;
+import com.abach42.superhero.controller.SkillController;
+import com.abach42.superhero.dto.SkillDto;
+import com.abach42.superhero.dto.SkillListDto;
+import com.abach42.superhero.service.SkillService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,25 +40,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.abach42.superhero.config.api.PathConfig;
-import com.abach42.superhero.configuration.TestDataConfiguration;
-import com.abach42.superhero.controller.SkillController;
-import com.abach42.superhero.dto.SkillDto;
-import com.abach42.superhero.dto.SkillListDto;
-import com.abach42.superhero.service.SkillService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /*
  * Mocked rest client, regarding validation, mocked database
- * 
+ *
  * * Fails no auth
- * * Read succeeds 
+ * * Read succeeds
  */
 @WebMvcTest(SkillController.class)
 @ContextConfiguration
 @WebAppConfiguration
 @WithMockUser
 public class SkillControllerTest {
+
     private final static String PATH = PathConfig.SKILLS;
 
     @Autowired
@@ -67,33 +66,34 @@ public class SkillControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private static Stream<Arguments> endpointProvider() {
+        return Stream.of(
+                Arguments.of(HttpMethod.GET, PATH, MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.GET, PATH + "/" + 0,
+                        MockMvcResultMatchers.status().isUnauthorized())
+        );
+    }
+
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders
-                        .webAppContextSetup(context)
-                        .apply(springSecurity()) 
-                        .build();
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
 
     @ParameterizedTest
     @MethodSource("endpointProvider")
     @DisplayName("fails w/o JWT")
     @WithAnonymousUser
-    public void testAnonymousFails(HttpMethod method, String path, ResultMatcher status) throws Exception {
+    public void testAnonymousFails(HttpMethod method, String path, ResultMatcher status)
+            throws Exception {
         mockMvc.perform(
-                    request(method, path)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status);
+                        request(method, path)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status);
     }
-
-    private static Stream<Arguments> endpointProvider() {
-        return Stream.of(
-                Arguments.of(HttpMethod.GET, PATH, MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.GET, PATH + "/" + 0, MockMvcResultMatchers.status().isUnauthorized())
-        );
-    }
-
 
     @Test
     @DisplayName("GET " + PATH + " list skills")
@@ -105,8 +105,8 @@ public class SkillControllerTest {
         MvcResult mvcResult = mockMvc.perform(
                         get(PATH)
                                 .accept(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
         SkillListDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
@@ -124,12 +124,12 @@ public class SkillControllerTest {
         MvcResult mvcResult = mockMvc.perform(
                         get(PATH + "/" + 0)
                                 .accept(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
         SkillDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
-            SkillDto.class);
+                SkillDto.class);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }

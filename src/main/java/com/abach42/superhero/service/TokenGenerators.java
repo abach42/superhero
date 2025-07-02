@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TokenGenerators {
-    
+
     @Bean
     AbstractTokenGenerator jwTokenGenerator() {
         return new JwtTokenGenerator();

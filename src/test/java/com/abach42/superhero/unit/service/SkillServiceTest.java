@@ -5,10 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
+import com.abach42.superhero.dto.SkillDto;
+import com.abach42.superhero.entity.Skill;
+import com.abach42.superhero.exception.ApiException;
+import com.abach42.superhero.repository.SkillRepository;
+import com.abach42.superhero.service.SkillService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,17 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-
-import com.abach42.superhero.dto.SkillDto;
-import com.abach42.superhero.entity.Skill;
-import com.abach42.superhero.exception.ApiException;
-import com.abach42.superhero.repository.SkillRepository;
-import com.abach42.superhero.service.SkillService;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ExtendWith(MockitoExtension.class)
 public class SkillServiceTest {
 
-    @Mock
+    @MockitoBean
     private SkillRepository skillRepository;
 
     @InjectMocks

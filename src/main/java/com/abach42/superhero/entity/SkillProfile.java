@@ -11,13 +11,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 /**
- * Brings together aggregate root {@link Superhero} and skill {@link Skill} identified by `Superhero.id` and `Skill.id`, 
- * unique for every {@link Superhero} and filled by `intensity` of skill. 
- * Works as single or list filtered by `Superhero.id`. 
+ * Brings together aggregate root {@link Superhero} and skill {@link Skill} identified by
+ * `Superhero.id` and `Skill.id`, unique for every {@link Superhero} and filled by `intensity` of
+ * skill. Works as single or list filtered by `Superhero.id`.
  */
 @Entity
 @Access(AccessType.FIELD)
 public class SkillProfile {
+
     /* Normally, this record is fully identified by superheroId and skill,
      * but FE developers like ids
      */
@@ -37,7 +38,7 @@ public class SkillProfile {
 
     protected SkillProfile() {
     }
-    
+
     public SkillProfile(Long superheroId, Integer intensity, Skill skill) {
         this.superheroId = superheroId;
         this.intensity = intensity;
@@ -63,7 +64,7 @@ public class SkillProfile {
     public void setIntensity(Integer intensity) {
         this.intensity = intensity;
     }
-    
+
     public Skill getSkill() {
         return skill;
     }

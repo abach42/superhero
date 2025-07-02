@@ -20,4 +20,7 @@ package com.abach42.superhero.dto;
        "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA"
      }
  */
-public record TokenDto(String access_token, String token_type, int expires_in, String refresh_token) {}
+public record TokenDto(String access_token, String token_type, int expires_in,
+                       String refresh_token) {
+
+}

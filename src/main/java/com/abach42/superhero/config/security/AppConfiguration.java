@@ -1,7 +1,6 @@
 package com.abach42.superhero.config.security;
 
 import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -30,5 +29,6 @@ public class AppConfiguration {
             List<String> exposedHeaders,
             Boolean allowCredentials,
             Long maxAge) {
+
     }
 }

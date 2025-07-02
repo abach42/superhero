@@ -5,25 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
+import com.abach42.superhero.dto.SuperheroUserDto;
+import com.abach42.superhero.entity.SuperheroUser;
+import com.abach42.superhero.exception.UserNotFoundException;
+import com.abach42.superhero.repository.SuperheroUserRepository;
+import com.abach42.superhero.service.SuperheroUserService;
 import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.abach42.superhero.dto.SuperheroUserDto;
-import com.abach42.superhero.entity.SuperheroUser;
-import com.abach42.superhero.exception.UserNotFoundException;
-import com.abach42.superhero.repository.SuperheroUserRepository;
-import com.abach42.superhero.service.SuperheroUserService;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ExtendWith(MockitoExtension.class)
 public class SuperheroUserServiceTest {
 
-    @Mock
+    @MockitoBean
     private SuperheroUserRepository superheroUserRepository;
 
     @InjectMocks
@@ -36,7 +35,8 @@ public class SuperheroUserServiceTest {
         SuperheroUser superheroUser = new SuperheroUser(email, "foo", "user");
         superheroUser.setEmail(email);
 
-        given(superheroUserRepository.findOneByEmailAndDeletedIsFalse(email)).willReturn(Optional.of(superheroUser));
+        given(superheroUserRepository.findOneByEmailAndDeletedIsFalse(email)).willReturn(
+                Optional.of(superheroUser));
 
         SuperheroUserDto dto = subject.retrieveSuperheroUser(email);
         assertNotNull(dto);
@@ -47,7 +47,8 @@ public class SuperheroUserServiceTest {
     @DisplayName("Get superhero throws when empty")
     public void testRetrieveSuperheroUserFailsNotFound() {
         String email = "test@example.com";
-        given(superheroUserRepository.findOneByEmailAndDeletedIsFalse(email)).willReturn(Optional.empty());
+        given(superheroUserRepository.findOneByEmailAndDeletedIsFalse(email)).willReturn(
+                Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> subject.retrieveSuperheroUser(email));
     }

@@ -2,6 +2,9 @@ package com.abach42.superhero.config.security;
 
 import static org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope;
 
+import com.abach42.superhero.config.security.AppConfiguration.CorsConfigurationProperties;
+import com.abach42.superhero.service.JwtTokenGenerator;
+import com.abach42.superhero.service.RefreshTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,14 +18,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.abach42.superhero.config.security.AppConfiguration.CorsConfigurationProperties;
-import com.abach42.superhero.service.JwtTokenGenerator;
-import com.abach42.superhero.service.RefreshTokenGenerator;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     @Autowired
     CorsConfigurationProperties configurationProperties;
 
@@ -35,7 +34,8 @@ public class SecurityConfig {
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/login").authenticated()
-                        .requestMatchers("/api/v1/refresh-token").access(hasScope(RefreshTokenGenerator.SCOPE))
+                        .requestMatchers("/api/v1/refresh-token")
+                        .access(hasScope(RefreshTokenGenerator.SCOPE))
                         .requestMatchers("/api/v1/**").access(hasScope(JwtTokenGenerator.SCOPE))
                         .anyRequest().denyAll())
                 .oauth2ResourceServer((oauth2) -> oauth2
@@ -53,17 +53,17 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                            // documentation
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**",
-                            // chart example
-                            "/chart.html",
-                            "/static/**", 
-                            // react spa
-                            "/index.html", 
-                            "/public/**",
-                            "/logo*.png", 
-                            "favicon.ico").permitAll()
+                                // documentation
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                // chart example
+                                "/chart.html",
+                                "/static/**",
+                                // react spa
+                                "/index.html",
+                                "/public/**",
+                                "/logo*.png",
+                                "favicon.ico").permitAll()
                         .anyRequest().denyAll());
 
         return http.build();

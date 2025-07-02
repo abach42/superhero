@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 @Entity
 @Access(AccessType.FIELD)
 public class Skill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_id")
@@ -25,7 +26,7 @@ public class Skill {
     public Skill(String name) {
         this.name = name;
     }
-    
+
     public Skill(Long id, String name) {
         this.id = id;
         this.name = name;

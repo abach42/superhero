@@ -3,11 +3,10 @@ package com.abach42.superhero.unit.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Skill;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /*
  * Yes, lombock would do...

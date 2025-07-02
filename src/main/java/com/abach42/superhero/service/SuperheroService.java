@@ -1,8 +1,13 @@
 package com.abach42.superhero.service;
 
+import com.abach42.superhero.dto.SuperheroDto;
+import com.abach42.superhero.dto.SuperheroListDto;
+import com.abach42.superhero.entity.Superhero;
+import com.abach42.superhero.exception.ApiException;
+import com.abach42.superhero.repository.SuperheroRepository;
+import jakarta.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,16 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.abach42.superhero.dto.SuperheroDto;
-import com.abach42.superhero.dto.SuperheroListDto;
-import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.exception.ApiException;
-import com.abach42.superhero.repository.SuperheroRepository;
-
-import jakarta.annotation.Nullable;
-
 @Service
 public class SuperheroService {
+
     public static final String SUPERHEROES_NOT_FOUND_MSG = "Superheroes not found.";
     public static final String MAX_PAGE_EXCEEDED_MSG = "The total page number has been exceeded.";
     public static final String SUPERHERO_NOT_FOUND_MSG = "Superhero not found on id ";
@@ -31,20 +29,24 @@ public class SuperheroService {
     private final Integer defaultPageSize;
     private final PasswordEncoder passwordEncoder;
 
-    public SuperheroService(SuperheroRepository superheroRepository, Integer defaultPageSize, PasswordEncoder passwordEncoder) {
+    public SuperheroService(SuperheroRepository superheroRepository, Integer defaultPageSize,
+            PasswordEncoder passwordEncoder) {
         this.superheroRepository = superheroRepository;
         this.defaultPageSize = defaultPageSize;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public SuperheroListDto retrieveSuperheroList(@Nullable Integer pageNumber) throws ApiException {
+    public SuperheroListDto retrieveSuperheroList(@Nullable Integer pageNumber)
+            throws ApiException {
         Page<SuperheroDto> superheroPage = superheroRepository
-                .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize, Sort.by("id")))
+                .findAll(PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), defaultPageSize,
+                        Sort.by("id")))
                 .map(SuperheroDto::fromDomain);
 
         if (pageNumber != null && pageNumber > superheroPage.getTotalPages()) {
             throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXCEEDED_MSG, superheroPage.getTotalPages(),
+                    String.format("%s Total: %s, requested: %s.", MAX_PAGE_EXCEEDED_MSG,
+                            superheroPage.getTotalPages(),
                             pageNumber));
         }
 
@@ -66,7 +68,7 @@ public class SuperheroService {
     }
 
     public SuperheroDto addSuperhero(SuperheroDto superheroDto) throws ApiException {
-       try {
+        try {
             Objects.requireNonNull(superheroDto);
 
             Superhero newSuperhero = SuperheroDto.toDomain(superheroDto);
@@ -112,7 +114,7 @@ public class SuperheroService {
         if (update.originStory() != null) {
             origin.setOriginStory(update.originStory());
         }
-        
+
         Superhero savedSuperhero = superheroRepository.save(origin);
         return SuperheroDto.fromDomain(savedSuperhero);
     }

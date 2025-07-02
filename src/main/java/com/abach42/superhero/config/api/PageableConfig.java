@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class PageableConfig {
+
     @Bean
     static Integer defaultPageSize(@Value("${paging.default.pageSize:10}") Integer pageSize) {
         return pageSize;

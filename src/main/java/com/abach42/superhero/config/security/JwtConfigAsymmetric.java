@@ -1,7 +1,11 @@
 package com.abach42.superhero.config.security;
+
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import java.util.List;
 import java.util.function.Function;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +23,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-
-@ConditionalOnProperty( name = "com.abach42.superhero.security.jwt.symmetric", 
-    havingValue = "false")
+@ConditionalOnProperty(name = "com.abach42.superhero.security.jwt.symmetric",
+        havingValue = "false")
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RsaKeyProperties.class)
 public class JwtConfigAsymmetric {
@@ -40,13 +39,14 @@ public class JwtConfigAsymmetric {
     JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(
                 new ImmutableJWKSet<>(
-                    new JWKSet(
-                        new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build())));
+                        new JWKSet(
+                                new RSAKey.Builder(rsaKeys.publicKey()).privateKey(
+                                        rsaKeys.privateKey()).build())));
     }
 
     @Bean
     Function<JwtClaimsSet, JwtEncoderParameters> jwtParamBuilder() {
-       return JwtEncoderParameters::from;
+        return JwtEncoderParameters::from;
     }
 
     @Bean
@@ -55,15 +55,16 @@ public class JwtConfigAsymmetric {
 
         //notice: documentation purpose only
         OAuth2TokenValidator<Jwt> validators = new DelegatingOAuth2TokenValidator<>(
-            new JwtClaimValidator<List<String>>("aud", aud -> aud.contains("messaging")),
-            new CustomValidator()
+                new JwtClaimValidator<List<String>>("aud", aud -> aud.contains("messaging")),
+                new CustomValidator()
         );
-        
+
         jwtDecoder.setJwtValidator(validators);
         return jwtDecoder;
     }
 
     static class CustomValidator implements OAuth2TokenValidator<Jwt> {
+
         OAuth2Error error = new OAuth2Error("12345", "not allowed action", null);
 
         @Override

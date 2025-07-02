@@ -1,11 +1,8 @@
 package com.abach42.superhero.entity;
 
-import java.time.LocalDate;
-
 import com.abach42.superhero.config.api.OnCreate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.CascadeType;
@@ -16,10 +13,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 @Access(AccessType.FIELD)
 public class Superhero {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -50,7 +49,7 @@ public class Superhero {
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    private SuperheroUser user; 
+    private SuperheroUser user;
 
     protected Superhero() {
     }
@@ -132,7 +131,7 @@ public class Superhero {
         this.deleted = deleted;
     }
 
-    
+
     public SuperheroUser getUser() {
         return user;
     }

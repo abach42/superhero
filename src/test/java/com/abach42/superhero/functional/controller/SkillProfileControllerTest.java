@@ -13,10 +13,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.abach42.superhero.config.api.OnCreate;
+import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.configuration.ObjectMapperSerializerHelper;
+import com.abach42.superhero.configuration.TestDataConfiguration;
+import com.abach42.superhero.controller.SkillProfileController;
+import com.abach42.superhero.dto.SkillProfileDto;
+import com.abach42.superhero.dto.SkillProfileListDto;
+import com.abach42.superhero.entity.SkillProfile;
+import com.abach42.superhero.service.SkillProfileService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,22 +53,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.abach42.superhero.config.api.OnCreate;
-import com.abach42.superhero.config.api.PathConfig;
-import com.abach42.superhero.configuration.ObjectMapperSerializerHelper;
-import com.abach42.superhero.configuration.TestDataConfiguration;
-import com.abach42.superhero.controller.SkillProfileController;
-import com.abach42.superhero.dto.SkillProfileDto;
-import com.abach42.superhero.dto.SkillProfileListDto;
-import com.abach42.superhero.entity.SkillProfile;
-import com.abach42.superhero.service.SkillProfileService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /*
  * Mocked rest client, regarding validation, mocked database
- * 
+ *
  * * Fails no auth
- * * CRUD succeeds 
+ * * CRUD succeeds
  * * Write fails on missing filed
  */
 @WebMvcTest(SkillProfileController.class)
@@ -68,7 +66,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Import(ObjectMapperSerializerHelper.class)
 @WithMockUser
 public class SkillProfileControllerTest {
-    private final static String PATH = PathConfig.SKILLPROFILES;
+
+    private final static String PATH = PathConfig.SKILL_PROFILES;
 
     @Autowired
     private WebApplicationContext context;
@@ -78,7 +77,7 @@ public class SkillProfileControllerTest {
 
     @MockitoBean
     private JwtDecoder jwtDecoder;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -87,19 +86,34 @@ public class SkillProfileControllerTest {
 
     private SkillProfileDto skillProfileDtoStub;
 
-    @BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders
-                        .webAppContextSetup(context)
-                        .apply(springSecurity()) 
-                        .build();
-                                
-        this.skillProfileDtoStub = TestDataConfiguration.getSkillProfileDtoStub();
-    }
-
     private static URI buildUri(int superheroId) {
         return UriComponentsBuilder.fromUriString(PATH)
                 .build(superheroId);
+    }
+
+    private static Stream<Arguments> endpointProvider() {
+        return Stream.of(
+                Arguments.of(HttpMethod.GET, buildUri(1) + "",
+                        MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.GET, buildUri(1) + "/" + 0,
+                        MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.POST, buildUri(1) + "",
+                        MockMvcResultMatchers.status().isForbidden()),
+                Arguments.of(HttpMethod.PUT, buildUri(1) + "/" + 0,
+                        MockMvcResultMatchers.status().isForbidden()),
+                Arguments.of(HttpMethod.DELETE, buildUri(1) + "/" + 0,
+                        MockMvcResultMatchers.status().isForbidden())
+        );
+    }
+
+    @BeforeEach
+    public void setUp() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+
+        this.skillProfileDtoStub = TestDataConfiguration.getSkillProfileDtoStub();
     }
 
     @Test
@@ -107,16 +121,18 @@ public class SkillProfileControllerTest {
     public void testListSuperheroSkillProfiles() throws Exception {
         SkillProfileListDto expected = new SkillProfileListDto(List.of(skillProfileDtoStub));
 
-        given(skillProfileService.retrieveSuperheroSkillProfileList(anyLong())).willReturn(expected);
+        given(skillProfileService.retrieveSuperheroSkillProfileList(anyLong())).willReturn(
+                expected);
 
         MvcResult mvcResult = mockMvc.perform(
                         get(buildUri(1))
                                 .accept(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
-        SkillProfileListDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        SkillProfileListDto actual = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
                 SkillProfileListDto.class);
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
@@ -126,16 +142,18 @@ public class SkillProfileControllerTest {
     public void testShowSuperheroSkillProfile() throws Exception {
         SkillProfileDto expected = skillProfileDtoStub;
 
-        given(skillProfileService.retrieveSuperheroSkillProfile(anyLong(), anyLong())).willReturn(expected);
+        given(skillProfileService.retrieveSuperheroSkillProfile(anyLong(), anyLong())).willReturn(
+                expected);
 
         MvcResult mvcResult = mockMvc.perform(
                         get(buildUri(1) + "/" + 0)
                                 .accept(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
-        SkillProfileDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        SkillProfileDto actual = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
                 SkillProfileDto.class);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
@@ -144,9 +162,11 @@ public class SkillProfileControllerTest {
     @Test
     @DisplayName("POST " + PATH + " results created")
     public void testCreateSuperheroSkillProfile() throws Exception {
-        SkillProfileDto expected = SkillProfileDto.fromDomain(TestDataConfiguration.getSkillProfileToCreateStub());
+        SkillProfileDto expected = SkillProfileDto.fromDomain(
+                TestDataConfiguration.getSkillProfileToCreateStub());
 
-        given(skillProfileService.addSuperheroSkillProfile(anyLong(), any(SkillProfileDto.class))).willReturn(expected);
+        given(skillProfileService.addSuperheroSkillProfile(anyLong(),
+                any(SkillProfileDto.class))).willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
                         post(buildUri(1))
@@ -154,11 +174,12 @@ public class SkillProfileControllerTest {
                                 .content(objectMapper.writeValueAsString(expected))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isCreated())
+                .andDo(print())
+                .andExpect(status().isCreated())
                 .andReturn();
 
-        SkillProfileDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        SkillProfileDto actual = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
                 SkillProfileDto.class);
 
         String locationHeader = mvcResult.getResponse().getHeader("Location");
@@ -172,15 +193,15 @@ public class SkillProfileControllerTest {
     public void testCreatedSuperheroSkillProfileFailsOnMissingField() throws Exception {
         SkillProfile skillProfile = TestDataConfiguration.getSkillProfileToCreateStub();
         skillProfile.setIntensity(null);
-        
+
         SkillProfileDto failedSkillProfileDto = SkillProfileDto.fromDomain(skillProfile);
-        
+
         mockMvc.perform(
-                post(buildUri(1))
-                        .with(SecurityMockMvcRequestPostProcessors.jwt())
-                        .content(objectMapper.writeValueAsString(failedSkillProfileDto))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        post(buildUri(1))
+                                .with(SecurityMockMvcRequestPostProcessors.jwt())
+                                .content(objectMapper.writeValueAsString(failedSkillProfileDto))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -189,21 +210,23 @@ public class SkillProfileControllerTest {
     @DisplayName("PUT " + PATH + "/" + 0 + " update updates intensity ")
     public void testUpdateSuperheroSkillProfile() throws Exception {
         SkillProfileDto expected = TestDataConfiguration.getSkillProfileDtoToUpdateStub();
-        given(skillProfileService.changeSuperheroSkillProfile(anyLong(), anyLong(), any(SkillProfileDto.class)))
+        given(skillProfileService.changeSuperheroSkillProfile(anyLong(), anyLong(),
+                any(SkillProfileDto.class)))
                 .willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
-                
-        put(buildUri(1) + "/" + 0)
+
+                        put(buildUri(1) + "/" + 0)
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
                                 .content(objectMapper.writeValueAsString(expected))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
-        SkillProfileDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        SkillProfileDto actual = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
                 SkillProfileDto.class);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
@@ -212,7 +235,8 @@ public class SkillProfileControllerTest {
     @Test
     @DisplayName("Controller action to delete superhero result ok")
     public void testDeleteSuperheroSkillProfile() throws Exception {
-        given(skillProfileService.deleteSuperheroSkillProfile(anyLong(), anyLong())).willReturn(skillProfileDtoStub);
+        given(skillProfileService.deleteSuperheroSkillProfile(anyLong(), anyLong())).willReturn(
+                skillProfileDtoStub);
 
         MvcResult mvcResult = mockMvc.perform(
                         delete(buildUri(1) + "/" + 0)
@@ -220,11 +244,12 @@ public class SkillProfileControllerTest {
                                 .content(objectMapper.writeValueAsString(skillProfileDtoStub))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
-        SkillProfileDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        SkillProfileDto actual = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
                 SkillProfileDto.class);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(skillProfileDtoStub);
@@ -234,21 +259,12 @@ public class SkillProfileControllerTest {
     @MethodSource("endpointProvider")
     @DisplayName("fails w/o JWT")
     @WithAnonymousUser
-    public void testAnonymousFails(HttpMethod method, String path, ResultMatcher status) throws Exception {
+    public void testAnonymousFails(HttpMethod method, String path, ResultMatcher status)
+            throws Exception {
         mockMvc.perform(
                         request(method, path)
                                 .accept(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status);
-    }
-
-    private static Stream<Arguments> endpointProvider() {
-        return Stream.of(
-                Arguments.of(HttpMethod.GET, buildUri(1) + "", MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.GET, buildUri(1) + "/" + 0, MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.POST, buildUri(1) + "", MockMvcResultMatchers.status().isForbidden()),
-                Arguments.of(HttpMethod.PUT, buildUri(1) + "/" + 0, MockMvcResultMatchers.status().isForbidden()),
-                Arguments.of(HttpMethod.DELETE, buildUri(1) + "/" + 0, MockMvcResultMatchers.status().isForbidden())
-        );
+                .andDo(print())
+                .andExpect(status);
     }
 }
