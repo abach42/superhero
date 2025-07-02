@@ -3,24 +3,22 @@ package com.abach42.superhero.unit.dto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
-import java.util.Set;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.abach42.superhero.config.api.OnCreate;
 import com.abach42.superhero.config.api.OnUpdate;
 import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.dto.SuperheroDto;
 import com.abach42.superhero.dto.SuperheroUserDto;
 import com.abach42.superhero.entity.Superhero;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.time.LocalDate;
+import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class SuperheroDtoTest {
+
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
@@ -40,7 +38,8 @@ public class SuperheroDtoTest {
     @DisplayName("SuperheroDto can be mapped to its domain object")
     public void testToDomain() {
         SuperheroUserDto userDto = new SuperheroUserDto("username", "password", "ROLE");
-        SuperheroDto superheroDto = new SuperheroDto(null, "Batman", "Bruce Wayne", LocalDate.of(1939, 5, 1), "Male",
+        SuperheroDto superheroDto = new SuperheroDto(null, "Batman", "Bruce Wayne",
+                LocalDate.of(1939, 5, 1), "Male",
                 "Businessman", "The Dark Knight", userDto);
 
         Superhero superhero = SuperheroDto.toDomain(superheroDto);
@@ -79,7 +78,8 @@ public class SuperheroDtoTest {
     @DisplayName("Test Validation alias size onCreate/ onUpdate")
     public void testValidationAliasSize() {
         SuperheroUserDto userDto = new SuperheroUserDto("username", "password", "ROLE");
-        SuperheroDto failingSuperheroDto = new SuperheroDto(777L, "abcdefghijklmnopqrstu".substring(0, 21), "foo", LocalDate.of(1970, 1, 1),
+        SuperheroDto failingSuperheroDto = new SuperheroDto(777L,
+                "abcdefghijklmnopqrstu".substring(0, 21), "foo", LocalDate.of(1970, 1, 1),
                 "foo", "ignore", "ignore", userDto);
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(

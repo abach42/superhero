@@ -1,6 +1,7 @@
 package com.abach42.superhero.service;
 
 public class RefreshTokenGenerator extends AbstractTokenGenerator {
+
     public static final String SCOPE = "refresh";
 
     @Override

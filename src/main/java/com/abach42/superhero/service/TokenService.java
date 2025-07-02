@@ -1,17 +1,17 @@
 package com.abach42.superhero.service;
 
+import com.abach42.superhero.dto.TokenDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.abach42.superhero.dto.TokenDto;
-
 @Service
 public class TokenService {
+
     AbstractTokenGenerator jwTokenGenerator;
     AbstractTokenGenerator refreshTokenGenerator;
 
-    TokenService(AbstractTokenGenerator jwTokenGenerator, 
-        AbstractTokenGenerator refreshTokenGenerator) {
+    TokenService(AbstractTokenGenerator jwTokenGenerator,
+            AbstractTokenGenerator refreshTokenGenerator) {
         this.jwTokenGenerator = jwTokenGenerator;
         this.refreshTokenGenerator = refreshTokenGenerator;
     }
@@ -22,7 +22,7 @@ public class TokenService {
 
         return new TokenDto(jwt, "Bearer", JwtTokenGenerator.EXP * 60, refreshToken);
     }
- 
+
     private String retrieveJwt(Authentication authentication) {
         return jwTokenGenerator.generate(authentication);
     }

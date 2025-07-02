@@ -1,15 +1,15 @@
 package com.abach42.superhero.shell;
 
+import com.abach42.superhero.service.DatabaseCleanupService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import com.abach42.superhero.service.DatabaseCleanupService;
-
 @Profile("!test")
 @ShellComponent
 public class EraseDeletedRecords {
-    DatabaseCleanupService databaseCleanupService; 
+
+    DatabaseCleanupService databaseCleanupService;
 
     public EraseDeletedRecords(DatabaseCleanupService databaseCleanupService) {
         this.databaseCleanupService = databaseCleanupService;

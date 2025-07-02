@@ -2,11 +2,10 @@ package com.abach42.superhero.unit.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.abach42.superhero.entity.Skill;
 import com.abach42.superhero.entity.SkillProfile;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class SkillProfileTest {
 
@@ -25,7 +24,7 @@ public class SkillProfileTest {
     }
 
     @Test
-    
+
     @DisplayName("Test setter")
     public void settersWorkCorrectly() {
         SkillProfile skillProfile = new SkillProfile(1L, 5, new Skill("foo"));

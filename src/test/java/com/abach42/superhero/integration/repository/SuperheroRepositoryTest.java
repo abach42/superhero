@@ -2,6 +2,10 @@ package com.abach42.superhero.integration.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.abach42.superhero.configuration.TestContainerConfiguration;
+import com.abach42.superhero.configuration.TestDataConfiguration;
+import com.abach42.superhero.entity.Superhero;
+import com.abach42.superhero.repository.SuperheroRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,11 +20,6 @@ import org.springframework.test.context.NestedTestConfiguration;
 import org.springframework.test.context.NestedTestConfiguration.EnclosingConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.abach42.superhero.configuration.TestContainerConfiguration;
-import com.abach42.superhero.configuration.TestDataConfiguration;
-import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.repository.SuperheroRepository;
-
 /*
  * Test real database starting docker container
  */
@@ -33,40 +32,13 @@ public class SuperheroRepositoryTest {
     @Autowired
     private SuperheroRepository subject;
 
-    @Nested
-    @NestedTestConfiguration(EnclosingConfiguration.OVERRIDE)
-    @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-    @DisplayName("Tests for counting superheroes")
-    class CountTest {
-        @Test
-        @DisplayName("count superheroes does not count soft deleted")
-        public void testCountDoesNotCountSoftDeleted() {
-            assertThat(subject.count()).isEqualTo(1L);
-            assertThat(subject.countByDeletedIsTrue()).isEqualTo(1L);
-        }
-    
-        @Test
-        @DisplayName("find all superheroes does not find soft deleted")
-        public void testFindAllDoesNotFindSoftDeleted() {
-            assertThat(subject.findAll()).size().isEqualTo(1);
-            assertThat(subject.findAll(Pageable.ofSize(1)).getNumberOfElements()).isEqualTo(1);
-        }
-    
-        @Test
-        @DisplayName("find all superheroes does not find soft deleted")
-        public void testFindByIdDoesNotFindSoftDeleted() {
-            assertThat(subject.findById(1L).isPresent()).isTrue();
-            assertThat(subject.findById(2L).isPresent()).isFalse();
-        }
-    }
-
     @Test
     @DisplayName("delete by deleted is true, erases record of soft deleted")
     @Transactional
     public void testDeleteByDeletedErases() {
         subject.deleteByDeletedIsTrue();
         assertThat(subject.count()).isEqualTo(1L);
-            assertThat(subject.countByDeletedIsTrue()).isEqualTo(0);
+        assertThat(subject.countByDeletedIsTrue()).isEqualTo(0);
     }
 
     @Test
@@ -87,5 +59,33 @@ public class SuperheroRepositoryTest {
         superhero.setAlias("new");
         Superhero updatedSuperhero = subject.save(superhero);
         assertThat(updatedSuperhero).usingRecursiveComparison().isEqualTo(superhero);
+    }
+
+    @Nested
+    @NestedTestConfiguration(EnclosingConfiguration.OVERRIDE)
+    @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+    @DisplayName("Tests for counting superheroes")
+    class CountTest {
+
+        @Test
+        @DisplayName("count superheroes does not count soft deleted")
+        public void testCountDoesNotCountSoftDeleted() {
+            assertThat(subject.count()).isEqualTo(1L);
+            assertThat(subject.countByDeletedIsTrue()).isEqualTo(1L);
+        }
+
+        @Test
+        @DisplayName("find all superheroes does not find soft deleted")
+        public void testFindAllDoesNotFindSoftDeleted() {
+            assertThat(subject.findAll()).size().isEqualTo(1);
+            assertThat(subject.findAll(Pageable.ofSize(1)).getNumberOfElements()).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("find all superheroes does not find soft deleted")
+        public void testFindByIdDoesNotFindSoftDeleted() {
+            assertThat(subject.findById(1L).isPresent()).isTrue();
+            assertThat(subject.findById(2L).isPresent()).isFalse();
+        }
     }
 }

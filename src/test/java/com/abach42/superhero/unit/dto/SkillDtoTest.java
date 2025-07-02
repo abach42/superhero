@@ -2,22 +2,20 @@ package com.abach42.superhero.unit.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Set;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.abach42.superhero.config.api.OnCreate;
 import com.abach42.superhero.config.api.OnUpdate;
 import com.abach42.superhero.dto.SkillDto;
 import com.abach42.superhero.entity.Skill;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class SkillDtoTest {
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     @DisplayName("Skill can be mapped to it's DTO")
@@ -44,7 +42,7 @@ public class SkillDtoTest {
     public void testValidationFailsOnCreate() {
         SkillDto failingSkillDto = new SkillDto(null, "foo");
         Set<ConstraintViolation<SkillDto>> violations = validator.validate(
-            failingSkillDto, OnCreate.class);
+                failingSkillDto, OnCreate.class);
         assertThat(violations).hasSize(2);
     }
 
@@ -53,7 +51,7 @@ public class SkillDtoTest {
     public void testValidationFailsOnUpdate() {
         SkillDto failingSkillDto = new SkillDto(1L, "foo");
         Set<ConstraintViolation<SkillDto>> violations = validator.validate(
-            failingSkillDto, OnUpdate.class);
+                failingSkillDto, OnUpdate.class);
         assertThat(violations).hasSize(2);
     }
 }

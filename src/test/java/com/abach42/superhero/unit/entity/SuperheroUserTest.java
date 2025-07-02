@@ -2,13 +2,13 @@ package com.abach42.superhero.unit.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.abach42.superhero.entity.SuperheroUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.abach42.superhero.entity.SuperheroUser;
-
 public class SuperheroUserTest {
+
     private SuperheroUser superheroUser;
 
     @BeforeEach

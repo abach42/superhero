@@ -1,7 +1,9 @@
 package com.abach42.superhero.config.api;
 
+import com.abach42.superhero.dto.ErrorDetailedDto;
+import com.abach42.superhero.dto.ErrorDto;
+import com.abach42.superhero.exception.ApiException;
 import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +16,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import com.abach42.superhero.dto.ErrorDetailedDto;
-import com.abach42.superhero.dto.ErrorDto;
-import com.abach42.superhero.exception.ApiException;
-
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ResponseEntity<ErrorDetailedDto> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
+    public ResponseEntity<ErrorDetailedDto> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException exception,
             ServletWebRequest request) {
         HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
-        ErrorDetailedDto errorDetailedResponse = new ErrorDetailedDto(getStatusCodeNumber(httpStatus), getError(httpStatus), 
+        ErrorDetailedDto errorDetailedResponse = new ErrorDetailedDto(
+                getStatusCodeNumber(httpStatus),
+                getError(httpStatus),
                 getMessage(exception), getPath(request));
-    
+
         for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
             errorDetailedResponse.addValidationError(fieldError.getField(),
                     fieldError.getDefaultMessage());
@@ -40,14 +41,18 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorDto> handle(ApiException exception, ServletWebRequest request) {
         return new ResponseEntity<>(
-            new ErrorDto(getStatusCodeNumber(exception.getStatusCode()), getError(exception), getMessage(exception), getPath(request)),         
+                new ErrorDto(getStatusCodeNumber(exception.getStatusCode()), getError(exception),
+                        getMessage(exception), getPath(request)),
                 exception.getStatusCode());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorDto> handleAccessDenied(AccessDeniedException exception, ServletWebRequest request) {
+    public ResponseEntity<ErrorDto> handleAccessDenied(AccessDeniedException exception,
+            ServletWebRequest request) {
         return new ResponseEntity<>(
-            new ErrorDto(getStatusCodeNumber(HttpStatus.FORBIDDEN), getError(HttpStatus.FORBIDDEN), exception.getMessage(), getPath(request)),
+                new ErrorDto(getStatusCodeNumber(HttpStatus.FORBIDDEN),
+                        getError(HttpStatus.FORBIDDEN),
+                        exception.getMessage(), getPath(request)),
                 HttpStatus.FORBIDDEN);
     }
 
@@ -56,7 +61,8 @@ public class ExceptionHandlerAdvice {
     }
 
     private String getError(ErrorResponse exception) {
-        return Optional.of(HttpStatus.resolve(getStatusCodeNumber(exception.getStatusCode())))
+        return Optional.ofNullable(
+                        HttpStatus.resolve(getStatusCodeNumber(exception.getStatusCode())))
                 .map(HttpStatus::getReasonPhrase).orElse("Unknown error");
     }
 

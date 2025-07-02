@@ -10,11 +10,19 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.abach42.superhero.configuration.TestDataConfiguration;
+import com.abach42.superhero.dto.SuperheroDto;
+import com.abach42.superhero.dto.SuperheroListDto;
+import com.abach42.superhero.dto.SuperheroUserDto;
+import com.abach42.superhero.entity.Superhero;
+import com.abach42.superhero.entity.SuperheroUser;
+import com.abach42.superhero.exception.ApiException;
+import com.abach42.superhero.repository.SuperheroRepository;
+import com.abach42.superhero.service.SuperheroService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,29 +39,52 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.abach42.superhero.configuration.TestDataConfiguration;
-import com.abach42.superhero.dto.SuperheroDto;
-import com.abach42.superhero.dto.SuperheroListDto;
-import com.abach42.superhero.dto.SuperheroUserDto;
-import com.abach42.superhero.entity.Superhero;
-import com.abach42.superhero.entity.SuperheroUser;
-import com.abach42.superhero.exception.ApiException;
-import com.abach42.superhero.repository.SuperheroRepository;
-import com.abach42.superhero.service.SuperheroService;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 @ExtendWith(MockitoExtension.class)
 public class SuperheroServiceTest {
-    @Mock
+
+    @MockitoBean
     private SuperheroRepository superheroRepository;
 
-    @Spy
+    @MockitoSpyBean
     private PasswordEncoder passwordEncoder;
 
     private SuperheroService subject;
 
     private Superhero superhero;
-    
+
+    private static Stream<Arguments> updateFieldByField() {
+        SuperheroUser user = new SuperheroUser("foo", "bar", "USER");
+        SuperheroUserDto userDto = SuperheroUserDto.fromDomain(user);
+        return Stream.of(
+                Arguments.of(new SuperheroDto(1L, "updated", null, null, null, null, null, userDto),
+                        new Superhero("updated", "bar", LocalDate.of(1970, 1, 1), "Male", "foo",
+                                "foo", user)),
+                Arguments.of(new SuperheroDto(1L, null, "updated", null, null, null, null, userDto),
+                        new Superhero("foo", "updated", LocalDate.of(1970, 1, 1), "Male", "foo",
+                                "foo", user)),
+                Arguments.of(
+                        new SuperheroDto(1L, null, null, LocalDate.of(1999, 1, 1), null, null, null,
+                                userDto),
+                        new Superhero("foo", "bar", LocalDate.of(1999, 1, 1), "Male", "foo", "foo",
+                                user)),
+                Arguments.of(new SuperheroDto(1L, null, null, null, "updated", null, null, userDto),
+                        new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "updated", "foo",
+                                "foo", user)),
+                Arguments.of(new SuperheroDto(1L, null, null, null, null, "updated", null, userDto),
+                        new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "updated",
+                                "foo", user)),
+                Arguments.of(new SuperheroDto(1L, null, null, null, null, null, "updated", userDto),
+                        new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo",
+                                "updated", user)),
+                Arguments.of(new SuperheroDto(1L, null, null, null, null, null, null, userDto),
+                        new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo",
+                                user))
+        );
+    }
+
     @BeforeEach
     public void setUp() {
         subject = new SuperheroService(superheroRepository, 10, passwordEncoder);
@@ -97,7 +128,8 @@ public class SuperheroServiceTest {
         ApiException exception = assertThrows(ApiException.class,
                 () -> subject.retrieveSuperheroList(null));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHEROES_NOT_FOUND_MSG);
+        assertThat(exception.getMessage()).containsSequence(
+                SuperheroService.SUPERHEROES_NOT_FOUND_MSG);
     }
 
     @Test
@@ -114,11 +146,12 @@ public class SuperheroServiceTest {
     @DisplayName("Get a superhero throws not found, because not exists")
     void testRetrieveSuperheroThrowsNotFound() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
-        
+
         ApiException exception = assertThrows(ApiException.class,
                 () -> subject.retrieveSuperhero(1L));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
+        assertThat(exception.getMessage()).containsSequence(
+                SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }
 
     @Test
@@ -138,10 +171,11 @@ public class SuperheroServiceTest {
     @Test
     @DisplayName("Add superhero null input throws bad request")
     void testAddSuperheroThrowsBadRequest() {
-        ApiException exception = assertThrows(ApiException.class, 
+        ApiException exception = assertThrows(ApiException.class,
                 () -> subject.addSuperhero(null));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_CREATED_MSG);
+        assertThat(exception.getMessage()).containsSequence(
+                SuperheroService.SUPERHERO_NOT_CREATED_MSG);
     }
 
     @ParameterizedTest
@@ -160,48 +194,29 @@ public class SuperheroServiceTest {
         assertThat(expected.getOccupation()).isEqualTo(updatedSuperhero.occupation());
     }
 
-    private static Stream<Arguments> updateFieldByField() {
-        SuperheroUser user = new SuperheroUser("foo", "bar", "USER");
-        SuperheroUserDto userDto = SuperheroUserDto.fromDomain(user);
-        return Stream.of(
-            Arguments.of(new SuperheroDto(1L, "updated", null, null, null, null, null, userDto),
-                         new Superhero("updated", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user)),
-            Arguments.of(new SuperheroDto(1L, null, "updated", null, null, null, null, userDto),
-                         new Superhero("foo", "updated", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user)),
-            Arguments.of(new SuperheroDto(1L, null, null, LocalDate.of(1999, 1, 1), null, null, null, userDto),
-                         new Superhero("foo", "bar", LocalDate.of(1999, 1, 1), "Male", "foo", "foo", user)),
-            Arguments.of(new SuperheroDto(1L, null, null, null, "updated", null, null, userDto),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "updated", "foo", "foo", user)),
-            Arguments.of(new SuperheroDto(1L, null, null, null, null, "updated", null, userDto),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "updated", "foo", user)),
-            Arguments.of(new SuperheroDto(1L, null, null, null, null, null, "updated", userDto),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "updated", user)),
-            Arguments.of(new SuperheroDto(1L, null, null, null, null, null, null, userDto),
-                         new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), "Male", "foo", "foo", user))
-        );
-    }
-
     @Test
     @DisplayName("Update superhero throws not found, because not exists")
     void testUpdateSuperheroThrowsNotFound() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
-        
+
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.changeSuperhero(1L, new SuperheroDto(1L, null, null, null, null, null, null, null)));
+                () -> subject.changeSuperhero(1L,
+                        new SuperheroDto(1L, null, null, null, null, null, null, null)));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
+        assertThat(exception.getMessage()).containsSequence(
+                SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }
 
     @Test
     @DisplayName("Mark superhero soft deleted")
     void testMarkSuperheroSoftDeleted() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.of(superhero));
-        
+
         Superhero expected = superhero;
         expected.setDeleted(true);
         expected.getUser().setDeleted(true);
         given(superheroRepository.save(any(Superhero.class))).willReturn(superhero);
-        
+
         SuperheroDto actual = subject.markSuperheroAsDeleted(1L);
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
@@ -211,10 +226,11 @@ public class SuperheroServiceTest {
     @DisplayName("Mark superhero soft deleted throws not found, because not exists")
     void testMarkSuperheroSoftDeletedThrowsNotFound() {
         given(superheroRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
-        
+
         ApiException exception = assertThrows(ApiException.class,
                 () -> subject.markSuperheroAsDeleted(1L));
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(exception.getMessage()).containsSequence(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
+        assertThat(exception.getMessage()).containsSequence(
+                SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }
 }

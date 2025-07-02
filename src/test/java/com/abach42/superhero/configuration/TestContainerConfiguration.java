@@ -8,6 +8,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @TestConfiguration
 public class TestContainerConfiguration {
+
     @Value("${abach42.superhero.oci.testcontainer.imageName:postgres:latest}")
     private String dockerImageName;
 

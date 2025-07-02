@@ -8,6 +8,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.controller.AuthController;
+import com.abach42.superhero.dto.TokenDto;
+import com.abach42.superhero.service.TokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,24 +30,19 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.abach42.superhero.config.api.PathConfig;
-import com.abach42.superhero.controller.AuthController;
-import com.abach42.superhero.dto.TokenDto;
-import com.abach42.superhero.service.TokenService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /*
  * Mocked rest client, regarding validation, mocked database
- * 
+ *
  */
 @WebMvcTest(AuthController.class)
 @ContextConfiguration
 @WebAppConfiguration
 public class AuthControllerTest {
+
     private final static String PATH = PathConfig.TOKENS;
 
     @Autowired
-	private WebApplicationContext context;
+    private WebApplicationContext context;
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,20 +54,20 @@ public class AuthControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-	public void setup() {
-		mockMvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity()) 
-				.build();
-	}
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @Test
     @DisplayName("Login anonymous fails")
     @WithAnonymousUser
     public void testGetSuperheroLoginFails() throws Exception {
         mockMvc.perform(
-                get(PATH + "/login")
-                        .accept(MediaType.APPLICATION_JSON))
+                        get(PATH + "/login")
+                                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
@@ -82,8 +82,8 @@ public class AuthControllerTest {
         MvcResult mvcResult = mockMvc.perform(
                         get(PATH + "/login")
                                 .accept(MediaType.APPLICATION_JSON))
-                        .andDo(print())
-                        .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn();
 
         TokenDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),

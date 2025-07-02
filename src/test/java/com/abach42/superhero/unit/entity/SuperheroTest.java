@@ -2,13 +2,11 @@ package com.abach42.superhero.unit.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.abach42.superhero.configuration.TestDataConfiguration;
 import com.abach42.superhero.entity.Superhero;
+import java.time.LocalDate;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class SuperheroTest {
 
@@ -36,6 +34,7 @@ public class SuperheroTest {
         assertThat(superhero.getDateOfBirth()).isEqualTo(LocalDate.of(1938, 6, 1));
         assertThat(superhero.getGender()).isEqualTo("Male");
         assertThat(superhero.getOccupation()).isEqualTo("Journalist");
-        assertThat(superhero.getOriginStory()).isEqualTo("Superman was born on the planet Krypton...");
+        assertThat(superhero.getOriginStory()).isEqualTo(
+                "Superman was born on the planet Krypton...");
     }
 }

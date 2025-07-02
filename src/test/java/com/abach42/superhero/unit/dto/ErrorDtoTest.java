@@ -1,12 +1,10 @@
 package com.abach42.superhero.unit.dto;
 
-import org.junit.jupiter.api.Test;
-
-import com.abach42.superhero.dto.ErrorDto;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.abach42.superhero.dto.ErrorDto;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class ErrorDtoTest {
 
