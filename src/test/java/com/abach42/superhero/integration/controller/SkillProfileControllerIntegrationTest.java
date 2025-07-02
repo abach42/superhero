@@ -83,7 +83,7 @@ public class SkillProfileControllerIntegrationTest {
     private SkillRepository skillRepository;
 
     //unable to mock on layer
-    private RequestPostProcessor allAuthorities = SecurityMockMvcRequestPostProcessors.jwt()
+    private final RequestPostProcessor allAuthorities = SecurityMockMvcRequestPostProcessors.jwt()
             .authorities(new SimpleGrantedAuthority(SecuredAdmin.ROLE_ADMIN),
                     new SimpleGrantedAuthority(SecuredUser.ROLE_USER));
 
@@ -99,9 +99,8 @@ public class SkillProfileControllerIntegrationTest {
     }
 
     private ErrorDto getErrorDtoFromResponseBody(MvcResult mvcResult) throws IOException {
-        ErrorDto actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                 ErrorDto.class);
-        return actual;
     }
 
     @Test
