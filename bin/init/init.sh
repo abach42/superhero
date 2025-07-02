@@ -29,15 +29,3 @@ echo "--------------------------------------------------"
 echo "--------------------------------------------------"
 echo " ✔️  Building TLS key"
 echo "--------------------------------------------------"
-
-# Determine the path for Maven depending on OS
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    # Linux
-    mvn="mvn"
-elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "mingw"* ]]; then
-    # Windows (MinGW)
-    mvn="./mvnw"
-else
-    echo "  ⛔ Unsupported OS: Cannot locate mvn."
-    exit 1
-fi
