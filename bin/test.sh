@@ -11,4 +11,4 @@ cd "$(dirname "$0")/.." || exit
 
 . "$(dirname "$0")/init/maven-cmd.sh"
 
-$mvn clean test -Dparallel=all -DperCoreThreadCount=false -DthreadCount=28 -Djdk.net.URLClassPath.disableClassPathURLCheck=true "$@"
+$mvn clean test -Dparallel=all -DperCoreThreadCount=false -Djdk.net.URLClassPath.disableClassPathURLCheck=true "$@"
