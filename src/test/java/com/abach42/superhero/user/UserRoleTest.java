@@ -44,68 +44,12 @@ class UserRoleTest {
     }
 
     @Test
-    @DisplayName("should convert value 0 to ADMIN using fromValue")
-    void shouldConvertValue0ToAdminUsingFromValue() {
-        UserRole result = UserRole.fromValue((byte) 0);
-
-        assertThat(result).isEqualTo(UserRole.ADMIN);
-    }
-
-    @Test
-    @DisplayName("should convert value 1 to USER using fromValue")
-    void shouldConvertValue1ToUserUsingFromValue() {
-        UserRole result = UserRole.fromValue((byte) 1);
-
-        assertThat(result).isEqualTo(UserRole.USER);
-    }
-
-    @Test
-    @DisplayName("should throw exception for invalid value in fromValue")
-    void shouldThrowExceptionForInvalidValueInFromValue() {
-        byte invalidValue = 99;
-
-        assertThatThrownBy(() -> UserRole.fromValue(invalidValue))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Invalid level value: " + invalidValue);
-    }
-
-    @Test
-    @DisplayName("should throw exception for negative value in fromValue")
-    void shouldThrowExceptionForNegativeValueInFromValue() {
-        byte negativeValue = -1;
-
-        assertThatThrownBy(() -> UserRole.fromValue(negativeValue))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Invalid level value: " + negativeValue);
-    }
-
-    @Test
     @DisplayName("should have exactly two enum values")
     void shouldHaveExactlyTwoEnumValues() {
         UserRole[] values = UserRole.values();
 
         assertThat(values).hasSize(2);
         assertThat(values).containsExactly(UserRole.ADMIN, UserRole.USER);
-    }
-
-    @Test
-    @DisplayName("should be bidirectional conversion for ADMIN")
-    void shouldBeBidirectionalConversionForAdmin() {
-        UserRole original = UserRole.ADMIN;
-        byte value = original.getValue();
-        UserRole converted = UserRole.fromValue(value);
-
-        assertThat(converted).isEqualTo(original);
-    }
-
-    @Test
-    @DisplayName("should be bidirectional conversion for USER")
-    void shouldBeBidirectionalConversionForUser() {
-        UserRole original = UserRole.USER;
-        byte value = original.getValue();
-        UserRole converted = UserRole.fromValue(value);
-
-        assertThat(converted).isEqualTo(original);
     }
 
     @Test

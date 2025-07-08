@@ -1,14 +1,15 @@
-package com.abach42.superhero.user;
+package com.abach42.superhero.superhero;
 
 import com.abach42.superhero.config.convertion.ConvertibleEnum;
 
-public enum UserRole implements ConvertibleEnum<Byte> {
-    ADMIN((byte) 0),
-    USER((byte) 1);
+public enum Gender implements ConvertibleEnum<Byte> {
+    MALE((byte) 0),
+    FEMALE((byte) 1),
+    HIDDEN((byte) 2);
 
     private final byte value;
 
-    UserRole(int value) {
+    Gender(int value) {
         this.value = (byte) value;
     }
 
