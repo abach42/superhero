@@ -1,15 +1,18 @@
-# Superhero Spring Boot RESTful API
-A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example code - to store contacts of superheroes.
+# 🦸‍♂️ Superhero Spring Boot RESTful API
+A RESTful API etude, using Spring 6.* , Spring Boot 3.* to find solutions and build tests as example 
+code and to store contacts of your superheroes.
 
-🚀 Start with `bin/start.sh` (more information below)
+🚀 Start with `bin/start.sh` (see below)
 
-You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. You can run unit, functional and integrative tests using oci container solution ("Testcontainers" feature of spring boot). 
+You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior get a JWT token. 
+You can run unit, functional and integrative tests using oci container solution ("Testcontainers" 
+feature of spring boot). 
 
 ![Swagger UI](src/main/resources/static/img/swg.png)
 
-## Changelog 📜
+## 📜 Changelog
 
-### Features ✨
+### ✨ Features 
 
 * JWT auth, user roles
 * Refresh token
@@ -19,18 +22,19 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 * Soft delete for superhero and user, cleaning database scheduler (to be discussed)
 * Deployment for static websites inside Springs Webserver, SPA
 
-### New for 1.0.0 ✨
-* Optimize method security and project structure
+### ✨ New for 1.0.0 
+* Optimized method security and project structure
 
-## Start project in your docker environment 🚀
+## 🚀 Start project in your docker environment
 
 👆 You will need 🐋 docker/ docker compose V2 installed on your OS.
 
 Start with `bin/start.sh`
 
+This will generate keys, make an image of Java project, start it in a docker container, 
+initialize a postgres database as container and provide localhost, TLS at port 8443.
 
-This will generate keys, make an image of Java project, initialize a postgres database as docker container 
-and provide localhost, TLS at port 8443.
+(Java will be installed inside the container, you do not need it in your OS).
 
 ### Go on using 
 
@@ -40,7 +44,7 @@ and provide localhost, TLS at port 8443.
 
 * See a chart of superhero skills (id: 1 - 16) https://localhost:8443/chart.html?id=1
 
-## Using JWT <img src="./src/main/resources/static/img/jwt_logo.svg" width="20">
+## <img src="./src/main/resources/static/img/jwt_logo.svg" width="20"> Using JWT
 
 1. Get a token by authentication
 
@@ -61,21 +65,17 @@ and provide localhost, TLS at port 8443.
   * user: chris@example.com
   * password: foobar
 
-## Developing (using hot swapping of code) 🔧
+## 🔧 Developing (using hot swapping of code)
 
-👆 You will need docker/ docker compose V2 installed on your OS and Java 21.0.2
+👆 You will need docker/ docker compose V2 installed on your OS and Java 17
 
 * Start application: `./bin/dev/start.sh`
   - Postgres database will be started and fully initialized in a docker container.
   - Spring-boot will be started.
 
-* Run test by `mvn clean test`.
+* Run test by `bin/test.sh`.
 
-* Open database client on `psql postgresql://db:db@localhost:15432/db`.
-
-## Using docker deployment
-
-Start `bin/oci/start.sh`
+* Open database client on `psql postgresql://db:db@localhost:25432/db`.
 
 ## Endpoints
 
@@ -100,6 +100,6 @@ Start `bin/oci/start.sh`
 * PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 
-## Plans for 1.1.0 ⏳
+## ⏳ Plans for 1.1.0 
 
 * End to end test API against Swagger doc

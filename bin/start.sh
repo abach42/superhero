@@ -1,17 +1,22 @@
 #!/bin/bash
-# Script to run Maven with specified parameters
 
 # Navigate to the directory containing the mvnw file
 cd "$(dirname "$0")/.." || exit
 
 source ./bin/init/init.sh
 
-. "$(dirname "$0")/init/maven-cmd.sh"
+# Starting application; code changes would be ignored
+# 1. Build image of actual code state
+# 2. Start OCI network database and Java
 
 echo "--------------------------------------------------"
-echo " 🪴  starting spring on default profile, skipping tests"
+echo " 🖼️ Build docker image of Spring Boot application"
 echo "--------------------------------------------------"
 
-# you can add -PmyProfile 
-$mvn clean spring-boot:run -DskipTests \
-    -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+docker compose build
+
+echo "--------------------------------------------------"
+echo " 🐳 Start docker network"
+echo "--------------------------------------------------"
+
+docker compose up
