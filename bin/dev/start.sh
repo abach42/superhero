@@ -2,11 +2,11 @@
 # Script to run Maven with specified parameters
 
 # Navigate to the directory containing the mvnw file
-cd "$(dirname "$0")/.." || exit
+cd "$(dirname "$0")/../.." || exit
 
 source ./bin/init/init.sh
 
-. "$(dirname "$0")/init/maven-cmd.sh"
+. bin/init/maven-cmd.sh
 
 echo "--------------------------------------------------"
 echo " 🪴  starting spring on default profile, skipping tests"
