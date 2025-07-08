@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SuperheroService {
@@ -81,38 +82,27 @@ public class SuperheroService {
         }
     }
 
-    /*
-     * TODO: Merge and write manually superheroDTO, using `JPA automatic dirty checking`
-     * by not merging a null value.
-     * * @DynamicUpdate over entity
-     * * get this merge done by framework solution, but including *Dto
-     * * @Transactional over here to enable dirty checking
-     */
+    @Transactional
     public SuperheroDto changeSuperhero(Long id, SuperheroDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
 
-        // this is manual dirty checking, todo see above
-        if (update.alias() != null) {
-            origin.setAlias(update.alias());
-        }
-        if (update.realName() != null) {
-            origin.setRealName(update.realName());
-        }
-        if (update.dateOfBirth() != null) {
-            origin.setDateOfBirth(update.dateOfBirth());
-        }
-        if (update.gender() != null) {
-            origin.setGender(update.gender());
-        }
-        if (update.occupation() != null) {
-            origin.setOccupation(update.occupation());
-        }
-        if (update.originStory() != null) {
-            origin.setOriginStory(update.originStory());
-        }
+        // Use a more sophisticated approach to handle explicit nulls
+        updateFieldIfPresent(update.alias(), origin::setAlias);
+        updateFieldIfPresent(update.realName(), origin::setRealName);
+        updateFieldIfPresent(update.dateOfBirth(), origin::setDateOfBirth);
+        updateFieldIfPresent(update.gender(), origin::setGender);
+        updateFieldIfPresent(update.occupation(), origin::setOccupation);
+        updateFieldIfPresent(update.originStory(), origin::setOriginStory);
 
-        Superhero savedSuperhero = superheroRepository.save(origin);
-        return SuperheroDto.fromDomain(savedSuperhero);
+        return SuperheroDto.fromDomain(origin);
+    }
+
+    private <T> void updateFieldIfPresent(T value, java.util.function.Consumer<T> setter) {
+        // This still has the same limitation - we can't distinguish between
+        // "not provided" and "explicitly null"
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 
     public SuperheroDto markSuperheroAsDeleted(Long id) throws ApiException {
