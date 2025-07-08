@@ -9,9 +9,9 @@ INSERT INTO skill (skill_name) VALUES
 ('baz');
 
 INSERT INTO superhero (user_id, alias, real_name, date_of_birth, gender, occupation, origin_story, deleted) VALUES
-(1, 'foo', 'Mr. Foo', '1970-01-01', 'Male', 'foo', 'foo', false),
-(2, 'bar', 'Mrs. Bar', '1970-01-02', 'Female', 'bar', 'bar', true),
-(3, 'baz', 'Mrs. baz', '1970-01-03', 'Male', 'baz', 'baz', true);
+(1, 'foo', 'Mr. Foo', '1970-01-01', 0, 'foo', 'foo', false),
+(2, 'bar', 'Mrs. Bar', '1970-01-02', 1, 'bar', 'bar', true),
+(3, 'baz', 'Mrs. baz', '1970-01-03', 0, 'baz', 'baz', true);
 
 INSERT INTO skill_profile (superhero_id, skill_id, intensity) VALUES
 (1, 2, 1),
