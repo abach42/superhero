@@ -1,45 +1,32 @@
 spring:
-    config:
-        activate:
-            on-profile: test
-    main:
-        banner-mode: console
-    shell:
-        interactive:
-            enabled: false
-    jpa:
-        properties:
-            hibernate:
-                ddl-auto: create-drop
-                format_sql: true
-                highlight_sql: true
-    datasource:
-        driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    sql:
-        init:
-            mode: always
-    liquibase:
-        enabled: true
-        change-log: classpath:/db/migrations/changelog-master.yaml
+  config:
+    activate:
+      on-profile: test
+  main:
+    banner-mode: console
+  shell:
+    interactive:
+      enabled: false
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+        format_sql: false
+        highlight_sql: false
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  sql:
+    init:
+      mode: always
+  liquibase:
+    enabled: true
+    drop-first: false
+    default-schema: public
+    show-summary: verbose
+    show-summary-output: console
+    ui-service: console
+    change-log: classpath:/arrange/changelog-master.yaml
 springdoc:
-    swagger-ui:
-        enabled: false
+  swagger-ui:
+    enabled: false
 debug: true
-abach42:
-    superhero:
-        oci:
-            testcontainer:
-                imageName: postgres:latest
-junit:
-    jupiter:
-        execution: 
-            parallel:
-                enabled: true
-                config:
-                    strategy: fixed
-                    fixed:
-                        parallelism: 8
-                mode:
-                    default: concurrent
-                    classes:
-                        default: concurrent

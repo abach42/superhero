@@ -9,19 +9,18 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 
 ## Changelog 📜
 
-### Features 0.8.* ✨
+### Features ✨
 
 * JWT auth, user roles
+* Refresh token
 * Tests (using testcontainers, liquibase), > 90%
 * Database postgres + docker
 * Pagination on listing
 * Soft delete for superhero and user, cleaning database scheduler (to be discussed)
+* Deployment for static websites inside Springs Webserver, SPA
 
-### Features 0.9.* ✨
-* Refresh token
-
-### New for 0.10.* ✨
-* Deployment for static websites inside of Springs Webserver, SPA
+### New for 1.0.0 ✨
+* Optimize method security and project structure
 
 ## Start project in your docker environment 🚀
 
@@ -30,13 +29,14 @@ You could get data calling e.g. `/api/v1/superheroes` and other endpoints. Prior
 Start with `bin/start.sh`
 
 
-This will generate keys, make an image of Java project,  initialize a postgres database as docker container and provide localhost, TLS at port 8443.
+This will generate keys, make an image of Java project, initialize a postgres database as docker container 
+and provide localhost, TLS at port 8443.
 
 ### Go on using 
 
 * Use some rest client: `GET https://localhost:8443/api/v1/superheroes/ HTTP/1.1` (Please use JWT).
 
-* See OpenAPI definition at https://localhost:8443/swagger-ui/index.html . (Please write `index.html`, there is no redirect)
+* See OpenAPI definition at https://localhost:8443/swagger-ui/index.html. (Please write `index.html`, there is no redirect)
 
 * See a chart of superhero skills (id: 1 - 16) https://localhost:8443/chart.html?id=1
 
@@ -77,26 +77,6 @@ This will generate keys, make an image of Java project,  initialize a postgres d
 
 Start `bin/oci/start.sh`
 
-## Using asymmetric key encryption for JWT
-
-1) Run bin/init/generate-auth-keys.sh (consider to enable it in bin/init/init.sh)
-2) Set com.abach42.superhero.security.jwt.symmetric to false
-3) Set com.abach42.superhero.security.jwt.public-key and *.private-key paths
-
-e.g: 
-
-```yaml
-com.abach42.superhero:
-    ...
-    security:
-        jwt:
-            public-key: "classpath:.certs/public.pem"
-            private-key: "classpath:.certs/private.pem"
-            symmetric: false
-```
-
-Both variants held in code for documentation purpose. 
-
 ## Endpoints
 
 ### Authentication
@@ -120,7 +100,6 @@ Both variants held in code for documentation purpose.
 * PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
 
-## Plans for 0.11.0 ⏳
+## Plans for 1.1.0 ⏳
 
 * End to end test API against Swagger doc
-* Optimize JWT claim to better store user roles

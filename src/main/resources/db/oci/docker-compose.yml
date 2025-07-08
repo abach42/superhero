@@ -1,10 +1,10 @@
 services:
-  postgres-db:
-    container_name: postgres-superhero-db
+  local-database:
+    container_name: superhero-postgres-db
     image: postgres:latest
     restart: always
     ports:
-      - 15432:5432
+      - 25432:5432
     environment:
       POSTGRES_USER: db
       POSTGRES_PASSWORD: db

@@ -4,19 +4,24 @@
 @domain = {{sheme}}://{{host}}:{{port}}
 
 ### Preflight
-OPTIONS {{domain}}/api/v1/login HTTP/1.1
+OPTIONS {{domain}}/api/v1/auth/login HTTP/1.1
 
 ### Get token Admin
 # @name login
-GET {{domain}}/api/v1/login HTTP/1.1
+GET {{domain}}/api/v1/auth/login HTTP/1.1
 Authorization: Basic admin@example.com foobar
 
 @jwt = {{login.response.body.access_token}}
 @token = {{login.response.body.refresh_token}}
 
+### Get superhero
+GET {{domain}}/api/v1/superheroes/6 HTTP/1.1
+Accept: application/json
+Authorization: Bearer {{jwt}}
+
 ### Get token User
 #@name login
-GET {{domain}}/api/v1/login HTTP/1.1
+GET {{domain}}/api/v1/auth/login HTTP/1.1
 Authorization: Basic chris@example.com foobar
 
 
@@ -26,11 +31,11 @@ Authorization: Basic chris@example.com foobar
 # Authorization: Basic foo@bar.org foobar
 
 ### Refresh Token
-GET {{domain}}/api/v1/refresh-token HTTP/1.1
+GET {{domain}}/api/v1/auth/refresh-token HTTP/1.1
 Authorization: Bearer {{token}}
 
 ### Refresh Token with jwt does not work
-GET {{domain}}/api/v1/refresh-token HTTP/1.1
+GET {{domain}}/api/v1/auth/refresh-token HTTP/1.1
 Authorization: Bearer {{jwt}}
 
 ### Get all superheroes with refresh token does not work
