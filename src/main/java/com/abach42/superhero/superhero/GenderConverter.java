@@ -1,17 +1,17 @@
-package com.abach42.superhero.user;
+package com.abach42.superhero.superhero;
 
 import com.abach42.superhero.config.convertion.GenericEnumConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class UserRoleConverter extends GenericEnumConverter<UserRole, Byte> {
+public class GenderConverter extends GenericEnumConverter<Gender, Byte> {
 
     @Override
-    public UserRole convertToEntityAttribute(Byte dbData) {
+    public Gender convertToEntityAttribute(Byte dbData) {
         if (dbData == null) {
             return null;
         }
 
-        return fromValue(UserRole.class, dbData);
+        return fromValue(Gender.class, dbData);
     }
 }

@@ -53,6 +53,7 @@ public class Superhero {
     private ApplicationUser user;
 
     protected Superhero() {
+
     }
 
     public Superhero(

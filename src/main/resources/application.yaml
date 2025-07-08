@@ -70,11 +70,11 @@ spring:
   docker:
     compose:
       file: src/main/resources/db/oci/docker-compose.yml
-      lifecycle: start-and-stop
       skip:
         in-tests: true
       start:
         log-level: trace
+      lifecycle-management: start_and_stop
   liquibase:
     enabled: false
   data:
