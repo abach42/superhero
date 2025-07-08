@@ -28,7 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tags(value = {@Tag("integration"), @Tag("auth")})
-@SpringBootTest(classes = {TestContainerConfiguration.class})
+@SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
 @Import(TestContainerConfiguration.class)
@@ -36,7 +36,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class AuthenticationControllerIntegrationTest {
 
     private static final String SLUG = "auth";
-
     String basePath = BASE_URI;
 
     @Autowired
@@ -47,14 +46,14 @@ public class AuthenticationControllerIntegrationTest {
 
     @Test
     @DisplayName("Admin should be able to receive a jwt")
-    @WithUserDetails(value = "admin@example.com")
+    @WithUserDetails("admin@example.com")
     void testAdminShouldBeAbleToReceiveAJwt() throws Exception {
         performRequest();
     }
 
     @Test
     @DisplayName("User should be able to receive a jwt")
-    @WithUserDetails(value = "user@example.com")
+    @WithUserDetails("user@example.com")
     void testUserShouldBeAbleToReceiveAJwt() throws Exception {
         performRequest();
     }
