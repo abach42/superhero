@@ -22,6 +22,6 @@ services:
     depends_on:
       - database
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/db
       - SPRING_DATASOURCE_USERNAME=db
       - SPRING_DATASOURCE_PASSWORD=db
