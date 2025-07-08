@@ -1,102 +1,101 @@
 com.abach42.superhero:
-    cors:
-        allowed-origins: 
-            - http://localhost:3000
-            - https://localhost:3001
-        allowed-methods: 
-            - '*'
-        allowed-headers:
-            - '*'
-        exposed-headers: 
-            - '*'
-        allow-credentials: true
-        maxAge: 3600
-    security:
-        jwt:
-            ## documentation purpose here: asymmetric key 
-            ## public-key: "classpath:.certs/public.pem"
-            ## private-key: "classpath:.certs/private.pem"
-            
-            # must be at least 256 bits, 
-            # caution: never commit key in production, consider to use env var
-            token-secret: ks9lg8pubax3ctmw9aq4pz4vduxllqq4
-            symmetric: true
-    erase-soft-deleted-at: "0 0 0 ? * SAT" 
-    # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
-    # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
-    # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - https://localhost:3001
+    allowed-methods:
+      - '*'
+    allowed-headers:
+      - '*'
+    exposed-headers:
+      - '*'
+    allow-credentials: true
+    maxAge: 3600
+  security:
+    jwt:
+      # must be at least 256 bits,
+      # caution: never commit key in production, consider to use env var
+      token-secret: ks9lg8pubax3ctmw9aq4pz4vduxllqq4
+  erase-soft-deleted-at: "0 0 0 ? * SAT"
+  # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
+  # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
+  # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight
 server:
-    port: 8443
-    ssl:
-        key-store: "classpath:.certs/abach42.superhero.p12"
-        # credential use only for localhost (production: change and use .env)
-        key-store-password: onlyForLocalhost123
-    error:
-        include-message: always
-        include-binding-errors: always
-        include-stacktrace: on-param
-        include-exception: false
-    servlet:
-        session:
-            cookie:
-                same-site: "none"
-        # Static resources: In a stand-alone web application, the default servlet from the container is not enabled.
-        # The servlet container will serve static resources from the static paths 
-        # (e.g., /static, /public, /resources, or /META-INF/resources).
-        register-default-servlet: true
+  port: 8443
+  ssl:
+    key-store: "classpath:.certs/abach42.superhero.p12"
+    # credential use only for localhost (production: change and use .env)
+    key-store-password: onlyForLocalhost123
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on-param
+    include-exception: false
+  servlet:
+    session:
+      cookie:
+        same-site: "none"
+    # Static resources: In a stand-alone web application, the default servlet from the container is not enabled.
+    # The servlet container will serve static resources from the static paths
+    # (e.g., /static, /public, /resources, or /META-INF/resources).
+    register-default-servlet: true
 spring:
-    profiles:
-        active: @spring.profiles@
-    mvc:
-        log-request-details: true
-        # Static resources: By default, resources are mapped on /**, 
-        # For instance, relocating all resources to /resources/** can be achieved
-        static-path-pattern: "/**"
+  profiles:
+    active: default
+  mvc:
+    log-request-details: true
+    # Static resources: By default, resources are mapped on /**,
+    # For instance, relocating all resources to /resources/** can be achieved
+    static-path-pattern: "/**"
+  web:
+    resources:
+      # You can also customize the static resource locations, replacing the default values with a list of directory
+      # locations). The root servlet context
+      # path, "/", is automatically added as a location as well.
+      static-locations: classpath:/public/, classpath:/static/
+  shell:
+    interactive:
+      enabled: false
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: none
+        format_sql: true
+        highlight_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:25432/db
+    # credentaial use only for localhost (production: change and use .env)
+    username: db
+    password: db
+    driverClassName: org.postgresql.Driver
+  docker:
+    compose:
+      file: src/main/resources/db/oci/docker-compose.yml
+      lifecycle: start-and-stop
+      skip:
+        in-tests: true
+      start:
+        log-level: trace
+  liquibase:
+    enabled: false
+  data:
     web:
-        resources:
-            # You can also customize the static resource locations, replacing the default values with a list of directory 
-            # locations). The root servlet context 
-            # path, "/", is automatically added as a location as well.
-            static-locations: classpath:/public/, classpath:/static/
-    main:
-        banner-mode: off
-    shell:
-        interactive:
-            enabled: false
-    jpa:
-        properties:
-            hibernate:
-                ddl-auto: none
-                format_sql: true
-                highlight_sql: true
-    datasource:
-        url: jdbc:postgresql://localhost:15432/db
-        # credentaial use only for localhost (production: change and use .env)
-        username: db
-        password: db
-        driverClassName: org.postgresql.Driver
-    liquibase:
-        enabled: false
-    data:
-        web:    
-            pageable: 
-                default-page-size: 5
-    codec:
-        log-request-details: true
+      pageable:
+        default-page-size: 5
 springdoc:
-    swagger-ui:
-        enabled: true
-        tryItOutEnabled: true
-        filter: false
-        syntaxHighlight.activated: true
+  swagger-ui:
+    enabled: true
+    tryItOutEnabled: true
+    filter: false
+    syntaxHighlight.activated: true
 debug: false
 logging:
-    level:
-        org:
-            hibernate:
-                SQL: DEBUG
-                orm.jdbc.bind: TRACE
-            springframework:
-                web: TRACE
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: TRACE
+      springframework:
         web: TRACE
-        org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+        security: TRACE
+    web: TRACE

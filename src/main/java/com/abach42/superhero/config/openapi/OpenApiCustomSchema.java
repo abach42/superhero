@@ -1,6 +1,6 @@
 package com.abach42.superhero.config.openapi;
 
-import com.abach42.superhero.dto.SkillProfileDto;
+import com.abach42.superhero.skillprofile.SkillProfileDto;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.converter.ResolvedSchema;

@@ -1,8 +1,5 @@
 package com.abach42.superhero.config.api;
 
-import com.abach42.superhero.dto.ErrorDetailedDto;
-import com.abach42.superhero.dto.ErrorDto;
-import com.abach42.superhero.exception.ApiException;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

@@ -1,16 +1,16 @@
 CREATE EXTENSION pgcrypto;
 
-CREATE TABLE superhero_user (
+CREATE TABLE application_user (
     id SERIAL PRIMARY KEY,
     email VARCHAR(64) UNIQUE NOT NULL,
     password VARCHAR(128) NOT NULL,
-    role VARCHAR(10) DEFAULT 'USER',
+    role smallint NOT NULL,
     deleted BOOLEAN DEFAULT false
 );
 
 CREATE TABLE superhero (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES superhero_user(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES application_user(id) ON DELETE CASCADE,
     alias VARCHAR(100),
     real_name VARCHAR(100),
     date_of_birth DATE,
@@ -18,7 +18,7 @@ CREATE TABLE superhero (
     occupation VARCHAR(100),
     origin_story TEXT,
     deleted BOOLEAN DEFAULT false,
-    CONSTRAINT fk_superhero_user FOREIGN KEY (user_id) REFERENCES superhero_user(id)
+    CONSTRAINT fk_application_user FOREIGN KEY (user_id) REFERENCES application_user(id)
 );
 
 CREATE TABLE skill (
@@ -55,24 +55,24 @@ INSERT INTO skill (skill_name) VALUES
 ('self_control'), -- Selbstbeherrschung
 ('good_looks'); -- Gut-Aussehen
 
-INSERT INTO superhero_user (email, password, role)
+INSERT INTO application_user (email, password, role)
 VALUES
-('admin@example.com', '{bcrypt}$2a$12$anOoGoXF50pcBQMlUSDA..s7mJjQakVJ3dGXkQm3iRAiigRZWvts6', 'ADMIN'),
-('chris@example.com', '{bcrypt}$2a$12$4cAnXB4ziicHOuRiV4XVQOhCNr3w4N95Q07d3d1SNovRmLFfcPchS', 'USER'),
-('samantha@example.com', '{bcrypt}$2a$12$XTxxbXQmCVr.c10nOM/V2OE0tFwxwumS.CDqOjFg6GkST2VhXwUuy', 'USER'),
-('kevin@example.com', '{bcrypt}$2a$12$tHbblSycdUJgFF6/nJ/yG.Fwz7tESgDMek9DRSTnKQhRlyz4Mtr32', 'USER'),
-('emma@example.com', '{bcrypt}$2a$12$o41irHYILPDLVR.RcMk8IeOVpe2QlbhqK8ocbbCOxzGaindMZtHW.', 'USER'),
-('oliver@example.com', '{bcrypt}$2a$12$nEp7ynfqWgYXX4hQTvkOkO.2XiFoIvk5ovBw0ehygF2apBTlLz./m', 'USER'),
-('cassandra@example.com', '{bcrypt}$2a$12$1EUCNLOWgT95K/Wq3LYU.egM6AWt2zl4bJ7QCx7XPJ3uwBJUsl0Ye', 'USER'),
-('gary@example.com', '{bcrypt}$2a$12$J5yrKvd5K0YN6Thy4aI.bes1hzurkc0fjDDlN/smvfqkV5IxZ7JuS', 'USER'),
-('leah@example.com', '{bcrypt}$2a$12$gF45UC2TnJnWZA9Wg3So..sruiYXYXwqfVUecQXfSUcWI1n/JQVY.', 'USER'),
-('pete@example.com', '{bcrypt}$2a$12$jDIBR0Bu6i/rMlMYJ/TiquwjStIH2qweKywiRa3oxV3MyClROh58O', 'USER'),
-('grace@example.com', '{bcrypt}$2a$12$XOAwRzHyJ3qe2NRpFIN56uBKVh/buBHpTUmU0Cc8Vn2n2H0WQJjWW', 'USER'),
-('carlos@example.com', '{bcrypt}$2a$12$iRtrPjgggB42.Q5L0HiskOtzB/38jKN/96nIJe1aXo7rHh..u9MAm', 'USER'),
-('sarah@example.com', '{bcrypt}$2a$12$eQbyf1v2gR10DMZJhVcvLupQxuMk/IFMGur97Nd0ucRTI/.OQK0NG', 'USER'),
-('keith@example.com', '{bcrypt}$2a$12$OHuZ3xXiwavZZqKG28B/s.9GT8cLmkexSxeiajsalYmJcxJeHk4Mq', 'USER'),
-('ella@example.com', '{bcrypt}$2a$12$Ya7ekHzToVdqyeuiozpoJODLto6HABrDNkSQ8Uigz2CgkvC0e/aUy', 'USER'),
-('walter@example.com', '{bcrypt}$2a$12$gErPAHGz.PrcwrTkLkZ2euMD02qqTYR3q7bjw0VAaEMenVQFrsnaC', 'USER');
+('admin@example.com', '{bcrypt}$2a$12$anOoGoXF50pcBQMlUSDA..s7mJjQakVJ3dGXkQm3iRAiigRZWvts6', 0),
+('chris@example.com', '{bcrypt}$2a$12$4cAnXB4ziicHOuRiV4XVQOhCNr3w4N95Q07d3d1SNovRmLFfcPchS', 1),
+('samantha@example.com', '{bcrypt}$2a$12$XTxxbXQmCVr.c10nOM/V2OE0tFwxwumS.CDqOjFg6GkST2VhXwUuy', 1),
+('kevin@example.com', '{bcrypt}$2a$12$tHbblSycdUJgFF6/nJ/yG.Fwz7tESgDMek9DRSTnKQhRlyz4Mtr32', 1),
+('emma@example.com', '{bcrypt}$2a$12$o41irHYILPDLVR.RcMk8IeOVpe2QlbhqK8ocbbCOxzGaindMZtHW.', 1),
+('oliver@example.com', '{bcrypt}$2a$12$nEp7ynfqWgYXX4hQTvkOkO.2XiFoIvk5ovBw0ehygF2apBTlLz./m', 1),
+('cassandra@example.com', '{bcrypt}$2a$12$1EUCNLOWgT95K/Wq3LYU.egM6AWt2zl4bJ7QCx7XPJ3uwBJUsl0Ye', 1),
+('gary@example.com', '{bcrypt}$2a$12$J5yrKvd5K0YN6Thy4aI.bes1hzurkc0fjDDlN/smvfqkV5IxZ7JuS', 1),
+('leah@example.com', '{bcrypt}$2a$12$gF45UC2TnJnWZA9Wg3So..sruiYXYXwqfVUecQXfSUcWI1n/JQVY.', 1),
+('pete@example.com', '{bcrypt}$2a$12$jDIBR0Bu6i/rMlMYJ/TiquwjStIH2qweKywiRa3oxV3MyClROh58O', 1),
+('grace@example.com', '{bcrypt}$2a$12$XOAwRzHyJ3qe2NRpFIN56uBKVh/buBHpTUmU0Cc8Vn2n2H0WQJjWW', 1),
+('carlos@example.com', '{bcrypt}$2a$12$iRtrPjgggB42.Q5L0HiskOtzB/38jKN/96nIJe1aXo7rHh..u9MAm', 1),
+('sarah@example.com', '{bcrypt}$2a$12$eQbyf1v2gR10DMZJhVcvLupQxuMk/IFMGur97Nd0ucRTI/.OQK0NG', 1),
+('keith@example.com', '{bcrypt}$2a$12$OHuZ3xXiwavZZqKG28B/s.9GT8cLmkexSxeiajsalYmJcxJeHk4Mq', 1),
+('ella@example.com', '{bcrypt}$2a$12$Ya7ekHzToVdqyeuiozpoJODLto6HABrDNkSQ8Uigz2CgkvC0e/aUy', 1),
+('walter@example.com', '{bcrypt}$2a$12$gErPAHGz.PrcwrTkLkZ2euMD02qqTYR3q7bjw0VAaEMenVQFrsnaC', 1);
 
 INSERT INTO superhero (user_id, alias, real_name, date_of_birth, gender, occupation, origin_story)
 VALUES

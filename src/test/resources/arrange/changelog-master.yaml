@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: all-tests
+      author: abach42
+      changes:
+        - sqlFile:
+            path: classpath:/arrange/schema/create.sql
+            encoding: UTF-8
+            splitStatements: true
+            stripComments: true
+        - sqlFile:
+            path: classpath:/arrange/data/data.sql
+            encoding: UTF-8
+            splitStatements: true
+            stripComments: true

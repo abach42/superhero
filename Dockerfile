@@ -1,11 +1,11 @@
-FROM maven:latest
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-WORKDIR /build
-
-COPY . /build
-
-RUN mvn clean install -Pcontainer -DskipTests
-
-COPY target/*.jar /build/project.jar
-
-CMD ["java", "-jar", "/build/project.jar"]
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
