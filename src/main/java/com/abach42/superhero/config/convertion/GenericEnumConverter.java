@@ -16,10 +16,6 @@ public abstract class GenericEnumConverter<E extends Enum<E> & ConvertibleEnum<T
     public abstract E convertToEntityAttribute(T dbData);
 
     protected E fromValue(Class<E> enumClass, T value) {
-        if (value == null) {
-            return null;
-        }
-
         for (E enumConstant : enumClass.getEnumConstants()) {
             if (enumConstant.getValue().equals(value)) {
                 return enumConstant;
