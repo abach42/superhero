@@ -14,7 +14,7 @@ CREATE TABLE superhero (
     alias VARCHAR(100),
     real_name VARCHAR(100),
     date_of_birth DATE,
-    gender VARCHAR(10),
+    gender smallint NOT NULL,
     occupation VARCHAR(100),
     origin_story TEXT,
     deleted BOOLEAN DEFAULT false,

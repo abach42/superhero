@@ -30,6 +30,6 @@ class UserRoleConverterTest {
     void shouldThrowExceptionForInvalidByteValue() {
         assertThatThrownBy(() -> subject.convertToEntityAttribute((byte) 99))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Invalid level value: 99");
+                .hasMessage("Invalid UserRole value: 99");
     }
 }
