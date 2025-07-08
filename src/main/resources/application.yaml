@@ -63,10 +63,9 @@ spring:
         format_sql: true
         highlight_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:25432/db
-    # credentaial use only for localhost (production: change and use .env)
-    username: db
-    password: db
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:25432/db}
+    username: ${SPRING_DATASOURCE_USERNAME:db}
+    password: ${SPRING_DATASOURCE_PASSWORD:db}
     driverClassName: org.postgresql.Driver
   docker:
     compose:
