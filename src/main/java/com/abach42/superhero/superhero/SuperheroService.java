@@ -82,7 +82,7 @@ public class SuperheroService {
         }
     }
 
-    // todo This still has the same limitation - we can't distinguish between
+    //todo rather be automatically by JPA dirty checking
     @Transactional
     public SuperheroDto changeSuperhero(Long id, SuperheroPatchDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
