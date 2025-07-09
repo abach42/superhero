@@ -4,6 +4,7 @@ import com.abach42.superhero.config.api.ApiException;
 import jakarta.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,19 +83,22 @@ public class SuperheroService {
         }
     }
 
-    //todo rather be automatically by JPA dirty checking
     @Transactional
     public SuperheroDto changeSuperhero(Long id, SuperheroPatchDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
 
-        update.alias().ifPresent(origin::setAlias);
-        update.realName().ifPresent(origin::setRealName);
-        update.dateOfBirth().ifPresent(origin::setDateOfBirth);
-        update.gender().ifPresent(origin::setGender);
-        update.occupation().ifPresent(origin::setOccupation);
-        update.originStory().ifPresent(origin::setOriginStory);
+        updateField(update.alias(), origin::setAlias);
+        updateField(update.realName(), origin::setRealName);
+        updateField(update.dateOfBirth(), origin::setDateOfBirth);
+        updateField(update.gender(), origin::setGender);
+        updateField(update.occupation(), origin::setOccupation);
+        updateField(update.originStory(), origin::setOriginStory);
 
         return SuperheroDto.fromDomain(origin);
+    }
+
+    private <T> void updateField(Optional<T> newValue, Consumer<T> setter) {
+        newValue.ifPresent(setter);
     }
 
     public SuperheroDto markSuperheroAsDeleted(Long id) throws ApiException {
