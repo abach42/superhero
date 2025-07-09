@@ -82,27 +82,19 @@ public class SuperheroService {
         }
     }
 
+    // todo This still has the same limitation - we can't distinguish between
     @Transactional
-    public SuperheroDto changeSuperhero(Long id, SuperheroDto update) throws ApiException {
+    public SuperheroDto changeSuperhero(Long id, SuperheroPatchDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
 
-        // Use a more sophisticated approach to handle explicit nulls
-        updateFieldIfPresent(update.alias(), origin::setAlias);
-        updateFieldIfPresent(update.realName(), origin::setRealName);
-        updateFieldIfPresent(update.dateOfBirth(), origin::setDateOfBirth);
-        updateFieldIfPresent(update.gender(), origin::setGender);
-        updateFieldIfPresent(update.occupation(), origin::setOccupation);
-        updateFieldIfPresent(update.originStory(), origin::setOriginStory);
+        update.alias().ifPresent(origin::setAlias);
+        update.realName().ifPresent(origin::setRealName);
+        update.dateOfBirth().ifPresent(origin::setDateOfBirth);
+        update.gender().ifPresent(origin::setGender);
+        update.occupation().ifPresent(origin::setOccupation);
+        update.originStory().ifPresent(origin::setOriginStory);
 
         return SuperheroDto.fromDomain(origin);
-    }
-
-    private <T> void updateFieldIfPresent(T value, java.util.function.Consumer<T> setter) {
-        // This still has the same limitation - we can't distinguish between
-        // "not provided" and "explicitly null"
-        if (value != null) {
-            setter.accept(value);
-        }
     }
 
     public SuperheroDto markSuperheroAsDeleted(Long id) throws ApiException {

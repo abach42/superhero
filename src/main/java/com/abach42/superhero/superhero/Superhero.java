@@ -8,6 +8,7 @@ import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,10 +16,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
-@DynamicUpdate
 @Access(AccessType.FIELD)
 public class Superhero {
 
@@ -41,7 +40,8 @@ public class Superhero {
 
     @Column(nullable = false)
     @NotNull(groups = OnCreate.class)
-    private String gender;
+    @Convert(converter = GenderConverter.class)
+    private Gender gender;
 
     private String occupation;
 
@@ -62,7 +62,7 @@ public class Superhero {
             String alias,
             String realName,
             LocalDate dateOfBirth,
-            String gender,
+            Gender gender,
             String occupation,
             String originStory,
             ApplicationUser user) {
@@ -103,11 +103,11 @@ public class Superhero {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

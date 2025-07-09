@@ -55,12 +55,12 @@ public record SuperheroDto(
         //TODO make enum type, save byte
         @Schema(
                 title = "gender tag",
-                example = "Male",
+                example = "FEMALE",
                 description = "Gender of superhero",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull(groups = OnCreate.class)
-        String gender,
+        Gender gender,
 
         @Schema(
                 title = "occupation",

@@ -15,6 +15,7 @@ import com.abach42.superhero.testconfiguration.TestContainerConfiguration;
 import com.abach42.superhero.user.ApplicationUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -178,22 +179,20 @@ public class SuperheroControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should test JPA dirty checking with transactional service method")
+    @DisplayName("Should test manual dirty checking with transactional service method")
     @Transactional
-    void shouldTestJPADirtyCheckingWithTransactionalServiceMethod() throws ApiException {
+    void shouldTestManualDirtyCheckingWithTransactionalServiceMethod() throws ApiException {
         Long superheroId = 1L;
 
         SuperheroDto originalSuperhero = superheroService.retrieveSuperhero(superheroId);
 
-        SuperheroDto partialUpdate = new SuperheroDto(
-                null,
-                "Service Updated Alias",
-                null,
-                null,
-                null,
-                null,
-                "Service Updated Origin Story",
-                null
+        SuperheroPatchDto partialUpdate = new SuperheroPatchDto(
+                Optional.of("Service Updated Alias"),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of("Service Updated Origin Story")
         );
 
         SuperheroDto updatedSuperhero = superheroService.changeSuperhero(superheroId, partialUpdate);
@@ -242,7 +241,7 @@ public class SuperheroControllerIntegrationTest {
                 "Duplicate Hero",
                 "Duplicate Name",
                 LocalDate.of(1990, 1, 1),
-                "Male",
+                Gender.MALE,
                 "Test Occupation",
                 "Test Origin Story",
                 new ApplicationUserDto("user@example.com", "password123", "USER")
@@ -270,7 +269,7 @@ public class SuperheroControllerIntegrationTest {
                 "Test Hero",
                 "Test Real Name",
                 LocalDate.of(1985, 5, 15),
-                "Male",
+                Gender.MALE,
                 "Test Occupation",
                 "Test origin story for integration testing",
                 new ApplicationUserDto(

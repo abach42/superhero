@@ -74,11 +74,11 @@ Authorization: Bearer {{jwt}}
   "alias": "Mr. Incredible",
   "realName": "Bob Parr",
   "dateOfBirth": "1970-01-01",
-  "gender": "Male",
+  "gender": "MALE",
   "occupation": "Insurance employee",
   "originStory": "Story of superhero.",
   "user": {
-    "email": "foooooo@bar.org",
+    "email": "f124@bar.org",
     "password": "foobar",
     "role": "USER"
   }
@@ -93,16 +93,15 @@ Authorization: Bearer {{jwt}}
 {"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
 
 ### Update superhero - will be ok
-PUT {{domain}}/api/v1/superheroes/1111 HTTP/1.1
+PUT {{domain}}/api/v1/superheroes/19 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
 {
-
-  "realName": "Alex Admin ddbbb",
+  "realName": "Alex Admin",
   "dateOfBirth": "1987-07-22",
-  "gender": "Male",
+  "gender": "MALE",
   "occupation": "Administrator"
 }
 
@@ -114,9 +113,9 @@ Authorization: Bearer {{jwt}}
 
 {
  "alias": "The Wise Owl",
-  "realName": "Alex Admin ddbbb",
+  "realName": "Alex Admin",
   "dateOfBirth": "1987-07-22",
-  "gender": "Male",
+  "gender": "MALE",
   "occupation": "Administrator"
 }
 
