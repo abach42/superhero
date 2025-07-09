@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -192,7 +193,7 @@ public class SuperheroController {
                     )
             )
     })
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable Long id,
             @Validated(OnUpdate.class) @RequestBody SuperheroPatchDto superheroDto) throws ApiException {
         SuperheroDto updatedSuperheroDto = superheroService.changeSuperhero(id, superheroDto);
