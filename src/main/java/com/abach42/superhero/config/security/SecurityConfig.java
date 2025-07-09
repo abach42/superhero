@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,7 +31,7 @@ public class SecurityConfig {
     @Order(1)
     SecurityFilterChain apiFilterChain(HttpSecurity http,
             Function<String, CorsConfigurationSource> generateCorsConfig,
-            Function<TokenPurpose, WebExpressionAuthorizationManager> tokenAccess)
+            Function<TokenPurpose, AuthorizationManager<RequestAuthorizationContext>> tokenAccess)
             throws Exception {
         String securityMatcherPattern = PathConfig.BASE_URI + "/**";
 
