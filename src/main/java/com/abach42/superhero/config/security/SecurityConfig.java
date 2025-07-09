@@ -8,14 +8,18 @@ import java.util.function.Function;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -56,6 +60,24 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Determines access based on a given {@link TokenPurpose}.
+     * So a refresh token cannot be used to authorize a normal action, a jwt for authorization
+     * cannot be used to renew a token pair, but a refresh token may pass.
+     * <br/>
+     * Usage: httpSecurity.requestMatchers(...).access(tokenAccess.apply(TokenPurpose.AUTH))
+     */
+    @Bean
+    public Function<TokenPurpose, AuthorizationManager<RequestAuthorizationContext>> tokenAccess() {
+        return tokenPurpose -> (authentication, context) -> {
+            if (authentication.get() instanceof JwtAuthenticationToken jwtToken) {
+                String claimValue = jwtToken.getToken().getClaimAsString(AbstractTokenGenerator.CLAIM_ALLOWED);
+                return new AuthorizationDecision(tokenPurpose.name().equals(claimValue));
+            }
+            return new AuthorizationDecision(false);
+        };
+    }
+
     @Bean
     @Order(2)
     SecurityFilterChain documentationResourceFilterChain(HttpSecurity http) throws Exception {
@@ -64,13 +86,6 @@ public class SecurityConfig {
                         .requestMatchers("/chart.html", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll());
         return http.build();
-    }
-
-    @Bean
-    public Function<TokenPurpose, WebExpressionAuthorizationManager> tokenAccess() {
-        return tokenPurpose -> new WebExpressionAuthorizationManager(
-                "principal.claims['" + AbstractTokenGenerator.CLAIM_ALLOWED + "'] == '"
-                        + tokenPurpose.name() + "'");
     }
 
     @Bean
