@@ -194,7 +194,7 @@ public class SuperheroController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable Long id,
-            @Validated(OnUpdate.class) @RequestBody SuperheroDto superheroDto) throws ApiException {
+            @Validated(OnUpdate.class) @RequestBody SuperheroPatchDto superheroDto) throws ApiException {
         SuperheroDto updatedSuperheroDto = superheroService.changeSuperhero(id, superheroDto);
         return ResponseEntity.ok(updatedSuperheroDto);
     }

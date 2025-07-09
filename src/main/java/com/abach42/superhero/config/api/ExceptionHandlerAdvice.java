@@ -48,8 +48,7 @@ public class ExceptionHandlerAdvice {
             ServletWebRequest request) {
         return new ResponseEntity<>(
                 new ErrorDto(getStatusCodeNumber(HttpStatus.FORBIDDEN),
-                        getError(HttpStatus.FORBIDDEN),
-                        exception.getMessage(), getPath(request)),
+                        getError(HttpStatus.FORBIDDEN), exception.getMessage(), getPath(request)),
                 HttpStatus.FORBIDDEN);
     }
 
@@ -58,8 +57,8 @@ public class ExceptionHandlerAdvice {
     }
 
     private String getError(ErrorResponse exception) {
-        return Optional.ofNullable(
-                        HttpStatus.resolve(getStatusCodeNumber(exception.getStatusCode())))
+        return Optional.ofNullable(HttpStatus.resolve(
+                getStatusCodeNumber(exception.getStatusCode())))
                 .map(HttpStatus::getReasonPhrase).orElse("Unknown error");
     }
 
