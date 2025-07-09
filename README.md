@@ -16,7 +16,7 @@ feature of spring boot).
 
 * JWT auth, user roles
 * Refresh token
-* Tests (using testcontainers, liquibase), > 90%
+* Tests (using testcontainers, liquibase)
 * Database postgres + docker
 * Pagination on listing
 * Soft delete for superhero and user, cleaning database scheduler (to be discussed)
