@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 /**
  * Configuration class that helps set up a customized Jackson {@link ObjectMapper} for serialization
  * and deserialization. This configuration will only be active under the "test" profile.
- *
+ * <br>
  * This class provides a {@link Bean} for the configured {@link ObjectMapper}, `superheroObjectMapper`,
  * which can be injected and used in tests to ensure consistent serialization behavior, especially
  * for sensitive data such as passwords.

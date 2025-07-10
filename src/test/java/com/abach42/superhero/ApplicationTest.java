@@ -1,4 +1,3 @@
-
 package com.abach42.superhero;
 
 import static org.mockito.ArgumentMatchers.any;
