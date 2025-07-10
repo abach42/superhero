@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.abach42.superhero.testconfiguration.ObjectMapperSerializerHelper;
@@ -29,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -76,7 +76,6 @@ public class SuperheroControllerIntegrationTest {
             MvcResult result = mockMvc.perform(get(uri)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andDo(print())
                     .andReturn();
 
             String actualResponse = result.getResponse().getContentAsString();
@@ -101,7 +100,6 @@ public class SuperheroControllerIntegrationTest {
             MvcResult result = mockMvc.perform(get(uri)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andDo(print())
                     .andReturn();
 
             String actualResponse = result.getResponse().getContentAsString();
@@ -144,7 +142,6 @@ public class SuperheroControllerIntegrationTest {
             MvcResult result = mockMvc.perform(post(uri)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(newSuperhero)))
-                    .andDo(print())
                     .andReturn();
 
             System.out.println("Status: " + result.getResponse().getStatus());
@@ -192,7 +189,6 @@ public class SuperheroControllerIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(partialUpdate)))
                     .andExpect(status().isOk())
-                    .andDo(print())
                     .andReturn();
 
             String actualResponse = result.getResponse().getContentAsString();
@@ -258,12 +254,10 @@ public class SuperheroControllerIntegrationTest {
         @WithMockUser(authorities = {"ROLE_ADMIN"})
         void shouldAllowAdminFullAccess() throws Exception {
             mockMvc.perform(get(SUPERHEROES))
-                    .andExpect(status().isOk())
-                    .andDo(print());
+                    .andExpect(status().isOk());
 
             mockMvc.perform(get(SUPERHEROES + "/1"))
-                    .andExpect(status().isOk())
-                    .andDo(print());
+                    .andExpect(status().isOk());
 
             SuperheroDto validSuperhero = new SuperheroDto(
                     null,
@@ -288,25 +282,22 @@ public class SuperheroControllerIntegrationTest {
             mockMvc.perform(post(SUPERHEROES)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(superheroObjectMapper.writeValueAsString(validSuperhero)))
-                    .andExpect(status().isCreated())
-                    .andDo(print());
+                    .andExpect(status().isCreated());
 
             mockMvc.perform(patch(SUPERHEROES + "/1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(superheroObjectMapper.writeValueAsString(validPatch)))
-                    .andExpect(status().isOk())
-                    .andDo(print());
+                    .andExpect(status().isOk());
 
             mockMvc.perform(delete(SUPERHEROES + "/1"))
-                    .andExpect(status().isOk())
-                    .andDo(print());
+                    .andExpect(status().isOk());
         }
 
         @Test
         @DisplayName("Not existing user should be forbidden")
-        @WithMockUser(authorities = {"ROLE_FOO"})
+        @WithAnonymousUser
         void shouldBypassSecurityCompletely() throws Exception {
-            mockMvc.perform(get(SUPERHEROES)).andExpect(status().isForbidden()).andDo(print());
+            mockMvc.perform(get(SUPERHEROES)).andExpect(status().isForbidden());
             mockMvc.perform(get(SUPERHEROES + "/1")).andExpect(status().isForbidden());
 
             SuperheroDto validSuperhero = new SuperheroDto(
