@@ -10,11 +10,13 @@ import com.abach42.superhero.config.api.ApiException;
 import com.abach42.superhero.skill.Skill;
 import com.abach42.superhero.skill.SkillService;
 import com.abach42.superhero.superhero.SuperheroService;
-import com.abach42.superhero.testconfiguration.TestDataConfiguration;
+import com.abach42.superhero.testconfiguration.TestStubs;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 
+@Tags(value = {@Tag("unit"), @Tag("skillprofile")})
 @ExtendWith(MockitoExtension.class)
 public class SkillProfileServiceTest {
 
@@ -59,14 +62,14 @@ public class SkillProfileServiceTest {
     @DisplayName("Should return skill profile list when profiles exist")
     public void testRetrieveSuperheroSkillProfileListWillReturnProfileList() {
         Long superheroId = 1L;
-        List<SkillProfile> profiles = List.of(TestDataConfiguration.getSkillProfileStub());
+        List<SkillProfile> profiles = List.of(TestStubs.getSkillProfileStub());
         when(skillProfileRepository.findBySuperheroIdOrderBySkillId(superheroId))
                 .thenReturn(profiles);
 
         SkillProfileListDto actual = subject.retrieveSuperheroSkillProfileList(superheroId);
 
         assertThat(actual).usingRecursiveComparison()
-                .isEqualTo(TestDataConfiguration.getSkillProfileListDtoStub());
+                .isEqualTo(TestStubs.getSkillProfileListDtoStub());
         verify(skillProfileRepository).findBySuperheroIdOrderBySkillId(superheroId);
     }
 
@@ -107,13 +110,13 @@ public class SkillProfileServiceTest {
     @DisplayName("Should create skill profile successfully")
     public void testAddSuperheroSkillProfileSuccess() {
         Long superheroId = 1L;
-        SkillProfileDto skillProfileDto = TestDataConfiguration.getSkillProfileDtoStub();
+        SkillProfileDto skillProfileDto = TestStubs.getSkillProfileDtoStub();
         Skill skill = new Skill(1L, "TestSkill");
         SkillProfile savedSkillProfile = new SkillProfile(superheroId, skillProfileDto.intensity(),
                 skill);
 
         when(superheroService.getSuperhero(superheroId))
-                .thenReturn(TestDataConfiguration.getSuperheroStub());
+                .thenReturn(TestStubs.getSuperheroStub());
         when(skillService.getSkill(skillProfileDto.skill().id()))
                 .thenReturn(skill);
         when(skillProfileRepository.save(any(SkillProfile.class)))
@@ -145,7 +148,7 @@ public class SkillProfileServiceTest {
     @DisplayName("Should propagate ApiException when superhero not found")
     public void testAddSuperheroSkillProfileThrowsWhenSuperheroNotFound() {
         Long superheroId = 1L;
-        SkillProfileDto skillProfileDto = TestDataConfiguration.getSkillProfileDtoStub();
+        SkillProfileDto skillProfileDto = TestStubs.getSkillProfileDtoStub();
 
         when(superheroService.getSuperhero(superheroId))
                 .thenThrow(new ApiException(HttpStatus.NOT_FOUND, "Superhero not found"));
@@ -161,10 +164,10 @@ public class SkillProfileServiceTest {
     @DisplayName("Should throw ApiException when adding skill profile fails due to data integrity violation")
     public void testAddSuperheroSkillProfileThrows() {
         Long superheroId = 1L;
-        SkillProfileDto skillProfileDto = TestDataConfiguration.getSkillProfileDtoStub();
+        SkillProfileDto skillProfileDto = TestStubs.getSkillProfileDtoStub();
 
         when(superheroService.getSuperhero(superheroId))
-                .thenReturn(TestDataConfiguration.getSuperheroStub());
+                .thenReturn(TestStubs.getSuperheroStub());
         when(skillService.getSkill(skillProfileDto.skill().id()))
                 .thenReturn(new Skill(1L, "TestSkill"));
         when(skillProfileRepository.save(any(SkillProfile.class)))
@@ -185,19 +188,19 @@ public class SkillProfileServiceTest {
         Long skillId = 1L;
         Integer newIntensity = 80;
 
-        SkillProfile originalProfile = TestDataConfiguration.getSkillProfileStub();
-        SkillProfile updatedProfile = TestDataConfiguration.getSkillProfileStub();
+        SkillProfile originalProfile = TestStubs.getSkillProfileStub();
+        SkillProfile updatedProfile = TestStubs.getSkillProfileStub();
         updatedProfile.setIntensity(newIntensity);
 
         SkillProfileDto updateDto = new SkillProfileDto(
                 null,
                 superheroId,
                 newIntensity,
-                TestDataConfiguration.getSkillDtoStub()
+                TestStubs.getSkillDtoStub()
         );
 
         when(superheroService.getSuperhero(superheroId))
-                .thenReturn(TestDataConfiguration.getSuperheroStub());
+                .thenReturn(TestStubs.getSuperheroStub());
         when(skillProfileRepository.findBySuperheroIdAndSkillId(superheroId, skillId))
                 .thenReturn(Optional.of(originalProfile));
         when(skillProfileRepository.save(originalProfile))
@@ -218,18 +221,18 @@ public class SkillProfileServiceTest {
         Long superheroId = 1L;
         Long skillId = 1L;
 
-        SkillProfile originalProfile = TestDataConfiguration.getSkillProfileStub();
+        SkillProfile originalProfile = TestStubs.getSkillProfileStub();
         Integer originalIntensity = originalProfile.getIntensity();
 
         SkillProfileDto updateDto = new SkillProfileDto(
                 null,
                 null,
                 null,
-                TestDataConfiguration.getSkillDtoStub()
+                TestStubs.getSkillDtoStub()
         );
 
         when(superheroService.getSuperhero(superheroId))
-                .thenReturn(TestDataConfiguration.getSuperheroStub());
+                .thenReturn(TestStubs.getSuperheroStub());
         when(skillProfileRepository.findBySuperheroIdAndSkillId(superheroId, skillId))
                 .thenReturn(Optional.of(originalProfile));
         when(skillProfileRepository.save(originalProfile))
@@ -249,7 +252,7 @@ public class SkillProfileServiceTest {
     public void testChangeSuperheroSkillProfileThrowsWhenSuperheroNotFound() {
         Long superheroId = 1L;
         Long skillId = 1L;
-        SkillProfileDto updateDto = TestDataConfiguration.getSkillProfileDtoStub();
+        SkillProfileDto updateDto = TestStubs.getSkillProfileDtoStub();
 
         when(superheroService.getSuperhero(superheroId))
                 .thenThrow(new ApiException(HttpStatus.NOT_FOUND, "Superhero not found"));
@@ -267,11 +270,11 @@ public class SkillProfileServiceTest {
         Long superheroId = 1L;
         Long skillId = 1L;
 
-        SkillProfile skillProfile = TestDataConfiguration.getSkillProfileStub();
-        SkillProfileDto updateDto = TestDataConfiguration.getSkillProfileDtoStub();
+        SkillProfile skillProfile = TestStubs.getSkillProfileStub();
+        SkillProfileDto updateDto = TestStubs.getSkillProfileDtoStub();
 
         when(superheroService.getSuperhero(superheroId))
-                .thenReturn(TestDataConfiguration.getSuperheroStub());
+                .thenReturn(TestStubs.getSuperheroStub());
         when(skillProfileRepository.findBySuperheroIdAndSkillId(superheroId, skillId))
                 .thenReturn(Optional.of(skillProfile));
         when(skillProfileRepository.save(skillProfile))
@@ -290,7 +293,7 @@ public class SkillProfileServiceTest {
     public void testDeleteSuperheroSkillProfile() {
         Long superheroId = 1L;
         Long skillId = 1L;
-        SkillProfile skillProfile = TestDataConfiguration.getSkillProfileStub();
+        SkillProfile skillProfile = TestStubs.getSkillProfileStub();
 
         when(skillProfileRepository.findBySuperheroIdAndSkillId(superheroId, skillId))
                 .thenReturn(Optional.of(skillProfile));

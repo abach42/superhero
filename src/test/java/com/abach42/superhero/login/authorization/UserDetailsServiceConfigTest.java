@@ -1,85 +1,65 @@
 package com.abach42.superhero.login.authorization;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import com.abach42.superhero.user.ApplicationUser;
 import com.abach42.superhero.user.ApplicationUserService;
+import com.abach42.superhero.user.UserNotFoundException;
 import com.abach42.superhero.user.UserRole;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @Tags(value = {@Tag("unit"), @Tag("auth")})
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ContextConfiguration(classes = {UserDetailsServiceConfig.class})
 class UserDetailsServiceConfigTest {
 
-    @Mock
+    @MockitoBean
     private ApplicationUserService applicationUserService;
 
-    @Mock
-    private ApplicationUser applicationUser;
-
-    @InjectMocks
-    private UserDetailsServiceConfig subject;
-
-    @BeforeEach
-    void setUp() {
-        subject = new UserDetailsServiceConfig();
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Test
-    @DisplayName("should create UserDetailsService bean")
-    void shouldCreateUserDetailsServiceBean() {
-        UserDetailsService userDetailsService = subject.userDetailsService(applicationUserService);
+    @DisplayName("Should load user with USER role correctly")
+    void shouldLoadUserWithUserRoleCorrectly() {
+        String email = "user@example.com";
+        String password = "password123";
+        ApplicationUser user = new ApplicationUser(email, password, UserRole.USER);
 
-        assertThat(userDetailsService).isNotNull();
-    }
+        given(applicationUserService.retrieveUserByEmail(email)).willReturn(user);
 
-    @Test
-    @DisplayName("should load user by username with correct details")
-    void shouldLoadUserByUsernameWithCorrectDetails() {
-        String email = "test-user";
-        String password = "test-password";
-        UserRole role = UserRole.USER;
-
-        given(applicationUserService.retrieveUserByEmail(email))
-                .willReturn(applicationUser);
-        given(applicationUser.getEmail()).willReturn(email);
-        given(applicationUser.getPassword()).willReturn(password);
-        given(applicationUser.getRole()).willReturn(role);
-
-        UserDetailsService userDetailsService = subject.userDetailsService(applicationUserService);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         assertThat(userDetails.getUsername()).isEqualTo(email);
         assertThat(userDetails.getPassword()).isEqualTo(password);
         assertThat(userDetails.getAuthorities()).hasSize(1);
         assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo("USER");
+        assertThat(userDetails.isEnabled()).isTrue();
+        assertThat(userDetails.isAccountNonExpired()).isTrue();
+        assertThat(userDetails.isAccountNonLocked()).isTrue();
+        assertThat(userDetails.isCredentialsNonExpired()).isTrue();
     }
 
     @Test
-    @DisplayName("should handle admin role correctly")
-    void shouldHandleAdminRoleCorrectly() {
-        String email = "admin-user";
-        String password = "admin-password";
-        UserRole role = UserRole.ADMIN;
+    @DisplayName("Should load user with ADMIN role correctly")
+    void shouldLoadUserWithAdminRoleCorrectly() {
+        String email = "admin@example.com";
+        String password = "adminpass";
+        ApplicationUser admin = new ApplicationUser(email, password, UserRole.ADMIN);
 
-        given(applicationUserService.retrieveUserByEmail(email))
-                .willReturn(applicationUser);
-        given(applicationUser.getEmail()).willReturn(email);
-        given(applicationUser.getPassword()).willReturn(password);
-        given(applicationUser.getRole()).willReturn(role);
+        given(applicationUserService.retrieveUserByEmail(email)).willReturn(admin);
 
-        UserDetailsService userDetailsService = subject.userDetailsService(applicationUserService);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         assertThat(userDetails.getUsername()).isEqualTo(email);
@@ -89,18 +69,65 @@ class UserDetailsServiceConfigTest {
     }
 
     @Test
-    @DisplayName("should create enabled user details")
-    void shouldCreateEnabledUserDetails() {
-        String email = "test-user";
-        given(applicationUserService.retrieveUserByEmail(email))
-                .willReturn(applicationUser);
-        given(applicationUser.getEmail()).willReturn(email);
-        given(applicationUser.getPassword()).willReturn("password");
-        given(applicationUser.getRole()).willReturn(UserRole.USER);
+    @DisplayName("Should throw UserNotFoundException when user not found")
+    void shouldThrowUserNotFoundExceptionWhenUserNotFound() {
+        String email = "nonexistent@example.com";
 
-        UserDetailsService userDetailsService = subject.userDetailsService(applicationUserService);
+        given(applicationUserService.retrieveUserByEmail(email))
+                .willThrow(new UserNotFoundException(email));
+
+        assertThatThrownBy(() -> userDetailsService.loadUserByUsername(email))
+                .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Should handle null email gracefully")
+    void shouldHandleNullEmailGracefully() {
+        given(applicationUserService.retrieveUserByEmail(null))
+                .willThrow(new UserNotFoundException("null"));
+
+        assertThatThrownBy(() -> userDetailsService.loadUserByUsername(null))
+                .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Should handle empty email gracefully")
+    void shouldHandleEmptyEmailGracefully() {
+        String emptyEmail = "";
+
+        given(applicationUserService.retrieveUserByEmail(emptyEmail))
+                .willThrow(new UserNotFoundException(emptyEmail));
+
+        assertThatThrownBy(() -> userDetailsService.loadUserByUsername(emptyEmail))
+                .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Should create UserDetailsService bean")
+    void shouldCreateUserDetailsServiceBean() {
+        assertThat(userDetailsService).isNotNull();
+        assertThat(userDetailsService).isInstanceOf(UserDetailsService.class);
+    }
+
+    @Test
+    @DisplayName("Should handle different user roles consistently")
+    void shouldHandleDifferentUserRolesConsistently() {
+        String email = "complete@example.com";
+        String password = "secure123";
+        ApplicationUser user = new ApplicationUser(email, password, UserRole.USER);
+
+        given(applicationUserService.retrieveUserByEmail(email)).willReturn(user);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
+        assertThat(userDetails.getUsername()).isEqualTo(email);
+        assertThat(userDetails.getPassword()).isEqualTo(password);
+        assertThat(userDetails.getAuthorities())
+                .hasSize(1)
+                .extracting("authority")
+                .containsExactly("USER");
+
+        // Verify default UserDetails flags
         assertThat(userDetails.isEnabled()).isTrue();
         assertThat(userDetails.isAccountNonExpired()).isTrue();
         assertThat(userDetails.isAccountNonLocked()).isTrue();
