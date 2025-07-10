@@ -11,7 +11,7 @@ spring:
     properties:
       hibernate:
         ddl-auto: create-drop
-        format_sql: false
+        format_sql: true
         highlight_sql: false
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
@@ -29,4 +29,14 @@ spring:
 springdoc:
   swagger-ui:
     enabled: false
-debug: true
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: TRACE
+      springframework:
+        web: TRACE
+        security: TRACE
+    web: TRACE
+debug: false
