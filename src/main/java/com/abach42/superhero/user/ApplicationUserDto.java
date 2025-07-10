@@ -32,21 +32,21 @@ public record ApplicationUserDto(
                 description = "Role after login."
         )
         @NotNull(groups = OnCreate.class)
-        String role
+        UserRole role
 ) {
 
     public static ApplicationUserDto fromDomain(ApplicationUser applicationUser) {
         return new ApplicationUserDto(
                 applicationUser.getEmail(),
                 applicationUser.getPassword(),
-                applicationUser.getRole().name());
+                applicationUser.getRole());
     }
 
     public static ApplicationUser toDomain(ApplicationUserDto userDto) {
         return new ApplicationUser(
                 userDto.email(),
                 userDto.password(),
-                UserRole.valueOf(userDto.role())
+                userDto.role()
         );
     }
 }
