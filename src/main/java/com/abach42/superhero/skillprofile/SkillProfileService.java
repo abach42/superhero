@@ -72,7 +72,7 @@ public class SkillProfileService {
             return SkillProfileDto.fromDomain(createdSkillProfile);
         } catch (ApiException e) {
             throw new ApiException(e.getStatusCode(), e.getReason());
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException | NullPointerException e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG);
         }
     }
