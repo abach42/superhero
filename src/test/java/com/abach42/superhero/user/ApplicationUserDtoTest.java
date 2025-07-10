@@ -1,7 +1,6 @@
 package com.abach42.superhero.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -17,12 +16,12 @@ class ApplicationUserDtoTest {
         ApplicationUserDto dto = new ApplicationUserDto(
                 "test@example.com",
                 "password123",
-                "USER"
+                UserRole.USER
         );
 
         assertThat(dto.email()).isEqualTo("test@example.com");
         assertThat(dto.password()).isEqualTo("password123");
-        assertThat(dto.role()).isEqualTo("USER");
+        assertThat(dto.role()).isEqualTo(UserRole.USER);
     }
 
     @Test
@@ -38,7 +37,7 @@ class ApplicationUserDtoTest {
 
         assertThat(dto.email()).isEqualTo("user@test.com");
         assertThat(dto.password()).isEqualTo("secret");
-        assertThat(dto.role()).isEqualTo("ADMIN");
+        assertThat(dto.role()).isEqualTo(UserRole.ADMIN);
     }
 
     @Test
@@ -47,7 +46,7 @@ class ApplicationUserDtoTest {
         ApplicationUserDto dto = new ApplicationUserDto(
                 "admin@test.com",
                 "adminpass",
-                "ADMIN"
+                UserRole.ADMIN
         );
 
         ApplicationUser user = ApplicationUserDto.toDomain(dto);
@@ -63,26 +62,12 @@ class ApplicationUserDtoTest {
         ApplicationUserDto dto = new ApplicationUserDto(
                 "user@example.com",
                 "userpass",
-                "USER"
+                UserRole.USER
         );
 
         ApplicationUser user = ApplicationUserDto.toDomain(dto);
 
         assertThat(user.getRole()).isEqualTo(UserRole.USER);
-    }
-
-    @Test
-    @DisplayName("should throw exception for invalid role")
-    void shouldThrowExceptionForInvalidRole() {
-        ApplicationUserDto dto = new ApplicationUserDto(
-                "invalid@test.com",
-                "password",
-                "INVALID_ROLE"
-        );
-
-        assertThatThrownBy(() -> ApplicationUserDto.toDomain(dto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("INVALID_ROLE");
     }
 
     @Test

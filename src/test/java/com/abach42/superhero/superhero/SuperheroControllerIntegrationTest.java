@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -166,7 +165,7 @@ public class SuperheroControllerIntegrationTest {
 
         String actualResponse = result.getResponse().getContentAsString();
         SuperheroDto updatedSuperhero = objectMapper.readValue(actualResponse, SuperheroDto.class);
-        
+
         assertThat(updatedSuperhero.id()).isEqualTo(superheroId);
         assertThat(updatedSuperhero.alias()).isEqualTo("Updated Alias");
         assertThat(updatedSuperhero.realName()).isEqualTo(existingSuperhero.realName());
