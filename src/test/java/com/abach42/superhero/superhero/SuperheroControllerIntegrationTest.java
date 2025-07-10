@@ -4,6 +4,7 @@ import static com.abach42.superhero.config.api.PathConfig.BASE_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -13,6 +14,7 @@ import com.abach42.superhero.config.api.ApiException;
 import com.abach42.superhero.login.token.TokenResponseDto;
 import com.abach42.superhero.testconfiguration.TestContainerConfiguration;
 import com.abach42.superhero.user.ApplicationUserDto;
+import com.abach42.superhero.user.UserRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -134,30 +136,27 @@ public class SuperheroControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should update superhero with partial data using JPA dirty checking")
+    @DisplayName("Should update superhero with partial data using manual dirty checking")
     @WithUserDetails("admin@example.com")
     @Transactional
-    void shouldUpdateSuperheroWithPartialDataUsingJPADirtyChecking() throws Exception {
+    void shouldUpdateSuperheroWithPartialDataUsingManualDirtyChecking() throws Exception {
         TokenResponseDto tokenPair = getTokenForUser("admin@example.com");
         Long superheroId = 1L;
 
         SuperheroDto existingSuperhero = superheroService.retrieveSuperhero(superheroId);
 
-        // Create partial update with only some fields
-        SuperheroDto partialUpdate = new SuperheroDto(
-                null,
-                "Updated Alias",
-                null,
-                null,
-                null,
-                "Updated Occupation",
-                null,
-                null
+        SuperheroPatchDto partialUpdate = new SuperheroPatchDto(
+                Optional.of("Updated Alias"),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of("Updated Occupation"),
+                Optional.empty()
         );
 
         String uri = basePath + "/" + SLUG + "/" + superheroId;
 
-        MvcResult result = mockMvc.perform(put(uri)
+        MvcResult result = mockMvc.perform(patch(uri)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenPair.access_token())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(partialUpdate)))
@@ -167,8 +166,7 @@ public class SuperheroControllerIntegrationTest {
 
         String actualResponse = result.getResponse().getContentAsString();
         SuperheroDto updatedSuperhero = objectMapper.readValue(actualResponse, SuperheroDto.class);
-
-        // Verify that only the non-null fields were updated
+        
         assertThat(updatedSuperhero.id()).isEqualTo(superheroId);
         assertThat(updatedSuperhero.alias()).isEqualTo("Updated Alias");
         assertThat(updatedSuperhero.realName()).isEqualTo(existingSuperhero.realName());
@@ -176,6 +174,7 @@ public class SuperheroControllerIntegrationTest {
         assertThat(updatedSuperhero.gender()).isEqualTo(existingSuperhero.gender());
         assertThat(updatedSuperhero.occupation()).isEqualTo("Updated Occupation");
         assertThat(updatedSuperhero.originStory()).isEqualTo(existingSuperhero.originStory());
+
     }
 
     @Test
@@ -244,7 +243,7 @@ public class SuperheroControllerIntegrationTest {
                 Gender.MALE,
                 "Test Occupation",
                 "Test Origin Story",
-                new ApplicationUserDto("user@example.com", "password123", "USER")
+                new ApplicationUserDto("user@example.com", "password123", UserRole.USER)
         );
 
         assertThatThrownBy(() -> superheroService.addSuperhero(duplicateEmailSuperhero))
@@ -275,7 +274,7 @@ public class SuperheroControllerIntegrationTest {
                 new ApplicationUserDto(
                         "unique-testuser@example.com",
                         "password123",
-                        "USER"
+                        UserRole.USER
                 )
         );
     }
