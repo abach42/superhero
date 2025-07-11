@@ -14,6 +14,6 @@ INSERT INTO superhero (user_id, alias, real_name, date_of_birth, gender, occupat
 (3, 'baz', 'Mrs. baz', '1970-01-03', 0, 'baz', 'baz', true);
 
 INSERT INTO skill_profile (superhero_id, skill_id, intensity) VALUES
-(1, 2, 1),
 (1, 1, 1),
+(1, 2, 1),
 (2, 1, 2);
