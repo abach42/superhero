@@ -1,6 +1,5 @@
 package com.abach42.superhero.skillprofile;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.abach42.superhero.config.validation.OnCreate;
