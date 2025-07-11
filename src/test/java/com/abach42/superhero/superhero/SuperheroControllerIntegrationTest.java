@@ -296,7 +296,7 @@ public class SuperheroControllerIntegrationTest {
         @Test
         @DisplayName("Not existing user should be forbidden")
         @WithAnonymousUser
-        void shouldBypassSecurityCompletely() throws Exception {
+        void shouldDisallowAnonymous() throws Exception {
             mockMvc.perform(get(SUPERHEROES)).andExpect(status().isForbidden());
             mockMvc.perform(get(SUPERHEROES + "/1")).andExpect(status().isForbidden());
 
