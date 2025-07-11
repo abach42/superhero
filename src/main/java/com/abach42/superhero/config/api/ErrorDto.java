@@ -1,10 +1,9 @@
 package com.abach42.superhero.config.api;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "error")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorDto {
 
     @Schema(
@@ -13,24 +12,35 @@ public class ErrorDto {
             example = "666",
             format = "integer"
     )
+    @JsonProperty("status")
     protected final Integer status;
+
     @Schema(
             title = "message",
             example = "Something really impossible happened."
     )
+    @JsonProperty("message")
     protected final String message;
+
     @Schema(
             title = "path",
             example = "/api/v1/myentity/777"
     )
+    @JsonProperty("path")
     protected final String path;
+
     @Schema(
-            title = "message",
+            title = "error",
             example = "Impossible status"
     )
+    @JsonProperty("error")
     private final String error;
 
-    public ErrorDto(Integer status, String error, String message, String path) {
+    public ErrorDto(
+            @JsonProperty("status") Integer status,
+            @JsonProperty("error") String error,
+            @JsonProperty("message") String message,
+            @JsonProperty("path") String path) {
         this.status = status;
         this.error = error;
         this.message = message;
