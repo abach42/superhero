@@ -100,7 +100,8 @@ class SkillProfileControllerIntegrationTest {
         @Test
         @DisplayName("POST /skill-profiles - Should validate missing skill")
         void shouldValidateMissingSkill() throws Exception {
-            SkillProfileDto invalidDto = new SkillProfileDto(null, null, 3, null);
+            SkillProfileDto invalidDto = new SkillProfileDto(null, null, 3,
+                    null);
             String jsonContent = objectMapper.writeValueAsString(invalidDto);
 
             mockMvc.perform(post(buildUriSkillProfileList(1L))
@@ -133,7 +134,8 @@ class SkillProfileControllerIntegrationTest {
         @Test
         @DisplayName("PUT /skill-profiles/{skillId} - Should validate missing intensity on update")
         void shouldValidateMissingIntensityOnUpdate() throws Exception {
-            SkillProfileDto invalidDto = new SkillProfileDto(null, null, null, null);
+            SkillProfileDto invalidDto = new SkillProfileDto(null, null, null,
+                    null);
             String jsonContent = objectMapper.writeValueAsString(invalidDto);
 
             mockMvc.perform(put(buildUriSkillProfileSingle(1L, 2L))

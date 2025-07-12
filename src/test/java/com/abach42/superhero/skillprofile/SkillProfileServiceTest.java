@@ -78,7 +78,8 @@ public class SkillProfileServiceTest {
     public void testRetrieveSuperheroSkillProfileConverted() {
         Long superheroId = 1L;
         Long skillId = 1L;
-        SkillProfile skillProfile = new SkillProfile(superheroId, 50, new Skill(skillId, "foo"));
+        SkillProfile skillProfile = new SkillProfile(superheroId, 50, new Skill(skillId,
+                "foo"));
         when(skillProfileRepository.findBySuperheroIdAndSkillId(superheroId, skillId))
                 .thenReturn(Optional.of(skillProfile));
 

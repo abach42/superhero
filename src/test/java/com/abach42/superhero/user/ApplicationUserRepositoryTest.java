@@ -45,7 +45,8 @@ class ApplicationUserRepositoryTest {
     void shouldSaveAndFindUserByEmail() {
         entityManager.persistAndFlush(testUser);
 
-        Optional<ApplicationUser> result = subject.findOneByEmailAndDeletedIsFalse("test@example.com");
+        Optional<ApplicationUser> result =
+                subject.findOneByEmailAndDeletedIsFalse("test@example.com");
 
         assertThat(result).isPresent();
         assertThat(result.get().getEmail()).isEqualTo("test@example.com");
@@ -56,7 +57,8 @@ class ApplicationUserRepositoryTest {
     void shouldWorkWithUserRoleSecurityContext() {
         entityManager.persistAndFlush(testUser);
 
-        Optional<ApplicationUser> result = subject.findOneByEmailAndDeletedIsFalse("test@example.com");
+        Optional<ApplicationUser> result =
+                subject.findOneByEmailAndDeletedIsFalse("test@example.com");
 
         assertThat(result).isPresent();
         assertThat(result.get().getRole()).isEqualTo(UserRole.USER);
@@ -69,7 +71,8 @@ class ApplicationUserRepositoryTest {
         testUser.setRole(UserRole.ADMIN);
         entityManager.persistAndFlush(testUser);
 
-        Optional<ApplicationUser> result = subject.findOneByEmailAndDeletedIsFalse("admin666@example.com");
+        Optional<ApplicationUser> result =
+                subject.findOneByEmailAndDeletedIsFalse("admin666@example.com");
 
         assertThat(result).isPresent();
         assertThat(result.get().getRole()).isEqualTo(UserRole.ADMIN);

@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiCustomSchema {
 
-    // simply following https://springdoc.org/faq.html#_how_can_i_define_different_schemas_for_the_same_class
+    // simply following
+    // https://springdoc.org/faq.html#_how_can_i_define_different_schemas_for_the_same_class
     // workaround waiting for io.swagger.v3.oas using groups
     @Bean
     public OpenAPI customOpenAPI() {

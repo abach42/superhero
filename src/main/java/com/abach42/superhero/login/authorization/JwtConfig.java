@@ -30,7 +30,8 @@ public class JwtConfig {
 
     @Bean
     Function<JwtClaimsSet, JwtEncoderParameters> jwtParamBuilder() {
-        return claims -> JwtEncoderParameters.from(JwsHeader.with(MAC_ALGORITHM).build(), claims);
+        return claims -> JwtEncoderParameters.from(
+                JwsHeader.with(MAC_ALGORITHM).build(), claims);
     }
 
     @Bean

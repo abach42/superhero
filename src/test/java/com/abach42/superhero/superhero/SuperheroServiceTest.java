@@ -52,8 +52,10 @@ class SuperheroServiceTest {
     @Test
     @DisplayName("Should retrieve superhero list successfully")
     void shouldRetrieveSuperheroList() {
-        Page<Superhero> page = new PageImpl<>(List.of(superhero), PageRequest.ofSize(1), 1L);
-        given(superheroRepository.findAll(PageRequest.of(0, 10, Sort.by("id")))).willReturn(page);
+        Page<Superhero> page = new PageImpl<>(
+                List.of(superhero), PageRequest.ofSize(1), 1L);
+        given(superheroRepository.findAll(
+                PageRequest.of(0, 10, Sort.by("id")))).willReturn(page);
         given(superheroRepository.count()).willReturn(1L);
 
         SuperheroListDto actual = subject.retrieveSuperheroList(null);
@@ -65,7 +67,7 @@ class SuperheroServiceTest {
     @Test
     @DisplayName("Should throw unprocessable entity when page number exceeds total pages")
     void shouldThrowUnprocessableEntityWhenPageExceedsTotal() {
-        Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L); // 0 total pages
+        Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L);
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
 
         ApiException exception = assertThrows(ApiException.class,
@@ -79,7 +81,8 @@ class SuperheroServiceTest {
     @Test
     @DisplayName("Should retrieve superhero list with valid page number")
     void shouldRetrieveSuperheroListWithValidPageNumber() {
-        Page<Superhero> page = new PageImpl<>(List.of(superhero), PageRequest.ofSize(1), 1L);
+        Page<Superhero> page = new PageImpl<>(List.of(superhero),
+                PageRequest.ofSize(1), 1L);
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
         given(superheroRepository.count()).willReturn(1L);
 
@@ -91,7 +94,8 @@ class SuperheroServiceTest {
     @Test
     @DisplayName("Should throw not found when no superheroes exist")
     void shouldThrowNotFoundWhenNoSuperheroes() {
-        Page<Superhero> emptyPage = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L);
+        Page<Superhero> emptyPage = new PageImpl<>(List.of(),
+                PageRequest.ofSize(1), 0L);
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(emptyPage);
 
         ApiException exception = assertThrows(ApiException.class,
@@ -158,7 +162,8 @@ class SuperheroServiceTest {
                 () -> subject.addSuperhero(dto));
 
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(exception.getMessage()).contains(SuperheroService.SUPERHERO_NOT_CREATED_MSG_CONSTRAINT);
+        assertThat(exception.getMessage()).contains(
+                SuperheroService.SUPERHERO_NOT_CREATED_MSG_CONSTRAINT);
     }
 
     @ParameterizedTest
@@ -187,7 +192,8 @@ class SuperheroServiceTest {
         LocalDate newDate = LocalDate.of(2000, 1, 1);
         SuperheroPatchDto update = new SuperheroPatchDto(
                 Optional.empty(), Optional.empty(), Optional.of(newDate),
-                Optional.of(Gender.NOT_PROVIDED), Optional.empty(), Optional.empty());
+                Optional.of(Gender.NOT_PROVIDED), Optional.empty(),
+                Optional.empty());
 
         SuperheroDto actual = subject.changeSuperhero(1L, update);
 
@@ -242,13 +248,18 @@ class SuperheroServiceTest {
     private SuperheroPatchDto createPatchForField(String field, String value) {
         return switch (field) {
             case "alias" -> new SuperheroPatchDto(Optional.of(value), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                    Optional.empty(), Optional.empty(), Optional.empty(),
+                    Optional.empty());
             case "realName" -> new SuperheroPatchDto(Optional.empty(), Optional.of(value),
-                    Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                    Optional.empty(), Optional.empty(), Optional.empty(),
+                    Optional.empty());
             case "occupation" -> new SuperheroPatchDto(Optional.empty(), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.of(value), Optional.empty());
-            case "originStory" -> new SuperheroPatchDto(Optional.empty(), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(value));
+                    Optional.empty(), Optional.empty(), Optional.of(value),
+                    Optional.empty());
+            case "originStory" -> new SuperheroPatchDto(Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(), Optional.empty(), Optional.empty(),
+                    Optional.of(value));
             default -> SuperheroPatchDto.create();
         };
     }

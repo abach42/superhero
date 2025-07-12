@@ -73,7 +73,8 @@ public class SuperheroRepositoryTest {
         @DisplayName("find all superheroes does not find soft deleted")
         public void testFindAllDoesNotFindSoftDeleted() {
             assertThat(subject.findAll()).size().isEqualTo(1);
-            assertThat(subject.findAll(Pageable.ofSize(1)).getNumberOfElements()).isEqualTo(1);
+            assertThat(subject.findAll(Pageable.ofSize(1)).getNumberOfElements())
+                    .isEqualTo(1);
         }
 
         @Test

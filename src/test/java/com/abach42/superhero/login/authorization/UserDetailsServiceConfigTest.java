@@ -44,7 +44,8 @@ class UserDetailsServiceConfigTest {
         assertThat(userDetails.getUsername()).isEqualTo(email);
         assertThat(userDetails.getPassword()).isEqualTo(password);
         assertThat(userDetails.getAuthorities()).hasSize(1);
-        assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo("USER");
+        assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo(
+                "USER");
         assertThat(userDetails.isEnabled()).isTrue();
         assertThat(userDetails.isAccountNonExpired()).isTrue();
         assertThat(userDetails.isAccountNonLocked()).isTrue();
@@ -65,7 +66,8 @@ class UserDetailsServiceConfigTest {
         assertThat(userDetails.getUsername()).isEqualTo(email);
         assertThat(userDetails.getPassword()).isEqualTo(password);
         assertThat(userDetails.getAuthorities()).hasSize(1);
-        assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo("ADMIN");
+        assertThat(userDetails.getAuthorities().iterator().next().getAuthority()).isEqualTo(
+                "ADMIN");
     }
 
     @Test

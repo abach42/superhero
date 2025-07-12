@@ -84,7 +84,8 @@ public class SuperheroServiceIntegrationTest {
 
         assertThatThrownBy(() -> superheroService.retrieveSuperhero(nonExistentId))
                 .isInstanceOf(ApiException.class)
-                .hasMessageContaining(SuperheroService.SUPERHERO_NOT_FOUND_MSG + nonExistentId);
+                .hasMessageContaining(
+                        SuperheroService.SUPERHERO_NOT_FOUND_MSG + nonExistentId);
     }
 
     @Test

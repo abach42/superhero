@@ -87,7 +87,8 @@ public class AuthenticationControllerIntegrationTest {
                 .toUriString();
 
         MvcResult result = mockMvc.perform(get(uri)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenPair.refresh_token()))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                "Bearer " + tokenPair.refresh_token()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -110,7 +111,8 @@ public class AuthenticationControllerIntegrationTest {
                 .toUriString();
 
         mockMvc.perform(get(uri)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenPair.access_token()))
+                        .header(HttpHeaders.AUTHORIZATION,
+                                "Bearer " + tokenPair.access_token()))
                 .andExpect(status().isForbidden());
     }
 

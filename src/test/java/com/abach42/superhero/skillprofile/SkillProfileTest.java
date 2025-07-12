@@ -29,7 +29,8 @@ public class SkillProfileTest {
 
     @DisplayName("Test setter")
     public void settersWorkCorrectly() {
-        SkillProfile skillProfile = new SkillProfile(1L, 5, new Skill("foo"));
+        SkillProfile skillProfile = new SkillProfile(1L, 5,
+                new Skill("foo"));
         Long newSuperheroId = 2L;
         Integer newIntensity = 3;
         Skill newSkill = new Skill("bar");
