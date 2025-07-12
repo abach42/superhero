@@ -1,4 +1,4 @@
-package com.abach42.superhero.shell;
+package com.abach42.superhero.superhero;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.shell.standard.ShellComponent;

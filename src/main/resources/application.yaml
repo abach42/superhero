@@ -16,7 +16,9 @@ com.abach42.superhero:
       # must be at least 256 bits,
       # caution: never commit key in production, consider to use env var
       token-secret: ks9lg8pubax3ctmw9aq4pz4vduxllqq4
-  erase-soft-deleted-at: "0 0 0 ? * SAT"
+  database-cleanup-service:
+    enabled: true
+    erase-soft-deleted-at: "0 0 0 ? * SAT"
   # "0 0 0 ? * SAT" Cron expression for every Saturday at midnight
   # "0 0 0 1 * ?" Cron expression for the first day of every month at midnight
   # "0 0 0 1 1/6 ?" Cron expression for the first day of every 6th month at midnight

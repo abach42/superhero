@@ -1,15 +1,15 @@
-package com.abach42.superhero.shell;
+package com.abach42.superhero.superhero;
 
-import com.abach42.superhero.superhero.SuperheroRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-@Profile("!test")
+@ConditionalOnProperty(name = "com.abach42.superhero.database-cleanup-service.enabled", havingValue = "true")
 @Service
 @EnableScheduling
 public class DatabaseCleanupService {
@@ -22,8 +22,7 @@ public class DatabaseCleanupService {
         this.superheroRepository = superheroRepository;
     }
 
-    //TODO test by Logback
-    @Scheduled(cron = "${com.abach42.superhero.erase-soft-deleted-at}")
+    @Scheduled(cron = "${com.abach42.superhero.database-cleanup-service.erase-soft-deleted-at}")
     public void eraseRecordsMarkedAsDeleted() {
         logger.info("ERASE RECORDS marked as DELETED starts as scheduled");
         Long count = superheroRepository.countByDeletedIsTrue();
