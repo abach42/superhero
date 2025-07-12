@@ -18,12 +18,12 @@ class GenderConverterTest {
     void shouldConvertEnumToDatabaseAndBack() {
         assertThat(subject.convertToDatabaseColumn(Gender.MALE)).isEqualTo((byte) 0);
         assertThat(subject.convertToDatabaseColumn(Gender.FEMALE)).isEqualTo((byte) 1);
-        assertThat(subject.convertToDatabaseColumn(Gender.HIDDEN)).isEqualTo((byte) 2);
+        assertThat(subject.convertToDatabaseColumn(Gender.NOT_PROVIDED)).isEqualTo((byte) 2);
         assertThat(subject.convertToDatabaseColumn(null)).isNull();
 
         assertThat(subject.convertToEntityAttribute((byte) 0)).isEqualTo(Gender.MALE);
         assertThat(subject.convertToEntityAttribute((byte) 1)).isEqualTo(Gender.FEMALE);
-        assertThat(subject.convertToEntityAttribute((byte) 2)).isEqualTo(Gender.HIDDEN);
+        assertThat(subject.convertToEntityAttribute((byte) 2)).isEqualTo(Gender.NOT_PROVIDED);
         assertThat(subject.convertToEntityAttribute(null)).isNull();
     }
 

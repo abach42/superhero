@@ -38,7 +38,7 @@ public class TestStubs {
     }
 
     public static SuperheroDto getSuperheroDtoStubWithPassword() {
-        return new SuperheroDto(1L, "new", "foo", LocalDate.of(1970, 1, 1), Gender.HIDDEN,
+        return new SuperheroDto(1L, "new", "foo", LocalDate.of(1970, 1, 1), Gender.NOT_PROVIDED,
                 "foo", "foo", new ApplicationUserDto("new", "bar", UserRole.USER));
     }
 

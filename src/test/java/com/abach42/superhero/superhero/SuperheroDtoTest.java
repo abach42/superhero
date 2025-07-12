@@ -83,7 +83,7 @@ public class SuperheroDtoTest {
         ApplicationUserDto userDto = new ApplicationUserDto("username", "password", UserRole.USER);
         SuperheroDto failingSuperheroDto = new SuperheroDto(777L,
                 "abcdefghijklmnopqrstu".substring(0, 21), "foo", LocalDate.of(1970, 1, 1),
-                Gender.HIDDEN, "ignore", "ignore", userDto);
+                Gender.NOT_PROVIDED, "ignore", "ignore", userDto);
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
                 failingSuperheroDto, OnCreate.class, OnUpdate.class);

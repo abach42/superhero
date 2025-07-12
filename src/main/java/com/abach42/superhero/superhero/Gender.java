@@ -5,7 +5,7 @@ import com.abach42.superhero.config.convertion.ConvertibleEnum;
 public enum Gender implements ConvertibleEnum<Byte> {
     MALE((byte) 0),
     FEMALE((byte) 1),
-    HIDDEN((byte) 2);
+    NOT_PROVIDED((byte) 2);
 
     private final byte value;
 

@@ -1,3 +1,6 @@
+com.abach42.superhero:
+  database-cleanup-service:
+    enabled: false
 spring:
   config:
     activate:

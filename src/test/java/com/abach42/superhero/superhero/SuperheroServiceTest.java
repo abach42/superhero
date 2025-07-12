@@ -48,6 +48,7 @@ class SuperheroServiceTest {
         superhero = TestStubs.getSuperheroStubWithPassword();
     }
 
+    // branch `pageNumber == null`
     @Test
     @DisplayName("Should retrieve superhero list successfully")
     void shouldRetrieveSuperheroList() {
@@ -60,10 +61,11 @@ class SuperheroServiceTest {
         assertNotNull(actual);
     }
 
+    //branch `pageNumber != null && pageNumber > superheroPage.getTotalPages()`
     @Test
     @DisplayName("Should throw unprocessable entity when page number exceeds total pages")
     void shouldThrowUnprocessableEntityWhenPageExceedsTotal() {
-        Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L);
+        Page<Superhero> page = new PageImpl<>(List.of(), PageRequest.ofSize(1), 0L); // 0 total pages
         given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
 
         ApiException exception = assertThrows(ApiException.class,
@@ -71,6 +73,19 @@ class SuperheroServiceTest {
 
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(exception.getMessage()).contains(SuperheroService.MAX_PAGE_EXCEEDED_MSG);
+    }
+
+    //branch `pageNumber != null && pageNumber <= superheroPage.getTotalPages()`
+    @Test
+    @DisplayName("Should retrieve superhero list with valid page number")
+    void shouldRetrieveSuperheroListWithValidPageNumber() {
+        Page<Superhero> page = new PageImpl<>(List.of(superhero), PageRequest.ofSize(1), 1L);
+        given(superheroRepository.findAll(any(PageRequest.class))).willReturn(page);
+        given(superheroRepository.count()).willReturn(1L);
+
+        SuperheroListDto actual = subject.retrieveSuperheroList(0);
+
+        assertNotNull(actual);
     }
 
     @Test
@@ -172,12 +187,12 @@ class SuperheroServiceTest {
         LocalDate newDate = LocalDate.of(2000, 1, 1);
         SuperheroPatchDto update = new SuperheroPatchDto(
                 Optional.empty(), Optional.empty(), Optional.of(newDate),
-                Optional.of(Gender.HIDDEN), Optional.empty(), Optional.empty());
+                Optional.of(Gender.NOT_PROVIDED), Optional.empty(), Optional.empty());
 
         SuperheroDto actual = subject.changeSuperhero(1L, update);
 
         assertThat(actual.dateOfBirth()).isEqualTo(newDate);
-        assertThat(actual.gender()).isEqualTo(Gender.HIDDEN);
+        assertThat(actual.gender()).isEqualTo(Gender.NOT_PROVIDED);
     }
 
     @Test
