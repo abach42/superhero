@@ -50,7 +50,7 @@
         headers.set('Authorization', 'Basic ' + btoa(username + ":" + password));
         
         // Step 1: Fetch access token
-        fetch(`${baseURL}${apiEndpoint}/login`, {
+        fetch(`${baseURL}${apiEndpoint}/auth/login`, {
             method: "GET",
             headers: headers,
         })
@@ -101,7 +101,7 @@
 
 
                     // Step 5: Use the obtained token to fetch skill profiles of the superhero
-                    fetch(`${baseURL}${apiEndpoint}/superheroes/${superheroId}/skillprofiles`, { 
+                    fetch(`${baseURL}${apiEndpoint}/superheroes/${superheroId}/skill-profiles`, {
                         method: "GET",
                         headers: {
                             "Authorization": `Bearer ${token}`
