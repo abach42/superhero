@@ -20,13 +20,17 @@ import java.util.List;
 public class TestStubs {
 
     public static Superhero getSuperheroStub() {
-        return new Superhero("foo", "bar", LocalDate.of(1970, 1, 1), Gender.MALE, "foo",
-                "foo", new ApplicationUser("foo", null, UserRole.USER));
+        return new Superhero(
+                "foo", "bar", LocalDate.of(1970, 1, 1),
+                Gender.MALE, "foo", "foo",
+                new ApplicationUser("foo", null, UserRole.USER));
     }
 
     public static Superhero getSuperheroStubWithPassword() {
-        return new Superhero("some", "bar", LocalDate.of(1970, 1, 1), Gender.MALE, "foo",
-                "foo", new ApplicationUser("unique", "foo", UserRole.USER));
+        return new Superhero(
+                "some", "bar", LocalDate.of(1970, 1, 1),
+                Gender.MALE, "foo", "foo",
+                new ApplicationUser("unique", "foo", UserRole.USER));
     }
 
     public static SuperheroDto getSuperheroDtoStub() {
@@ -34,12 +38,16 @@ public class TestStubs {
     }
 
     public static SuperheroDto getSuperheroDtoStubEmpty() {
-        return new SuperheroDto(0L, null, null, null, null, null, null, null);
+        return new SuperheroDto(
+                0L, null, null, null, null, null,
+                null, null);
     }
 
     public static SuperheroDto getSuperheroDtoStubWithPassword() {
-        return new SuperheroDto(1L, "new", "foo", LocalDate.of(1970, 1, 1), Gender.NOT_PROVIDED,
-                "foo", "foo", new ApplicationUserDto("new", "bar", UserRole.USER));
+        return new SuperheroDto(
+                1L, "new", "foo", LocalDate.of(1970, 1, 1),
+                Gender.NOT_PROVIDED, "foo", "foo",
+                new ApplicationUserDto("new", "bar", UserRole.USER));
     }
 
     public static Skill getSkillStub() {

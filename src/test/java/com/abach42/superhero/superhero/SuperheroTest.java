@@ -22,7 +22,8 @@ public class SuperheroTest {
 
         assertThat(superhero.getAlias()).isEqualTo("foo");
         assertThat(superhero.getRealName()).isEqualTo("bar");
-        assertThat(superhero.getDateOfBirth()).isEqualTo(LocalDate.of(1970, 1, 1));
+        assertThat(superhero.getDateOfBirth()).isEqualTo(
+                LocalDate.of(1970, 1, 1));
         assertThat(superhero.getGender()).isEqualTo(Gender.MALE);
         assertThat(superhero.getOccupation()).isEqualTo("foo");
         assertThat(superhero.getOriginStory()).isEqualTo("foo");
@@ -36,7 +37,8 @@ public class SuperheroTest {
 
         assertThat(superhero.getAlias()).isEqualTo("Superman");
         assertThat(superhero.getRealName()).isEqualTo("Clark Kent");
-        assertThat(superhero.getDateOfBirth()).isEqualTo(LocalDate.of(1938, 6, 1));
+        assertThat(superhero.getDateOfBirth()).isEqualTo(LocalDate.of(
+                1938, 6, 1));
         assertThat(superhero.getGender()).isEqualTo(Gender.MALE);
         assertThat(superhero.getOccupation()).isEqualTo("Journalist");
         assertThat(superhero.getOriginStory()).isEqualTo(

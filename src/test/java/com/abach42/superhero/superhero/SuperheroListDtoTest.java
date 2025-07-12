@@ -23,7 +23,8 @@ public class SuperheroListDtoTest {
 
         List<SuperheroDto> superheroDtos = List.of(superhero1, superhero2);
 
-        Page<SuperheroDto> page = new PageImpl<>(superheroDtos, PageRequest.of(0, 10), 20);
+        Page<SuperheroDto> page = new PageImpl<>(superheroDtos, PageRequest.of(
+                0, 10), 20);
 
         SuperheroListDto actual = SuperheroListDto.fromPage(page, 20);
 

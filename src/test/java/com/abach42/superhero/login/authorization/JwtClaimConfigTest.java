@@ -42,7 +42,8 @@ class JwtClaimConfigTest {
         JwtAuthenticationToken token = (JwtAuthenticationToken) converter.convert(jwt);
 
         assertThat(token.getAuthorities()).hasSize(1);
-        assertThat(token.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_USER");
+        assertThat(token.getAuthorities().iterator().next().getAuthority()).isEqualTo(
+                "ROLE_USER");
     }
 
     @Test
@@ -55,7 +56,8 @@ class JwtClaimConfigTest {
         JwtAuthenticationToken token = (JwtAuthenticationToken) converter.convert(jwt);
 
         assertThat(token.getAuthorities()).hasSize(1);
-        assertThat(token.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_ADMIN");
+        assertThat(token.getAuthorities().iterator().next().getAuthority()).isEqualTo(
+                "ROLE_ADMIN");
     }
 
     private Jwt createJwtWithAuthorities(String authority) {

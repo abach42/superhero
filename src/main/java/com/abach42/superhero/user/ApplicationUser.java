@@ -47,7 +47,8 @@ public class ApplicationUser {
             description = "Secret password to login.",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
-    @Length(groups = OnCreate.class, min = 2, max = 255, message = "Password must be between 2 and 255 characters.")
+    @Length(groups = OnCreate.class, min = 2, max = 255, message =
+            "Password must be between 2 and 255 characters.")
     @Null(groups = OnUpdate.class)
     private String password;
 

@@ -33,13 +33,16 @@ class ApplicationTest {
     @DisplayName("Should start application successfully")
     void mainMethodShouldStartApplication() {
         try (MockedStatic<SpringApplication> springApp = mockStatic(SpringApplication.class)) {
-            ConfigurableApplicationContext mockContext = org.mockito.Mockito.mock(ConfigurableApplicationContext.class);
-            springApp.when(() -> SpringApplication.run(eq(SuperheroApplication.class), any(String[].class)))
+            ConfigurableApplicationContext mockContext =
+                    org.mockito.Mockito.mock(ConfigurableApplicationContext.class);
+            springApp.when(() -> SpringApplication.run(eq(SuperheroApplication.class),
+                            any(String[].class)))
                     .thenReturn(mockContext);
 
             SuperheroApplication.main(new String[]{"--spring.profiles.active=test"});
 
-            springApp.verify(() -> SpringApplication.run(SuperheroApplication.class, new String[]{"--spring.profiles.active=test"}));
+            springApp.verify(() -> SpringApplication.run(SuperheroApplication.class,
+                    new String[]{"--spring.profiles.active=test"}));
         }
     }
 }

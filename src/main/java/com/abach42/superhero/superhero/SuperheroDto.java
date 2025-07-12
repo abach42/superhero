@@ -52,7 +52,6 @@ public record SuperheroDto(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate dateOfBirth,
 
-        //TODO make enum type, save byte
         @Schema(
                 title = "gender tag",
                 example = "FEMALE",

@@ -38,7 +38,8 @@ public class SkillProfileDtoTest {
     @DisplayName("SkillProfileDto can be mapped to its domain object")
     public void testToDomain() {
         SkillDto skillDto = new SkillDto(1L, "foo");
-        SkillProfileDto skillProfileDto = new SkillProfileDto(1L, 2L, 3, skillDto);
+        SkillProfileDto skillProfileDto = new SkillProfileDto(1L, 2L, 3,
+                skillDto);
 
         SkillProfile skillProfile = SkillProfileDto.toDomain(skillProfileDto);
 
@@ -51,7 +52,8 @@ public class SkillProfileDtoTest {
     @Test
     @DisplayName("Test Validation fails onCreate")
     public void testValidationFailsOnCreate() {
-        SkillProfileDto failingSkillProfileDto = new SkillProfileDto(1L, 2L, null, null);
+        SkillProfileDto failingSkillProfileDto = new SkillProfileDto(1L, 2L,
+                null, null);
 
         Set<ConstraintViolation<SkillProfileDto>> violations = validator.validate(
                 failingSkillProfileDto, OnCreate.class);
@@ -63,7 +65,8 @@ public class SkillProfileDtoTest {
     @DisplayName("Test Validation fails onCreate")
     public void testValidationFailsOnUpdate() {
         SkillDto skillDto = new SkillDto(1L, "foo");
-        SkillProfileDto failingSkillProfileDto = new SkillProfileDto(1L, 2L, null, skillDto);
+        SkillProfileDto failingSkillProfileDto = new SkillProfileDto(1L, 2L,
+                null, skillDto);
 
         Set<ConstraintViolation<SkillProfileDto>> violations = validator.validate(
                 failingSkillProfileDto, OnUpdate.class);

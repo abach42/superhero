@@ -15,13 +15,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class SkillProfileService {
 
-    public static final String SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG = "Skill profiles not found for superhero by id ";
-    public static final String SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG = "Skill profile not found for superhero";
-    public static final BiFunction<Long, Long, String> SKILL_PROFILE_SUPERHERO_NOT_FOUND_FN = (superheroId, skillId) -> String.format(
+    public static final String SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG =
+            "Skill profiles not found for superhero by id ";
+    public static final String SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG =
+            "Skill profile not found for superhero";
+    public static final BiFunction<Long, Long, String> SKILL_PROFILE_SUPERHERO_NOT_FOUND_FN =
+            (superheroId, skillId) -> String.format(
             SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG + " by superhero id %d and skill id %d",
             superheroId, skillId);
-    public static final String SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG = "Skill profile for superhero could not be written.";
-    public static final String SKILL_PROFILE_SUPERHERO_NOT_UPDATED_MSG = "Skill profile for superhero could not be updated.";
+    public static final String SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG =
+            "Skill profile for superhero could not be written.";
+    public static final String SKILL_PROFILE_SUPERHERO_NOT_UPDATED_MSG =
+            "Skill profile for superhero could not be updated.";
 
     private final SkillProfileRepository skillProfileRepository;
     private final SuperheroService superheroService;
@@ -77,9 +82,6 @@ public class SkillProfileService {
         }
     }
 
-    /*
-     * TODO: use `JPA automatic dirty checking` @see SuperheroService
-     */
     public SkillProfileDto changeSuperheroSkillProfile(Long superheroId, Long skillId,
             SkillProfileDto update) throws ApiException {
         try {

@@ -24,7 +24,8 @@ public class MethodSecurityConfig {
     @Bean
     static MethodSecurityExpressionHandler methodSecurityExpressionHandler(
             RoleHierarchy roleHierarchy) {
-        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        DefaultMethodSecurityExpressionHandler expressionHandler =
+                new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
     }

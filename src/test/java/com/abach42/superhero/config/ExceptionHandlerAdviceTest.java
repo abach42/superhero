@@ -109,14 +109,17 @@ class ExceptionHandlerAdviceTest {
         BindingResult bindingResult = mock(BindingResult.class);
         MethodArgumentNotValidException exception = new MethodArgumentNotValidException(null, bindingResult);
 
-        FieldError fieldError1 = new FieldError("user", "email", "Email is required");
-        FieldError fieldError2 = new FieldError("user", "password", "Password must be at least 8 characters");
+        FieldError fieldError1 = new FieldError(
+                "user", "email", "Email is required");
+        FieldError fieldError2 = new FieldError(
+                "user", "password", "Password must be at least 8 characters");
 
         given(servletWebRequest.getRequest()).willReturn(httpServletRequest);
         given(httpServletRequest.getRequestURI()).willReturn(requestPath);
         given(bindingResult.getFieldErrors()).willReturn(java.util.List.of(fieldError1, fieldError2));
 
-        ResponseEntity<ErrorDetailedDto> result = subject.handleMethodArgumentNotValid(exception, servletWebRequest);
+        ResponseEntity<ErrorDetailedDto> result = subject.handleMethodArgumentNotValid(
+                exception, servletWebRequest);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(result.getBody()).isNotNull();
@@ -125,9 +128,11 @@ class ExceptionHandlerAdviceTest {
         assertThat(result.getBody().getPath()).isEqualTo(requestPath);
         assertThat(result.getBody().getErrors()).hasSize(2);
         assertThat(result.getBody().getErrors().get(0).field()).isEqualTo("email");
-        assertThat(result.getBody().getErrors().get(0).message()).isEqualTo("Email is required");
+        assertThat(result.getBody().getErrors().get(0).message()).isEqualTo(
+                "Email is required");
         assertThat(result.getBody().getErrors().get(1).field()).isEqualTo("password");
-        assertThat(result.getBody().getErrors().get(1).message()).isEqualTo("Password must be at least 8 characters");
+        assertThat(result.getBody().getErrors().get(1).message()).isEqualTo(
+                "Password must be at least 8 characters");
     }
 
     @Test
@@ -135,13 +140,15 @@ class ExceptionHandlerAdviceTest {
     void shouldHandleMethodArgumentNotValidExceptionWithNoValidationErrors() {
         String requestPath = "/api/users";
         BindingResult bindingResult = mock(BindingResult.class);
-        MethodArgumentNotValidException exception = new MethodArgumentNotValidException(null, bindingResult);
+        MethodArgumentNotValidException exception = new MethodArgumentNotValidException(null,
+                bindingResult);
 
         given(servletWebRequest.getRequest()).willReturn(httpServletRequest);
         given(httpServletRequest.getRequestURI()).willReturn(requestPath);
         given(bindingResult.getFieldErrors()).willReturn(java.util.List.of());
 
-        ResponseEntity<ErrorDetailedDto> result = subject.handleMethodArgumentNotValid(exception, servletWebRequest);
+        ResponseEntity<ErrorDetailedDto> result = subject.handleMethodArgumentNotValid(exception,
+                servletWebRequest);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(result.getBody()).isNotNull();

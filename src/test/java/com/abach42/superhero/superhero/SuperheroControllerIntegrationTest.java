@@ -224,7 +224,8 @@ public class SuperheroControllerIntegrationTest {
                     Gender.MALE,
                     "Test Occupation",
                     "Test Origin Story",
-                    new ApplicationUserDto("test@example.com", "password123", UserRole.USER)
+                    new ApplicationUserDto("test@example.com", "password123",
+                            UserRole.USER)
             );
 
             SuperheroPatchDto validPatch = new SuperheroPatchDto(
@@ -267,7 +268,8 @@ public class SuperheroControllerIntegrationTest {
                     Gender.FEMALE,
                     "Admin Occupation",
                     "Admin Origin Story",
-                    new ApplicationUserDto("admin-test@example.com", "password123", UserRole.USER)
+                    new ApplicationUserDto("admin-test@example.com", "password123",
+                            UserRole.USER)
             );
 
             SuperheroPatchDto validPatch = new SuperheroPatchDto(
@@ -308,7 +310,8 @@ public class SuperheroControllerIntegrationTest {
                     Gender.MALE,
                     "Test Occupation",
                     "Test Origin Story",
-                    new ApplicationUserDto("test@example.com", "password123", UserRole.USER)
+                    new ApplicationUserDto("test@example.com", "password123",
+                            UserRole.USER)
             );
 
             SuperheroPatchDto validPatch = new SuperheroPatchDto(

@@ -39,7 +39,8 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("SuperheroDto can be mapped to its domain object")
     public void testToDomain() {
-        ApplicationUserDto userDto = new ApplicationUserDto("username", "password", UserRole.USER);
+        ApplicationUserDto userDto = new ApplicationUserDto("username", "password",
+                UserRole.USER);
         SuperheroDto superheroDto = new SuperheroDto(null, "Batman", "Bruce Wayne",
                 LocalDate.of(1939, 5, 1), Gender.MALE,
                 "Businessman", "The Dark Knight", userDto);
@@ -58,8 +59,8 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Test Validation fails onCreate")
     public void testValidationOnCreateNotNull() {
-        SuperheroDto failingSuperheroDto = new SuperheroDto(null, null, null, null,
-                null, "ignore", "ignore", null);
+        SuperheroDto failingSuperheroDto = new SuperheroDto(null, null, null,
+                null, null, "ignore", "ignore", null);
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
                 failingSuperheroDto, OnCreate.class);
@@ -69,8 +70,8 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Test Validation fails onCreate")
     public void testValidationOnUpdateNull() {
-        SuperheroDto failingSuperheroDto = new SuperheroDto(777L, null, null, null,
-                null, "ignore", "ignore", null);
+        SuperheroDto failingSuperheroDto = new SuperheroDto(777L, null, null,
+                null, null, "ignore", "ignore", null);
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
                 failingSuperheroDto, OnUpdate.class);
@@ -80,9 +81,11 @@ public class SuperheroDtoTest {
     @Test
     @DisplayName("Test Validation alias size onCreate/ onUpdate")
     public void testValidationAliasSize() {
-        ApplicationUserDto userDto = new ApplicationUserDto("username", "password", UserRole.USER);
+        ApplicationUserDto userDto = new ApplicationUserDto("username", "password",
+                UserRole.USER);
         SuperheroDto failingSuperheroDto = new SuperheroDto(777L,
-                "abcdefghijklmnopqrstu".substring(0, 21), "foo", LocalDate.of(1970, 1, 1),
+                "abcdefghijklmnopqrstu".substring(0, 21), "foo",
+                LocalDate.of(1970, 1, 1),
                 Gender.NOT_PROVIDED, "ignore", "ignore", userDto);
 
         Set<ConstraintViolation<SuperheroDto>> constraintViolations = validator.validate(
