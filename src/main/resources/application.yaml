@@ -3,6 +3,7 @@ com.abach42.superhero:
     allowed-origins:
       - http://localhost:3000
       - https://localhost:3001
+      - https://localhost:8443
     allowed-methods:
       - '*'
     allowed-headers:

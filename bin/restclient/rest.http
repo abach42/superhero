@@ -93,26 +93,12 @@ Authorization: Bearer {{jwt}}
 {"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
 
 ### Update superhero - will be ok
-PUT {{domain}}/api/v1/superheroes/19 HTTP/1.1
+PATCH  {{domain}}/api/v1/superheroes/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
 {
-  "realName": "Alex Admin",
-  "dateOfBirth": "1987-07-22",
-  "gender": "MALE",
-  "occupation": "Administrator"
-}
-
-### Update superhero
-PUT {{domain}}/api/v1/superheroes/1 HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{jwt}}
-
-{
- "alias": "The Wise Owl",
   "realName": "Alex Admin",
   "dateOfBirth": "1987-07-22",
   "gender": "MALE",
@@ -153,7 +139,7 @@ Authorization: Bearer {{jwt}}
 }
 
 ### Update skill profile for superhero
-PUT {{domain}}/api/v1/superheroes/1/skill-profiles/15 HTTP/1.1
+PATCH {{domain}}/api/v1/superheroes/1/skill-profiles/15 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
