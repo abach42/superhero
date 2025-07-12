@@ -1,6 +1,7 @@
 package com.abach42.superhero.superhero;
 
 import com.abach42.superhero.config.validation.OnCreate;
+import com.abach42.superhero.skillprofile.SkillProfile;
 import com.abach42.superhero.user.ApplicationUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,9 +14,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -53,6 +57,10 @@ public class Superhero {
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private ApplicationUser user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "superheroId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SkillProfile> skillProfiles = new ArrayList<>();
 
     protected Superhero() {
 
@@ -135,6 +143,13 @@ public class Superhero {
         this.deleted = deleted;
     }
 
+    public List<SkillProfile> getSkillProfiles() {
+        return skillProfiles;
+    }
+
+    public void setSkillProfiles(List<SkillProfile> skillProfiles) {
+        this.skillProfiles = skillProfiles;
+    }
 
     public ApplicationUser getUser() {
         return user;

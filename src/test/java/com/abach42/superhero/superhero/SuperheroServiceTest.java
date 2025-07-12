@@ -55,9 +55,9 @@ class SuperheroServiceTest {
         given(superheroRepository.findAll(PageRequest.of(0, 10, Sort.by("id")))).willReturn(page);
         given(superheroRepository.count()).willReturn(1L);
 
-        SuperheroListDto result = subject.retrieveSuperheroList(null);
+        SuperheroListDto actual = subject.retrieveSuperheroList(null);
 
-        assertNotNull(result);
+        assertNotNull(actual);
     }
 
     @Test
@@ -91,9 +91,9 @@ class SuperheroServiceTest {
     void shouldRetrieveSuperheroById() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
 
-        SuperheroDto result = subject.retrieveSuperhero(1L);
+        SuperheroDto actual = subject.retrieveSuperhero(1L);
 
-        assertThat(result.alias()).isEqualTo(superhero.getAlias());
+        assertThat(actual.alias()).isEqualTo(superhero.getAlias());
     }
 
     @Test
@@ -108,17 +108,16 @@ class SuperheroServiceTest {
         assertThat(exception.getMessage()).contains(SuperheroService.SUPERHERO_NOT_FOUND_MSG);
     }
 
-    // Test addSuperhero method
     @Test
-    @DisplayName("Should add superhero successfully")
+    @DisplayName("Should add superhero successfully - and password is not returned")
     void shouldAddSuperhero() {
         given(passwordEncoder.encode(anyString())).willReturn("encoded");
         given(superheroRepository.save(any(Superhero.class))).willReturn(superhero);
         SuperheroDto dto = SuperheroDto.fromDomain(superhero);
 
-        SuperheroDto result = subject.addSuperhero(dto);
+        SuperheroDto actual = subject.addSuperhero(dto);
 
-        assertThat(result.alias()).isEqualTo(dto.alias());
+        assertThat(actual.alias()).isEqualTo(dto.alias());
         verify(passwordEncoder).encode(anyString());
     }
 
@@ -155,13 +154,13 @@ class SuperheroServiceTest {
 
         SuperheroPatchDto update = createPatchForField(field, "updated");
 
-        SuperheroDto result = subject.changeSuperhero(1L, update);
+        SuperheroDto actual = subject.changeSuperhero(1L, update);
 
         switch (field) {
-            case "alias" -> assertThat(result.alias()).isEqualTo("updated");
-            case "realName" -> assertThat(result.realName()).isEqualTo("updated");
-            case "occupation" -> assertThat(result.occupation()).isEqualTo("updated");
-            case "originStory" -> assertThat(result.originStory()).isEqualTo("updated");
+            case "alias" -> assertThat(actual.alias()).isEqualTo("updated");
+            case "realName" -> assertThat(actual.realName()).isEqualTo("updated");
+            case "occupation" -> assertThat(actual.occupation()).isEqualTo("updated");
+            case "originStory" -> assertThat(actual.originStory()).isEqualTo("updated");
         }
     }
 
@@ -175,10 +174,10 @@ class SuperheroServiceTest {
                 Optional.empty(), Optional.empty(), Optional.of(newDate),
                 Optional.of(Gender.HIDDEN), Optional.empty(), Optional.empty());
 
-        SuperheroDto result = subject.changeSuperhero(1L, update);
+        SuperheroDto actual = subject.changeSuperhero(1L, update);
 
-        assertThat(result.dateOfBirth()).isEqualTo(newDate);
-        assertThat(result.gender()).isEqualTo(Gender.HIDDEN);
+        assertThat(actual.dateOfBirth()).isEqualTo(newDate);
+        assertThat(actual.gender()).isEqualTo(Gender.HIDDEN);
     }
 
     @Test
@@ -186,9 +185,9 @@ class SuperheroServiceTest {
     void shouldHandleEmptyPatchUpdate() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
 
-        SuperheroDto result = subject.changeSuperhero(1L, SuperheroPatchDto.create());
+        SuperheroDto actual = subject.changeSuperhero(1L, SuperheroPatchDto.create());
 
-        assertThat(result.alias()).isEqualTo(superhero.getAlias());
+        assertThat(actual.alias()).isEqualTo(superhero.getAlias());
     }
 
     @Test
@@ -208,9 +207,9 @@ class SuperheroServiceTest {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
         given(superheroRepository.save(any(Superhero.class))).willReturn(superhero);
 
-        SuperheroDto result = subject.markSuperheroAsDeleted(1L);
+        SuperheroDto actual = subject.markSuperheroAsDeleted(1L);
 
-        assertThat(result).isNotNull();
+        assertThat(actual).isNotNull();
         verify(superheroRepository).save(any(Superhero.class));
     }
 
