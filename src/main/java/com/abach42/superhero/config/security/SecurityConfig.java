@@ -82,7 +82,7 @@ public class SecurityConfig {
     SecurityFilterChain documentationResourceFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/chart.html", "/swagger-ui/**", "/v3/api-docs/**")
+                        .requestMatchers("/chart.html", "/favicon.ioco", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll());
         return http.build();
     }
