@@ -5,7 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -132,13 +132,13 @@ class SkillProfileControllerIntegrationTest {
         }
 
         @Test
-        @DisplayName("PUT /skill-profiles/{skillId} - Should validate missing intensity on update")
+        @DisplayName("PATCH /skill-profiles/{skillId} - Should validate missing intensity on update")
         void shouldValidateMissingIntensityOnUpdate() throws Exception {
             SkillProfileDto invalidDto = new SkillProfileDto(null, null, null,
                     null);
             String jsonContent = objectMapper.writeValueAsString(invalidDto);
 
-            mockMvc.perform(put(buildUriSkillProfileSingle(1L, 2L))
+            mockMvc.perform(patch(buildUriSkillProfileSingle(1L, 2L))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(jsonContent)
                             .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
@@ -178,7 +178,7 @@ class SkillProfileControllerIntegrationTest {
 
             String putPayload = objectMapper.writeValueAsString(validUpdateDto);
 
-            mockMvc.perform(put(buildUriSkillProfileSingle(1L, 2L))
+            mockMvc.perform(patch(buildUriSkillProfileSingle(1L, 2L))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(putPayload))
                     .andExpect(status().isForbidden());
@@ -207,7 +207,7 @@ class SkillProfileControllerIntegrationTest {
 
             String putPayload = objectMapper.writeValueAsString(validUpdateDto);
 
-            mockMvc.perform(put(buildUriSkillProfileSingle(1L, 2L))
+            mockMvc.perform(patch(buildUriSkillProfileSingle(1L, 2L))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(putPayload))
                     .andExpect(status().isOk());
@@ -235,7 +235,7 @@ class SkillProfileControllerIntegrationTest {
 
             String putPayload = objectMapper.writeValueAsString(validUpdateDto);
 
-            mockMvc.perform(put(buildUriSkillProfileSingle(1L, 2L))
+            mockMvc.perform(patch(buildUriSkillProfileSingle(1L, 2L))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(putPayload))
                     .andExpect(status().isForbidden());
