@@ -9,7 +9,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -184,7 +184,7 @@ public class SkillProfileControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /skill-profiles/" + 0 + " update updates intensity ")
+    @DisplayName("PATCH /skill-profiles/" + 0 + " update updates intensity ")
     public void testUpdateSuperheroSkillProfile() throws Exception {
         SkillProfileDto expected = TestStubs.getSkillProfileDtoToUpdateStub();
         given(skillProfileService.changeSuperheroSkillProfile(anyLong(), anyLong(),
@@ -192,8 +192,7 @@ public class SkillProfileControllerTest {
                 .willReturn(expected);
 
         MvcResult mvcResult = mockMvc.perform(
-
-                        put(buildUriSkillProfileMockSingle())
+                        patch(buildUriSkillProfileMockSingle())
                                 .with(SecurityMockMvcRequestPostProcessors.jwt())
                                 .content(objectMapper.writeValueAsString(expected))
                                 .accept(MediaType.APPLICATION_JSON)
