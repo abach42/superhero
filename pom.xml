@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.abach42</groupId>
   <artifactId>superhero</artifactId>
-  <version>0.10.2</version>
+  <version>1.0.0</version>
   <name>superhero</name>
   <description>An RESTful API etude.</description>
   <properties>
