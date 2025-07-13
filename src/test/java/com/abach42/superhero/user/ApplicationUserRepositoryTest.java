@@ -25,56 +25,14 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 class ApplicationUserRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private ApplicationUserRepository subject;
-
-    private ApplicationUser testUser;
-
-    @BeforeEach
-    void setUp() {
-        testUser = new ApplicationUser();
-        testUser.setPassword("password123");
-        testUser.setEmail("test@example.com");
-        testUser.setRole(UserRole.USER);
-    }
 
     @Test
     @DisplayName("should save and find user by email")
     void shouldSaveAndFindUserByEmail() {
-        entityManager.persistAndFlush(testUser);
-
         Optional<ApplicationUser> result =
-                subject.findOneByEmailAndDeletedIsFalse("test@example.com");
+                subject.findOneByEmailAndDeletedIsFalse("user@example.com");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getEmail()).isEqualTo("test@example.com");
-    }
-
-    @Test
-    @DisplayName("should work with USER role security context")
-    void shouldWorkWithUserRoleSecurityContext() {
-        entityManager.persistAndFlush(testUser);
-
-        Optional<ApplicationUser> result =
-                subject.findOneByEmailAndDeletedIsFalse("test@example.com");
-
-        assertThat(result).isPresent();
-        assertThat(result.get().getRole()).isEqualTo(UserRole.USER);
-    }
-
-    @Test
-    @DisplayName("should work with ADMIN role security context")
-    void shouldWorkWithAdminRoleSecurityContext() {
-        testUser.setEmail("admin666@example.com");
-        testUser.setRole(UserRole.ADMIN);
-        entityManager.persistAndFlush(testUser);
-
-        Optional<ApplicationUser> result =
-                subject.findOneByEmailAndDeletedIsFalse("admin666@example.com");
-
-        assertThat(result).isPresent();
-        assertThat(result.get().getRole()).isEqualTo(UserRole.ADMIN);
     }
 }

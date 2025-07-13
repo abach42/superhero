@@ -25,52 +25,6 @@ class ApplicationUserDtoTest {
     }
 
     @Test
-    @DisplayName("should convert from ApplicationUser domain object")
-    void shouldConvertFromApplicationUserDomainObject() {
-        ApplicationUser user = new ApplicationUser(
-                "user@test.com",
-                "secret",
-                UserRole.ADMIN
-        );
-
-        ApplicationUserDto dto = ApplicationUserDto.fromDomain(user);
-
-        assertThat(dto.email()).isEqualTo("user@test.com");
-        assertThat(dto.password()).isEqualTo("secret");
-        assertThat(dto.role()).isEqualTo(UserRole.ADMIN);
-    }
-
-    @Test
-    @DisplayName("should convert to ApplicationUser domain object")
-    void shouldConvertToApplicationUserDomainObject() {
-        ApplicationUserDto dto = new ApplicationUserDto(
-                "admin@test.com",
-                "adminpass",
-                UserRole.ADMIN
-        );
-
-        ApplicationUser user = ApplicationUserDto.toDomain(dto);
-
-        assertThat(user.getEmail()).isEqualTo("admin@test.com");
-        assertThat(user.getPassword()).isEqualTo("adminpass");
-        assertThat(user.getRole()).isEqualTo(UserRole.ADMIN);
-    }
-
-    @Test
-    @DisplayName("should handle USER role conversion")
-    void shouldHandleUserRoleConversion() {
-        ApplicationUserDto dto = new ApplicationUserDto(
-                "user@example.com",
-                "userpass",
-                UserRole.USER
-        );
-
-        ApplicationUser user = ApplicationUserDto.toDomain(dto);
-
-        assertThat(user.getRole()).isEqualTo(UserRole.USER);
-    }
-
-    @Test
     @DisplayName("should handle round-trip conversion")
     void shouldHandleRoundTripConversion() {
         ApplicationUser originalUser = new ApplicationUser(

@@ -50,6 +50,7 @@ public class SuperheroRepositoryTest {
     @DisplayName("update existing superhero")
     @Transactional
     public void testUpdateSuperhero() {
+        //assuming Superhero.getId() == 1L is in test database
         Superhero superhero = subject.findById(1L).get();
         superhero.setAlias("new");
         Superhero updatedSuperhero = subject.save(superhero);
