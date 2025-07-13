@@ -21,9 +21,6 @@ class ApplicationUserServiceTest {
     @Mock
     private ApplicationUserRepository applicationUserRepository;
 
-    @Mock
-    private ApplicationUser applicationUser;
-
     private ApplicationUserService subject;
 
     @BeforeEach
@@ -36,12 +33,15 @@ class ApplicationUserServiceTest {
     void shouldReturnUserWhenFoundByIdentifier() {
         String email = "test-user";
 
+        ApplicationUser applicationUserStub =
+                new ApplicationUser(email, "bar", UserRole.USER);
+
         given(applicationUserRepository.findOneByEmailAndDeletedIsFalse(email))
-                .willReturn(Optional.of(applicationUser));
+                .willReturn(Optional.of(applicationUserStub));
 
         ApplicationUser result = subject.retrieveUserByEmail(email);
 
-        assertThat(result).isEqualTo(applicationUser);
+        assertThat(result).isEqualTo(applicationUserStub);
     }
 
     @Test

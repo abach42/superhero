@@ -184,6 +184,25 @@ class SuperheroServiceTest {
         }
     }
 
+    private SuperheroPatchDto createPatchForField(String field, String value) {
+        return switch (field) {
+            case "alias" -> new SuperheroPatchDto(Optional.of(value), Optional.empty(),
+                    Optional.empty(), Optional.empty(), Optional.empty(),
+                    Optional.empty());
+            case "realName" -> new SuperheroPatchDto(Optional.empty(), Optional.of(value),
+                    Optional.empty(), Optional.empty(), Optional.empty(),
+                    Optional.empty());
+            case "occupation" -> new SuperheroPatchDto(Optional.empty(), Optional.empty(),
+                    Optional.empty(), Optional.empty(), Optional.of(value),
+                    Optional.empty());
+            case "originStory" -> new SuperheroPatchDto(Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(), Optional.empty(), Optional.empty(),
+                    Optional.of(value));
+            default -> SuperheroPatchDto.create();
+        };
+    }
+
     @Test
     @DisplayName("Should update date and gender fields")
     void shouldUpdateDateAndGenderFields() {
@@ -243,24 +262,5 @@ class SuperheroServiceTest {
                 () -> subject.markSuperheroAsDeleted(1L));
 
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    }
-
-    private SuperheroPatchDto createPatchForField(String field, String value) {
-        return switch (field) {
-            case "alias" -> new SuperheroPatchDto(Optional.of(value), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.empty(),
-                    Optional.empty());
-            case "realName" -> new SuperheroPatchDto(Optional.empty(), Optional.of(value),
-                    Optional.empty(), Optional.empty(), Optional.empty(),
-                    Optional.empty());
-            case "occupation" -> new SuperheroPatchDto(Optional.empty(), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.of(value),
-                    Optional.empty());
-            case "originStory" -> new SuperheroPatchDto(Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.empty(),
-                    Optional.of(value));
-            default -> SuperheroPatchDto.create();
-        };
     }
 }
