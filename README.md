@@ -80,13 +80,14 @@ initialize a postgres database as container and provide localhost, TLS at port 8
 ## Endpoints
 
 ### Authentication
-* GET /api/v1/login
+* GET /api/v1/auth/login
+* GET /api/v1/auth/refresh-token
 
 ### Superheroes
 * GET /api/v1/superheroes
 * GET /api/v1/superheroes/{id}
 * POST /api/v1/superheroes
-* PUT /api/v1/superheroes/{id}
+* PATCH /api/v1/superheroes/{id}
 * DELETE /api/v1/superheroes/{id} 
 
 ### Skills
@@ -94,11 +95,11 @@ initialize a postgres database as container and provide localhost, TLS at port 8
 * GET /api/v1/skills/{id}
 
 ### Skill profile
-* GET /api/v1/superheroes/{superheroId}/skillprofiles
-* GET /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
-* POST /api/v1/superheroes/{superheroId}/skillprofiles
-* PUT /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
-* DELETE /api/v1/superheroes/{superheroId}/skillprofiles/{skillId}
+* GET /api/v1/superheroes/{superheroId}/skill-profiles
+* GET /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
+* POST /api/v1/superheroes/{superheroId}/skill-profiles
+* PATCH /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
+* DELETE /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
 
 ## ⏳ Plans for 1.1.0 
 
