@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,5 +158,34 @@ public class Superhero {
 
     public void setUser(ApplicationUser user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Alias: ").append(getAlias()).append("\n");
+        sb.append("Real Name: ").append(getRealName()).append("\n");
+        sb.append("Occupation: ").append(getOccupation()).append("\n");
+
+        if (getDateOfBirth() != null) {
+            sb.append("Born: ")
+                    .append(getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .append("\n");
+        }
+
+        sb.append("Origin Story:\n");
+        sb.append(getOriginStory()).append("\n\n");
+
+        sb.append("Skills:\n");
+        for (SkillProfile sp : getSkillProfiles()) {
+            sb.append("- ")
+                    .append(sp.getSkill().getName())
+                    .append(": ")
+                    .append(sp.getIntensity())
+                    .append("\n");
+        }
+
+        return sb.toString();
     }
 }

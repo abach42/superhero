@@ -10,13 +10,25 @@
   </parent>
   <groupId>com.abach42</groupId>
   <artifactId>superhero</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <name>superhero</name>
   <description>An RESTful API etude.</description>
   <properties>
     <java.version>17</java.version>
   </properties>
   <dependencies>
+    <!-- https://central.sonatype.com/artifact/org.springframework.ai/spring-ai-starter-model-ollama/1.1.2 -->
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-model-ollama</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-starter-vector-store-pgvector -->
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
+      <version>1.1.2</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -112,6 +124,18 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <!-- Source: https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-bom -->
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-bom</artifactId>
+        <version>1.1.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <build>
     <plugins>
       <plugin>

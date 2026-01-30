@@ -1,7 +1,7 @@
 services:
   local-database:
     container_name: superhero-postgres-db
-    image: postgres:latest
+    image: pgvector/pgvector:pg17
     restart: always
     ports:
       - 25432:5432
@@ -12,3 +12,6 @@ services:
     volumes:
       - ./.data/:/var/lib/posgresql/data/
       - ./create.sql:/docker-entrypoint-initdb.d/create.sql
+
+volumes:
+  local-database:
