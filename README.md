@@ -12,7 +12,7 @@ feature of spring boot).
 
 ## 📜 Changelog
 
-### ✨ Features 
+### Features 
 
 * JWT auth, user roles
 * Refresh token
@@ -21,9 +21,10 @@ feature of spring boot).
 * Pagination on listing
 * Soft delete for superhero and user, cleaning database scheduler (to be discussed)
 * Deployment for static websites inside Springs Webserver, SPA
-
-### ✨ New for 1.0.0 
 * Optimized method security and project structure
+
+### ✨ New for 1.1.0 
+* AI search for similar skills and team recommendations
 
 ## 🚀 Start project in your docker environment
 
@@ -43,6 +44,8 @@ initialize a postgres database as container and provide localhost, TLS at port 8
 * See OpenAPI definition at https://localhost:8443/swagger-ui/index.html. (Please write `index.html`, there is no redirect)
 
 * See a chart of superhero skills (id: 1 - 16) https://localhost:8443/chart.html?id=1
+
+* For AI just run command of `update-semantic-data` in spring shell.
 
 ## <img src="./src/main/resources/static/img/jwt_logo.svg" width="20"> Using JWT
 

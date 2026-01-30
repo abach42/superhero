@@ -2,8 +2,10 @@ package com.abach42.superhero.superhero;
 
 import com.abach42.superhero.config.api.ApiException;
 import jakarta.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -58,6 +60,14 @@ public class SuperheroService {
     public SuperheroDto retrieveSuperhero(Long id) throws ApiException {
         Superhero superhero = getSuperhero(id);
         return SuperheroDto.fromDomain(superhero);
+    }
+
+    public List<Superhero> retrieveSuperheroesInList(Set<Long> heroIds) {
+        return superheroRepository.findAllById(heroIds);
+    }
+
+    public List<Superhero> retrieveAllSuperheroes() {
+        return superheroRepository.findAll();
     }
 
     public Superhero getSuperhero(Long id) throws ApiException {

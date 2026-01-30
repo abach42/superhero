@@ -144,11 +144,32 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
+
 {
   "intensity": 4
 }
 
 ### really delete skill profile to superhero
 DELETE {{domain}}/api/v1/superheroes/1/skill-profiles/15 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### search similar superheroes by embedding
+GET {{domain}}/api/v1/superheroes/search?query=wise peaceful hero who resolves conflicts calmly  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### search similar superheroes by embedding
+GET {{domain}}/api/v1/superheroes/search?query=strength and courage  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### team recommendation
+GET {{domain}}/api/v1/superheroes/team?task=rescue the city from evil robots&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### team recommendation
+GET {{domain}}/api/v1/superheroes/team?task=clean up city from bad police officers&teamSize=5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}

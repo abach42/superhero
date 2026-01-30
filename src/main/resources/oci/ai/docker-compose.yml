@@ -1,0 +1,20 @@
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+      ollama serve &
+      sleep 3 &&
+      ollama pull mxbai-embed-large &&
+      ollama pull nomic-embed-text &&
+      wait
+      "
+
+volumes:
+  ollama:

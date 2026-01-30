@@ -1,4 +1,4 @@
-CREATE EXTENSION pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE application_user (
     id SERIAL PRIMARY KEY,
@@ -127,3 +127,18 @@ VALUES
 (15, 7, 5), (15, 11, 4), (15, 15, 3), (15, 16, 2), (15, 1, 3), (15, 6, 4), (15, 12, 5), (15, 14, 1),
 -- Insert skill profiles for 'The Wise Wizard'
 (16, 6, 5), (16, 10, 4), (16, 11, 3), (16, 16, 2), (16, 2, 5), (16, 5, 3), (16, 9, 4), (16, 13, 1);
+
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS vector_store (
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    content text,
+    metadata jsonb,
+    embedding vector(1024)
+);
+
+CREATE INDEX IF NOT EXISTS vector_store_embedding_idx
+ON vector_store
+USING hnsw (embedding vector_cosine_ops);

@@ -56,9 +56,28 @@ spring:
       # locations). The root servlet context
       # path, "/", is automatically added as a location as well.
       static-locations: classpath:/public/, classpath:/static/
+  ai:
+    vectorstore:
+      pgvector:
+      index-type: HNSW
+      distance-type: COSINE_DISTANCE
+      dimensions: 1024
+      max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
+    ollama:
+      retry:
+        enabled: false
+      init:
+        # let AI service do the job of pulling
+        pull-model-strategy: never
+        timeout: 60s
+        max-retries: 1
+        embedding:
+          additional-models:
+            - mxbai-embed-large
+            - nomic-embed-text
   shell:
     interactive:
-      enabled: false
+      enabled: true
   jpa:
     properties:
       hibernate:
@@ -72,7 +91,9 @@ spring:
     driverClassName: org.postgresql.Driver
   docker:
     compose:
-      file: src/main/resources/db/oci/docker-compose.yml
+      file:
+        - src/main/resources/oci/db/docker-compose.yml
+        - src/main/resources/oci/ai/docker-compose.yml
       skip:
         in-tests: true
       start:
