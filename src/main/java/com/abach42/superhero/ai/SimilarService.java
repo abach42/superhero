@@ -28,7 +28,7 @@ public class SimilarService {
 
     public List<SemanticMatch> searchSimilarHeroes(String heroDescription, int quantity) {
         try {
-            var docs = vectorService.searchSimilarMatch(heroDescription, quantity);
+            var docs = vectorService.searchSimilarMatch(heroDescription, () -> quantity);
             Map<Long, Double> heroIdToScore = extractSuperheroIds(docs);
 
             Set<Long> heroIds = heroIdToScore.keySet();
