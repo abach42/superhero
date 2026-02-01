@@ -1,17 +1,21 @@
 services:
-  local-database:
-    container_name: superhero-postgres-db
+  database:
     image: pgvector/pgvector:pg17
     restart: always
     ports:
-      - 25432:5432
+      - "15432:5432"
     environment:
       POSTGRES_USER: db
       POSTGRES_PASSWORD: db
       POSTGRES_DB: db
     volumes:
-      - ./.data/:/var/lib/posgresql/data/
+      - database:/var/lib/posgresql/data/
       - ./create.sql:/docker-entrypoint-initdb.d/create.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  local-database:
+  database:

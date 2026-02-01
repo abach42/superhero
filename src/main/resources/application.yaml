@@ -85,7 +85,7 @@ spring:
         format_sql: true
         highlight_sql: true
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:25432/db}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:15432/db}
     username: ${SPRING_DATASOURCE_USERNAME:db}
     password: ${SPRING_DATASOURCE_PASSWORD:db}
     driverClassName: org.postgresql.Driver
@@ -97,6 +97,7 @@ spring:
       skip:
         in-tests: true
       start:
+        command: up
         log-level: trace
       lifecycle-management: start_and_stop
   liquibase:

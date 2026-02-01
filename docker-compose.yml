@@ -1,17 +1,8 @@
+include:
+  - path: src/main/resources/oci/ai/docker-compose.yml
+  - path: src/main/resources/oci/db/docker-compose.yml
+
 services:
-  database:
-    container_name: superhero-database
-    image: postgres:latest
-    restart: no
-    ports:
-      - 15432:5432
-    environment:
-      POSTGRES_USER: db
-      POSTGRES_PASSWORD: db
-      POSTGRES_DB: db
-    volumes:
-      - ./src/main/resources/db/oci/.data/:/var/lib/posgresql/data/
-      - ./src/main/resources/db/oci/create.sql:/docker-entrypoint-initdb.d/create.sql
   application:
     build: .
     image: abach42.superhero:latest
@@ -20,8 +11,14 @@ services:
     ports:
       - "8443:8443"
     depends_on:
-      - database
+      database:
+        condition: service_started
+      ollama:
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/db
       - SPRING_DATASOURCE_USERNAME=db
       - SPRING_DATASOURCE_PASSWORD=db
+volumes:
+  database:
+  ollama:
