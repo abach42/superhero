@@ -27,7 +27,8 @@ public class TeamService {
 
     public SuperheroTeam recommendTeam(String taskDescription, int teamSize) {
         try {
-            var docs = vectorService.searchTeamMatch(taskDescription, teamSize);
+            //double up team size for more emphasize on skills.
+            var docs = vectorService.searchSimilarMatch(taskDescription, () -> teamSize * 2);
             Set<Long> heroIds = extractSuperheroIds(docs);
 
             List<Superhero> heroes = superheroService.retrieveSuperheroesInList(heroIds);
