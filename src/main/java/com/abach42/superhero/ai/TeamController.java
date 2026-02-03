@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
 @IsAdmin
+//todo test
+//todo api doc
 public class TeamController {
 
     private final TeamService teamService;
