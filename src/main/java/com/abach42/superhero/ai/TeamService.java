@@ -68,6 +68,4 @@ public class TeamService {
             List<SemanticMatch> matches) {
         return matches.stream().limit(teamSize).toList();
     }
-
-
 }
