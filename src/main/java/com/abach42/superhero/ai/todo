@@ -1,0 +1,3 @@
+- change management for vectors on superhero change (hash, event, cost saving)
+- initializing of vectors on start for dev and container based start (shell not work)
+- test of ai 

@@ -74,7 +74,7 @@ public class SkillProfileService {
         try {
             Objects.requireNonNull(skillProfileDto);
 
-            superheroService.getSuperhero(superheroId);
+            Superhero superhero = superheroService.getSuperhero(superheroId);
 
             Skill skill = skillService.getSkill(skillProfileDto.skill().id());
             SkillProfile newSkillProfile = new SkillProfile(superheroId,
@@ -82,7 +82,7 @@ public class SkillProfileService {
 
             SkillProfile createdSkillProfile = skillProfileRepository.save(newSkillProfile);
 
-            triggerVectorUpdateEvent(superheroId);
+            triggerVectorUpdateEvent(superhero);
 
             return SkillProfileDto.fromDomain(createdSkillProfile);
         } catch (ApiException e) {
@@ -95,14 +95,14 @@ public class SkillProfileService {
     public SkillProfileDto changeSuperheroSkillProfile(Long superheroId, Long skillId,
             SkillProfileDto update) throws ApiException {
         try {
-            superheroService.getSuperhero(superheroId);
+            Superhero superhero = superheroService.getSuperhero(superheroId);
 
             SkillProfile origin = getSuperheroSkillProfile(superheroId, skillId);
 
             // manual dirty checking, todo see above
             if (update.intensity() != null) {
                 origin.setIntensity(update.intensity());
-                triggerVectorUpdateEvent(superheroId);
+                triggerVectorUpdateEvent(superhero);
             }
 
             SkillProfile savedSkillProfile = skillProfileRepository.save(origin);
@@ -125,8 +125,7 @@ public class SkillProfileService {
         return SkillProfileDto.fromDomain(skillProfile);
     }
 
-    private void triggerVectorUpdateEvent(Long superheroId) {
-        Superhero superhero = superheroService.getSuperhero(superheroId);
+    private void triggerVectorUpdateEvent(Superhero superhero) {
         eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(superhero));
     }
 
