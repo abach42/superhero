@@ -1,12 +1,16 @@
 package com.abach42.superhero.skillprofile;
 
+import com.abach42.superhero.ai.RemoveSuperheroVectorEvent;
+import com.abach42.superhero.ai.UpdateSuperheroVectorEvent;
 import com.abach42.superhero.config.api.ApiException;
 import com.abach42.superhero.skill.Skill;
 import com.abach42.superhero.skill.SkillService;
+import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -31,12 +35,15 @@ public class SkillProfileService {
     private final SkillProfileRepository skillProfileRepository;
     private final SuperheroService superheroService;
     private final SkillService skillService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public SkillProfileService(SkillProfileRepository skillProfileRepository,
-            @Lazy SuperheroService superheroService, @Lazy SkillService skillService) {
+            @Lazy SuperheroService superheroService, @Lazy SkillService skillService,
+            ApplicationEventPublisher eventPublisher) {
         this.skillProfileRepository = skillProfileRepository;
         this.superheroService = superheroService;
         this.skillService = skillService;
+        this.eventPublisher = eventPublisher;
     }
 
     public SkillProfileListDto retrieveSuperheroSkillProfileList(Long superheroId)
@@ -48,7 +55,14 @@ public class SkillProfileService {
                     SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG + superheroId);
         }
 
+        triggerVectorUpdateEvent(superheroId);
+
         return new SkillProfileListDto(profileList);
+    }
+
+    private void triggerVectorUpdateEvent(Long superheroId) {
+        Superhero superhero = superheroService.getSuperhero(superheroId);
+        eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(superhero));
     }
 
     public SkillProfileDto retrieveSuperheroSkillProfile(Long superheroId, Long skillId) {
@@ -74,6 +88,9 @@ public class SkillProfileService {
                     skillProfileDto.intensity(), skill);
 
             SkillProfile createdSkillProfile = skillProfileRepository.save(newSkillProfile);
+
+            triggerVectorUpdateEvent(superheroId);
+
             return SkillProfileDto.fromDomain(createdSkillProfile);
         } catch (ApiException e) {
             throw new ApiException(e.getStatusCode(), e.getReason());
@@ -95,6 +112,9 @@ public class SkillProfileService {
             }
 
             SkillProfile savedSkillProfile = skillProfileRepository.save(origin);
+
+            triggerVectorUpdateEvent(superheroId);
+
             return SkillProfileDto.fromDomain(savedSkillProfile);
         } catch (ApiException e) {
             throw new ApiException(e.getStatusCode(), e.getReason());
@@ -108,6 +128,13 @@ public class SkillProfileService {
         SkillProfile skillProfile = getSuperheroSkillProfile(superheroId, skillId);
         skillProfileRepository.delete(skillProfile);
 
+        triggerVectorRemoveEvent(superheroId);
+
         return SkillProfileDto.fromDomain(skillProfile);
+    }
+
+    private void triggerVectorRemoveEvent(Long superheroId) {
+        Superhero superhero = superheroService.getSuperhero(superheroId);
+        eventPublisher.publishEvent(new RemoveSuperheroVectorEvent(superhero));
     }
 }

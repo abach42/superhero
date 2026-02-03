@@ -12,7 +12,6 @@ public record SkillProfileListDto(
                 format = "array",
                 accessMode = AccessMode.READ_ONLY
         )
-        List<SkillProfileDto> skillprofiles
-) {
+        List<SkillProfileDto> skillprofiles) {
 
 }

@@ -44,7 +44,6 @@ class SuperheroServiceTest {
 
     @BeforeEach
     void setUp() {
-        subject = new SuperheroService(superheroRepository, 10, passwordEncoder);
         superhero = TestStubs.getSuperheroStubWithPassword();
     }
 

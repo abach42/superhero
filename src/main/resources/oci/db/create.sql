@@ -134,11 +134,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS vector_store (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-    superhero_id INT,
     content text,
     metadata jsonb,
-    embedding vector(1024),
-    CONSTRAINT fk_vector_superhero FOREIGN KEY (superhero_id) REFERENCES superhero(id)
+    embedding vector(1024)
 );
 
 CREATE INDEX IF NOT EXISTS vector_store_embedding_idx
