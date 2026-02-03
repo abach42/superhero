@@ -1,5 +1,7 @@
 package com.abach42.superhero.superhero;
 
+import com.abach42.superhero.ai.RemoveSuperheroVectorEvent;
+import com.abach42.superhero.ai.UpdateSuperheroVectorEvent;
 import com.abach42.superhero.config.api.ApiException;
 import jakarta.annotation.Nullable;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,12 +31,14 @@ public class SuperheroService {
     private final SuperheroRepository superheroRepository;
     private final Integer defaultPageSize;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     public SuperheroService(SuperheroRepository superheroRepository, Integer defaultPageSize,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher) {
         this.superheroRepository = superheroRepository;
         this.defaultPageSize = defaultPageSize;
         this.passwordEncoder = passwordEncoder;
+        this.eventPublisher = eventPublisher;
     }
 
     public SuperheroListDto retrieveSuperheroList(@Nullable Integer pageNumber)
@@ -85,6 +90,8 @@ public class SuperheroService {
 
             Superhero createdSuperhero = superheroRepository.save(newSuperhero);
 
+            eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(createdSuperhero));
+
             return SuperheroDto.fromDomain(createdSuperhero);
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, SUPERHERO_NOT_CREATED_MSG_CONSTRAINT);
@@ -104,6 +111,8 @@ public class SuperheroService {
         updateField(update.occupation(), origin::setOccupation);
         updateField(update.originStory(), origin::setOriginStory);
 
+        eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(origin));
+
         return SuperheroDto.fromDomain(origin);
     }
 
@@ -117,6 +126,8 @@ public class SuperheroService {
         superhero.getUser().setDeleted(true);
 
         superheroRepository.save(superhero);
+
+        eventPublisher.publishEvent(new RemoveSuperheroVectorEvent(superhero));
 
         return SuperheroDto.fromDomain(superhero);
     }

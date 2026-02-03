@@ -93,7 +93,7 @@ Authorization: Bearer {{jwt}}
 {"id":0,"alias":null,"realName":"bar","dateOfBirth":[1917,1,1],"gender":"Male","occupation":"foo","originStory":"foo","deleted":false}
 
 ### Update superhero - will be ok
-PATCH  {{domain}}/api/v1/superheroes/1 HTTP/1.1
+PATCH  {{domain}}/api/v1/superheroes/17 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{jwt}}

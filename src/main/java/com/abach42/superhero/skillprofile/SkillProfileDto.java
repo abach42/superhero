@@ -37,8 +37,7 @@ public record SkillProfileDto(
                 description = "Intensity of skill 1 - 5",
                 minimum = "1",
                 maximum = "5",
-                format = "integer",
-                required = true
+                format = "integer"
         )
         @NotNull(groups = {OnCreate.class, OnUpdate.class})
         Integer intensity,

@@ -100,8 +100,7 @@ public class SkillProfileController {
     public ResponseEntity<SkillProfileDto> showSuperheroSkillProfile(@PathVariable Long superheroId,
             @PathVariable Long skillId) throws ApiException {
         SkillProfileDto skillProfileDto = skillProfileService.retrieveSuperheroSkillProfile(
-                superheroId,
-                skillId);
+                superheroId, skillId);
         return ResponseEntity.ok(skillProfileDto);
     }
 

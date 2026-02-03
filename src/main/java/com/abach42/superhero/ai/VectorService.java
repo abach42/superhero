@@ -30,9 +30,14 @@ public class VectorService {
         heroes.forEach(this::updateEmbedding);
     }
 
-    private void updateEmbedding(Superhero hero) {
+    public void updateEmbedding(Superhero hero) {
         Document doc = documentService.toDocument(hero);
         vectorStore.add(List.of(doc));
+    }
+
+    public void removeEmbedding(Superhero hero) {
+        Document doc = documentService.toDocument(hero);
+        vectorStore.delete(List.of(doc.getId()));
     }
 
     /**
