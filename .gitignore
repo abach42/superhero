@@ -40,3 +40,5 @@ build/
 *.pem
 
 src/main/resources/public
+
+*todo
