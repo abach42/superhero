@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
 @IsAdmin
+//todo test
+//todo api doc
 public class SimilarController {
 
     private final SimilarService similarService;
@@ -26,7 +28,7 @@ public class SimilarController {
 
     @GetMapping("/search")
     public List<SemanticMatch> searchSimilar(@RequestParam String query,
-            @RequestParam(defaultValue = "5") int topK) {
-        return similarService.searchSimilarHeroes(query, topK);
+            @RequestParam(defaultValue = "5") int quantity) {
+        return similarService.searchSimilarHeroes(query, quantity);
     }
 }
