@@ -55,14 +55,7 @@ public class SkillProfileService {
                     SKILL_PROFILES_SUPERHERO_NOT_FOUND_MSG + superheroId);
         }
 
-        triggerVectorUpdateEvent(superheroId);
-
         return new SkillProfileListDto(profileList);
-    }
-
-    private void triggerVectorUpdateEvent(Long superheroId) {
-        Superhero superhero = superheroService.getSuperhero(superheroId);
-        eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(superhero));
     }
 
     public SkillProfileDto retrieveSuperheroSkillProfile(Long superheroId, Long skillId) {
@@ -109,11 +102,10 @@ public class SkillProfileService {
             // manual dirty checking, todo see above
             if (update.intensity() != null) {
                 origin.setIntensity(update.intensity());
+                triggerVectorUpdateEvent(superheroId);
             }
 
             SkillProfile savedSkillProfile = skillProfileRepository.save(origin);
-
-            triggerVectorUpdateEvent(superheroId);
 
             return SkillProfileDto.fromDomain(savedSkillProfile);
         } catch (ApiException e) {
@@ -131,6 +123,11 @@ public class SkillProfileService {
         triggerVectorRemoveEvent(superheroId);
 
         return SkillProfileDto.fromDomain(skillProfile);
+    }
+
+    private void triggerVectorUpdateEvent(Long superheroId) {
+        Superhero superhero = superheroService.getSuperhero(superheroId);
+        eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(superhero));
     }
 
     private void triggerVectorRemoveEvent(Long superheroId) {

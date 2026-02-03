@@ -103,6 +103,7 @@ public class SuperheroService {
     @Transactional
     public SuperheroDto changeSuperhero(Long id, SuperheroPatchDto update) throws ApiException {
         Superhero origin = getSuperhero(id);
+        int origHashCode = origin.hashCode();
 
         updateField(update.alias(), origin::setAlias);
         updateField(update.realName(), origin::setRealName);
@@ -111,13 +112,22 @@ public class SuperheroService {
         updateField(update.occupation(), origin::setOccupation);
         updateField(update.originStory(), origin::setOriginStory);
 
-        eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(origin));
+        int changedHashCode = origin.hashCode();
+        triggerUpdateVector(origHashCode, changedHashCode, origin);
 
         return SuperheroDto.fromDomain(origin);
     }
 
     private <T> void updateField(Optional<T> newValue, Consumer<T> setter) {
         newValue.ifPresent(setter);
+    }
+
+    private void triggerUpdateVector(int origHashCode, int changedHashCode, Superhero origin) {
+        if (origHashCode == changedHashCode) {
+            return;
+        }
+
+        eventPublisher.publishEvent(new UpdateSuperheroVectorEvent(origin));
     }
 
     public SuperheroDto markSuperheroAsDeleted(Long id) throws ApiException {

@@ -161,6 +161,18 @@ public class Superhero {
     }
 
     @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + (alias != null ? alias.hashCode() : 0);
+        result = 31 * result + (realName != null ? realName.hashCode() : 0);
+        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + (gender != null ? gender.hashCode() : 0);
+        result = 31 * result + (occupation != null ? occupation.hashCode() : 0);
+        result = 31 * result + (originStory != null ? originStory.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
