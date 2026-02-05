@@ -3,6 +3,7 @@ package com.abach42.superhero.superhero;
 import com.abach42.superhero.ai.RemoveSuperheroVectorEvent;
 import com.abach42.superhero.ai.UpdateSuperheroVectorEvent;
 import com.abach42.superhero.shared.api.ApiException;
+import com.abach42.superhero.shared.convertion.PatchField;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
@@ -105,21 +106,21 @@ public class SuperheroService {
         Superhero origin = getSuperhero(id);
         int origHashCode = origin.hashCode();
 
-        updateField(update.alias(), origin::setAlias);
-        updateField(update.realName(), origin::setRealName);
-        updateField(update.dateOfBirth(), origin::setDateOfBirth);
-        updateField(update.gender(), origin::setGender);
-        updateField(update.occupation(), origin::setOccupation);
-        updateField(update.originStory(), origin::setOriginStory);
+        try {
+            PatchField.updateField(update.alias(), origin::setAlias);
+            PatchField.updateField(update.realName(), origin::setRealName);
+            PatchField.updateField(update.dateOfBirth(), origin::setDateOfBirth);
+            PatchField.updateField(update.gender(), origin::setGender);
+            PatchField.updateField(update.occupation(), origin::setOccupation);
+            PatchField.updateField(update.originStory(), origin::setOriginStory);
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Superhero not updated");
+        }
 
         int changedHashCode = origin.hashCode();
         triggerUpdateVector(origHashCode, changedHashCode, origin);
 
         return SuperheroDto.fromDomain(origin);
-    }
-
-    private <T> void updateField(Optional<T> newValue, Consumer<T> setter) {
-        newValue.ifPresent(setter);
     }
 
     private void triggerUpdateVector(int origHashCode, int changedHashCode, Superhero origin) {

@@ -193,7 +193,7 @@ public class SuperheroController {
             )
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<SuperheroDto> updateSuperhero(@PathVariable Long id,
+    public ResponseEntity<SuperheroDto> patchSuperhero(@PathVariable Long id,
             @Validated(OnUpdate.class) @RequestBody SuperheroPatchDto superheroDto) throws ApiException {
         SuperheroDto updatedSuperheroDto = superheroService.changeSuperhero(id, superheroDto);
         return ResponseEntity.ok(updatedSuperheroDto);
