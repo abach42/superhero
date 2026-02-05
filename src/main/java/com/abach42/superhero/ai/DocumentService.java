@@ -11,7 +11,6 @@ import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 
 @Service
-//todo test
 public class DocumentService {
 
     public Double getDistance(Document doc) {
