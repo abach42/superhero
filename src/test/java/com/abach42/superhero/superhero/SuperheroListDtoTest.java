@@ -3,9 +3,6 @@ package com.abach42.superhero.superhero;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.abach42.superhero.testconfiguration.TestStubs;
-import com.abach42.superhero.user.ApplicationUser;
-import com.abach42.superhero.user.ApplicationUserDto;
-import com.abach42.superhero.user.UserRole;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

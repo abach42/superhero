@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.api;
+package com.abach42.superhero.shared.api;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

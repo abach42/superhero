@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

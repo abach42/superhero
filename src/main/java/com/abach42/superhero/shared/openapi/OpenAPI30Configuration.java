@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.openapi;
+package com.abach42.superhero.shared.openapi;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

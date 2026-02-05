@@ -1,6 +1,6 @@
 package com.abach42.superhero.superhero;
 
-import static com.abach42.superhero.config.api.PathConfig.SUPERHEROES;
+import static com.abach42.superhero.shared.api.PathConfig.SUPERHEROES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.abach42.superhero.shared.convertion.PatchField;
 import com.abach42.superhero.testconfiguration.ObjectMapperSerializerHelper;
 import com.abach42.superhero.testconfiguration.TestContainerConfiguration;
 import com.abach42.superhero.user.ApplicationUser;
@@ -172,12 +173,12 @@ public class SuperheroControllerIntegrationTest {
             SuperheroDto existingSuperhero = superheroService.retrieveSuperhero(superheroId);
 
             SuperheroPatchDto partialUpdate = new SuperheroPatchDto(
-                    Optional.of("Updated Alias"),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of("Updated Occupation"),
-                    Optional.empty()
+                    PatchField.of("Updated Alias"),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.of("Updated Occupation"),
+                    PatchField.missing()
             );
 
             String uri = UriComponentsBuilder.fromPath(SUPERHEROES)
@@ -229,12 +230,12 @@ public class SuperheroControllerIntegrationTest {
             );
 
             SuperheroPatchDto validPatch = new SuperheroPatchDto(
-                    Optional.of("Updated Alias"),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty()
+                    PatchField.of("Updated Alias"),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing()
             );
 
             mockMvc.perform(post(SUPERHEROES)
@@ -273,12 +274,12 @@ public class SuperheroControllerIntegrationTest {
             );
 
             SuperheroPatchDto validPatch = new SuperheroPatchDto(
-                    Optional.of("Admin Updated Alias"),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty()
+                    PatchField.of("Admin Updated Alias"),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing()
             );
 
             mockMvc.perform(post(SUPERHEROES)
@@ -315,12 +316,12 @@ public class SuperheroControllerIntegrationTest {
             );
 
             SuperheroPatchDto validPatch = new SuperheroPatchDto(
-                    Optional.of("Updated Alias"),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty()
+                    PatchField.of("Updated Alias"),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing(),
+                    PatchField.missing()
             );
 
             mockMvc.perform(post(SUPERHEROES)

@@ -1,13 +1,13 @@
 package com.abach42.superhero.skillprofile;
 
-import com.abach42.superhero.config.api.ApiException;
-import com.abach42.superhero.config.api.ErrorDetailedDto;
-import com.abach42.superhero.config.api.ErrorDto;
-import com.abach42.superhero.config.api.PathConfig;
-import com.abach42.superhero.config.validation.OnCreate;
-import com.abach42.superhero.config.validation.OnUpdate;
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
 import com.abach42.superhero.login.methodsecurity.IsUser;
+import com.abach42.superhero.shared.api.ApiException;
+import com.abach42.superhero.shared.api.ErrorDetailedDto;
+import com.abach42.superhero.shared.api.ErrorDto;
+import com.abach42.superhero.shared.api.PathConfig;
+import com.abach42.superhero.shared.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

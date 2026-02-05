@@ -1,6 +1,6 @@
 package com.abach42.superhero.user;
 
-import com.abach42.superhero.config.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnCreate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode;

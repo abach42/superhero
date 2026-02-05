@@ -5,9 +5,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import org.springframework.context.annotation.Profile;
-
 import java.io.IOException;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Custom serializer for the {@link ApplicationUserDto} class, to overcome password hiding in tests

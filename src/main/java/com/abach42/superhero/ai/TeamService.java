@@ -1,6 +1,6 @@
 package com.abach42.superhero.ai;
 
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
 import java.util.Comparator;
@@ -24,6 +24,22 @@ public class TeamService {
         this.superheroService = superheroService;
         this.documentService = documentService;
         this.vectorService = vectorService;
+    }
+
+    /**
+     * Sort all candidates by semantic similarity of skills, descending.
+     */
+    private static void sortSemantic(List<SemanticMatch> matches) {
+        try {
+            matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
+        } catch (Exception e) {
+            throw new SemanticSearchException("Sorting failed " + e.getMessage(), e);
+        }
+    }
+
+    private static List<SemanticMatch> limitToTeamSize(int teamSize,
+            List<SemanticMatch> matches) {
+        return matches.stream().limit(teamSize).toList();
     }
 
     public SuperheroTeam recommendTeam(String taskDescription, int teamSize) {
@@ -52,21 +68,5 @@ public class TeamService {
         return docs.stream()
                 .map(documentService::getSuperheroId)
                 .collect(Collectors.toSet());
-    }
-
-    /**
-     * Sort all candidates by semantic similarity of skills, descending.
-     */
-    private static void sortSemantic(List<SemanticMatch> matches) {
-        try {
-            matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
-        } catch (Exception e) {
-            throw new SemanticSearchException("Sorting failed " + e.getMessage(), e);
-        }
-    }
-
-    private static List<SemanticMatch> limitToTeamSize(int teamSize,
-            List<SemanticMatch> matches) {
-        return matches.stream().limit(teamSize).toList();
     }
 }

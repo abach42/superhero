@@ -1,6 +1,6 @@
 package com.abach42.superhero.login.authentication;
 
-import static com.abach42.superhero.config.api.PathConfig.AUTH;
+import static com.abach42.superhero.shared.api.PathConfig.AUTH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

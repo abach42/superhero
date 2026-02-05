@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.openapi;
+package com.abach42.superhero.shared.openapi;
 
 import com.abach42.superhero.skillprofile.SkillProfileDto;
 import io.swagger.v3.core.converter.AnnotatedType;

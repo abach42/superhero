@@ -1,6 +1,6 @@
 package com.abach42.superhero.login.authentication;
 
-import static com.abach42.superhero.config.api.PathConfig.BASE_URI;
+import static com.abach42.superhero.shared.api.PathConfig.BASE_URI;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

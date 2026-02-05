@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.api;
+package com.abach42.superhero.shared.api;
 
 /*
  * Concatenation of base path for api, to keep other resources in place and

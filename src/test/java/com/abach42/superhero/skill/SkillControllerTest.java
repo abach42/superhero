@@ -1,7 +1,6 @@
 package com.abach42.superhero.skill;
 
-import static com.abach42.superhero.config.api.PathConfig.SKILLS;
-import static com.abach42.superhero.config.api.PathConfig.SUPERHEROES;
+import static com.abach42.superhero.shared.api.PathConfig.SKILLS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -11,7 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -44,7 +42,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @WebAppConfiguration
 @WithMockUser
 public class SkillControllerTest {
-    
+
     @Autowired
     private WebApplicationContext context;
 
@@ -56,7 +54,17 @@ public class SkillControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
+
+    private static Stream<Arguments> endpointProvider() {
+        return Stream.of(
+                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS).toUriString(),
+                        MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS)
+                                .pathSegment("{id}").buildAndExpand(0L)
+                                .toUriString(),
+                        MockMvcResultMatchers.status().isUnauthorized())
+        );
+    }
 
     @BeforeEach
     public void setUp() {
@@ -77,17 +85,6 @@ public class SkillControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status);
-    }
-
-    private static Stream<Arguments> endpointProvider() {
-        return Stream.of(
-                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS).toUriString(),
-                        MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS)
-                                .pathSegment("{id}").buildAndExpand(0L)
-                                .toUriString(),
-                        MockMvcResultMatchers.status().isUnauthorized())
-        );
     }
 
     @Test
