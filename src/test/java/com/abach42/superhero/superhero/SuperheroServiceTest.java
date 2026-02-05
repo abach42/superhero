@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.abach42.superhero.shared.api.ApiException;
+import com.abach42.superhero.shared.convertion.PatchField;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import java.time.LocalDate;
 import java.util.List;
@@ -185,20 +186,11 @@ class SuperheroServiceTest {
 
     private SuperheroPatchDto createPatchForField(String field, String value) {
         return switch (field) {
-            case "alias" -> new SuperheroPatchDto(Optional.of(value), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.empty(),
-                    Optional.empty());
-            case "realName" -> new SuperheroPatchDto(Optional.empty(), Optional.of(value),
-                    Optional.empty(), Optional.empty(), Optional.empty(),
-                    Optional.empty());
-            case "occupation" -> new SuperheroPatchDto(Optional.empty(), Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.of(value),
-                    Optional.empty());
-            case "originStory" -> new SuperheroPatchDto(Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(), Optional.empty(), Optional.empty(),
-                    Optional.of(value));
-            default -> SuperheroPatchDto.create();
+            case "alias" -> new SuperheroPatchDto(PatchField.of(value), null, null, null, null, null);
+            case "realName" -> new SuperheroPatchDto(null, PatchField.of(value), null, null, null, null);
+            case "occupation" -> new SuperheroPatchDto(null, null, null, null, PatchField.of(value), null);
+            case "originStory" -> new SuperheroPatchDto(null, null, null, null, null, PatchField.of(value));
+            default -> throw new IllegalArgumentException("Unknown field: " + field);
         };
     }
 
@@ -208,10 +200,14 @@ class SuperheroServiceTest {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
 
         LocalDate newDate = LocalDate.of(2000, 1, 1);
+
         SuperheroPatchDto update = new SuperheroPatchDto(
-                Optional.empty(), Optional.empty(), Optional.of(newDate),
-                Optional.of(Gender.NOT_PROVIDED), Optional.empty(),
-                Optional.empty());
+                null,
+                null,
+                PatchField.of(newDate),
+                PatchField.of(Gender.NOT_PROVIDED),
+                null,
+                null);
 
         SuperheroDto actual = subject.changeSuperhero(1L, update);
 
@@ -224,9 +220,31 @@ class SuperheroServiceTest {
     void shouldHandleEmptyPatchUpdate() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
 
-        SuperheroDto actual = subject.changeSuperhero(1L, SuperheroPatchDto.create());
+        SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null,
+                null, null, null, null);
+
+        SuperheroDto actual = subject.changeSuperhero(1L, emptyUpdate);
 
         assertThat(actual.alias()).isEqualTo(superhero.getAlias());
+        assertThat(actual.realName()).isEqualTo(superhero.getRealName());
+    }
+
+    @Test
+    @DisplayName("Should set field to null when PatchField.of(null) is provided")
+    void shouldSetFieldToNull() {
+        given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
+
+
+        SuperheroPatchDto update = new SuperheroPatchDto(
+                null,                   // missing
+                PatchField.of(null),    // explicitly null (delete)
+                null, null, null, null
+        );
+
+        subject.changeSuperhero(1L, update);
+
+        assertThat(superhero.getRealName()).isNull(); // deleted
+        assertThat(superhero.getAlias()).isNotNull(); // missing, origin kept
     }
 
     @Test
@@ -234,8 +252,12 @@ class SuperheroServiceTest {
     void shouldThrowNotFoundWhenUpdatingNonExistent() {
         given(superheroRepository.findById(1L)).willReturn(Optional.empty());
 
+
+        SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null, null,
+                null, null, null);
+
         ApiException exception = assertThrows(ApiException.class,
-                () -> subject.changeSuperhero(1L, SuperheroPatchDto.create()));
+                () -> subject.changeSuperhero(1L, emptyUpdate));
 
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
