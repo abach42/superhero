@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-//todo test
 public class VectorService {
 
     private final DocumentService documentService;
