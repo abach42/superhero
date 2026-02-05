@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.api;
+package com.abach42.superhero.shared.api;
 
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -58,7 +58,7 @@ public class ExceptionHandlerAdvice {
 
     private String getError(ErrorResponse exception) {
         return Optional.ofNullable(HttpStatus.resolve(
-                getStatusCodeNumber(exception.getStatusCode())))
+                        getStatusCodeNumber(exception.getStatusCode())))
                 .map(HttpStatus::getReasonPhrase).orElse("Unknown error");
     }
 

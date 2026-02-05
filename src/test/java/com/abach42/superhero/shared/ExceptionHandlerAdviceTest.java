@@ -1,13 +1,13 @@
-package com.abach42.superhero.config;
+package com.abach42.superhero.shared;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.abach42.superhero.config.api.ApiException;
-import com.abach42.superhero.config.api.ErrorDetailedDto;
-import com.abach42.superhero.config.api.ErrorDto;
-import com.abach42.superhero.config.api.ExceptionHandlerAdvice;
+import com.abach42.superhero.shared.api.ApiException;
+import com.abach42.superhero.shared.api.ErrorDetailedDto;
+import com.abach42.superhero.shared.api.ErrorDto;
+import com.abach42.superhero.shared.api.ExceptionHandlerAdvice;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

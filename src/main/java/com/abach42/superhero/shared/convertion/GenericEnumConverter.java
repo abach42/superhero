@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.convertion;
+package com.abach42.superhero.shared.convertion;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -9,7 +9,7 @@ public abstract class GenericEnumConverter<E extends Enum<E> & ConvertibleEnum<T
 
     @Override
     public T convertToDatabaseColumn(E attribute) {
-        if(attribute == null) {
+        if (attribute == null) {
             return null;
         }
 

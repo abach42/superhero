@@ -2,8 +2,8 @@ package com.abach42.superhero.skillprofile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.abach42.superhero.config.validation.OnCreate;
-import com.abach42.superhero.config.validation.OnUpdate;
+import com.abach42.superhero.shared.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnUpdate;
 import com.abach42.superhero.skill.Skill;
 import com.abach42.superhero.skill.SkillDto;
 import jakarta.validation.ConstraintViolation;

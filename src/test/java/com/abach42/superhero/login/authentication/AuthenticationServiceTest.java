@@ -23,21 +23,21 @@ class AuthenticationServiceTest {
 
     @Mock
     private JwtTokenGenerator jwtTokenGenerator;
-    
+
     @Mock
     private RefreshTokenGenerator refreshTokenGenerator;
-    
+
     @Mock
     private Authentication authentication;
 
     @InjectMocks
     private AuthenticationService subject;
-    
+
     @BeforeEach
     void setUp() {
         subject = new AuthenticationService(jwtTokenGenerator, refreshTokenGenerator);
     }
-    
+
     @Test
     @DisplayName("should create new token pair with correct values")
     void shouldCreateNewTokenPairWithCorrectValues() {
@@ -45,31 +45,31 @@ class AuthenticationServiceTest {
         String expectedRefreshToken = "refresh-token";
         int expectedExpirationMinutes = 15;
         int expectedExpirationSeconds = 900;
-        
+
         given(jwtTokenGenerator.generateToken(authentication)).willReturn(expectedJwtToken);
         given(refreshTokenGenerator.generateToken(authentication)).willReturn(expectedRefreshToken);
         given(jwtTokenGenerator.getExpirationMinutes()).willReturn(expectedExpirationMinutes);
-        
+
         TokenResponseDto result = subject.createNewTokenPair(authentication);
-        
+
         assertThat(result.access_token()).isEqualTo(expectedJwtToken);
         assertThat(result.token_type()).isEqualTo(TokenResponseDto.TokenType.BEARER);
         assertThat(result.expires_in()).isEqualTo(expectedExpirationSeconds);
         assertThat(result.refresh_token()).isEqualTo(expectedRefreshToken);
     }
-    
+
     @Test
     @DisplayName("should convert expiration minutes to seconds")
     void shouldConvertExpirationMinutesToSeconds() {
         int expirationMinutes = 30;
         int expectedExpirationSeconds = 1800;
-        
+
         given(jwtTokenGenerator.generateToken(authentication)).willReturn("jwt-token");
         given(refreshTokenGenerator.generateToken(authentication)).willReturn("refresh-token");
         given(jwtTokenGenerator.getExpirationMinutes()).willReturn(expirationMinutes);
-        
+
         TokenResponseDto result = subject.createNewTokenPair(authentication);
-        
+
         assertThat(result.expires_in()).isEqualTo(expectedExpirationSeconds);
     }
 }

@@ -3,13 +3,13 @@ package com.abach42.superhero.superhero;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
+import com.abach42.superhero.shared.convertion.PatchField;
 import com.abach42.superhero.testconfiguration.TestContainerConfiguration;
 import com.abach42.superhero.user.ApplicationUserDto;
 import com.abach42.superhero.user.ApplicationUserRepository;
 import com.abach42.superhero.user.UserRole;
 import java.time.LocalDate;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -44,12 +44,12 @@ public class SuperheroServiceIntegrationTest {
         SuperheroDto originalSuperhero = superheroService.retrieveSuperhero(superheroId);
 
         SuperheroPatchDto partialUpdate = new SuperheroPatchDto(
-                Optional.of("Service Updated Alias"),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of("Service Updated Origin Story")
+                PatchField.of("Service Updated Alias"),
+                PatchField.missing(),
+                PatchField.missing(),
+                PatchField.missing(),
+                PatchField.missing(),
+                PatchField.of("Service Updated Origin Story")
         );
 
         SuperheroDto updatedSuperhero = superheroService.changeSuperhero(superheroId, partialUpdate);
@@ -105,5 +105,13 @@ public class SuperheroServiceIntegrationTest {
         assertThatThrownBy(() -> superheroService.addSuperhero(duplicateEmailSuperhero))
                 .isInstanceOf(ApiException.class)
                 .hasMessageContaining(SuperheroService.SUPERHERO_NOT_CREATED_MSG_CONSTRAINT);
+    }
+
+    @Test
+    @DisplayName("Should return empty list when no superheroes found for ids")
+    void shouldReturnEmptyListWhenNoSuperheroesFoundForIds() {
+        java.util.Set<Long> nonExistentIds = java.util.Set.of(999L, 1000L);
+        java.util.List<Superhero> result = superheroService.retrieveSuperheroesInList(nonExistentIds);
+        assertThat(result).isEmpty();
     }
 }

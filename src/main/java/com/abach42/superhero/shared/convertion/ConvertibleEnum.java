@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.convertion;
+package com.abach42.superhero.shared.convertion;
 
 public interface ConvertibleEnum<T> {
 

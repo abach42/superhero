@@ -1,9 +1,9 @@
 package com.abach42.superhero.skill;
 
-import com.abach42.superhero.config.api.ApiException;
-import com.abach42.superhero.config.api.ErrorDto;
-import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.login.methodsecurity.IsUser;
+import com.abach42.superhero.shared.api.ApiException;
+import com.abach42.superhero.shared.api.ErrorDto;
+import com.abach42.superhero.shared.api.PathConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
