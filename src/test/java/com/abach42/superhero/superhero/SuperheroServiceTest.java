@@ -239,7 +239,6 @@ class SuperheroServiceTest {
     void shouldSetFieldToNull() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
 
-
         SuperheroPatchDto update = new SuperheroPatchDto(
                 null,                   // missing
                 PatchField.of(null),    // explicitly null (delete)
@@ -256,7 +255,6 @@ class SuperheroServiceTest {
     @DisplayName("Should throw not found when updating non-existent superhero")
     void shouldThrowNotFoundWhenUpdatingNonExistent() {
         given(superheroRepository.findById(1L)).willReturn(Optional.empty());
-
 
         SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null, null,
                 null, null, null);

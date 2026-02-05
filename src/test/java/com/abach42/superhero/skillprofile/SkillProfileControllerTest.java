@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -81,6 +81,21 @@ public class SkillProfileControllerTest {
         return UriComponentsBuilder.fromPath(SKILL_PROFILES)
                 .pathSegment("{skillId}")
                 .build(1L, 0L);
+    }
+
+    private static Stream<Arguments> endpointProvider() {
+        return Stream.of(
+                Arguments.of(HttpMethod.GET, buildUriSkillProfileList().toString(),
+                        MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.GET, buildUriSkillProfileMockSingle().toString(),
+                        MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.POST, buildUriSkillProfileList().toString(),
+                        MockMvcResultMatchers.status().isForbidden()),
+                Arguments.of(HttpMethod.PUT, buildUriSkillProfileMockSingle().toString(),
+                        MockMvcResultMatchers.status().isForbidden()),
+                Arguments.of(HttpMethod.DELETE, buildUriSkillProfileMockSingle().toString(),
+                        MockMvcResultMatchers.status().isForbidden())
+        );
     }
 
     @BeforeEach
@@ -241,21 +256,6 @@ public class SkillProfileControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status);
-    }
-
-    private static Stream<Arguments> endpointProvider() {
-        return Stream.of(
-                Arguments.of(HttpMethod.GET, buildUriSkillProfileList().toString(),
-                        MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.GET, buildUriSkillProfileMockSingle().toString(),
-                        MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.POST, buildUriSkillProfileList().toString(),
-                        MockMvcResultMatchers.status().isForbidden()),
-                Arguments.of(HttpMethod.PUT, buildUriSkillProfileMockSingle().toString(),
-                        MockMvcResultMatchers.status().isForbidden()),
-                Arguments.of(HttpMethod.DELETE, buildUriSkillProfileMockSingle().toString(),
-                        MockMvcResultMatchers.status().isForbidden())
-        );
     }
 
 }

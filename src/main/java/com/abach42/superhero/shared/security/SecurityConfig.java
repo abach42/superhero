@@ -1,9 +1,9 @@
 package com.abach42.superhero.shared.security;
 
-import com.abach42.superhero.shared.api.PathConfig;
-import com.abach42.superhero.shared.security.AppConfiguration.CorsConfigurationProperties;
 import com.abach42.superhero.login.token.AbstractTokenGenerator;
 import com.abach42.superhero.login.token.TokenPurpose;
+import com.abach42.superhero.shared.api.PathConfig;
+import com.abach42.superhero.shared.security.AppConfiguration.CorsConfigurationProperties;
 import java.util.function.Function;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,25 +36,25 @@ public class SecurityConfig {
         String securityMatcherPattern = PathConfig.BASE_URI + "/**";
 
         http.csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(
-                    session ->
-                            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .securityMatcher(securityMatcherPattern)
-            .cors((cors) -> cors
-                    .configurationSource(generateCorsConfig.apply(securityMatcherPattern)))
-            .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers(PathConfig.BASE_URI + "/auth/login").authenticated()
-                    .requestMatchers(PathConfig.BASE_URI + "/auth/refresh-token")
-                            .access(tokenAccess.apply(TokenPurpose.REFRESH))
-                    .requestMatchers(PathConfig.BASE_URI + "/**")
-                            .access(tokenAccess.apply(TokenPurpose.AUTH))
-                    .anyRequest().denyAll()
-            )
-            .oauth2ResourceServer((oauth2) -> oauth2
-                    .jwt(Customizer.withDefaults()))
-            .httpBasic(Customizer.withDefaults())
-            .headers((headers) -> headers
-                    .frameOptions(FrameOptionsConfig::sameOrigin));
+                .sessionManagement(
+                        session ->
+                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .securityMatcher(securityMatcherPattern)
+                .cors((cors) -> cors
+                        .configurationSource(generateCorsConfig.apply(securityMatcherPattern)))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(PathConfig.BASE_URI + "/auth/login").authenticated()
+                        .requestMatchers(PathConfig.BASE_URI + "/auth/refresh-token")
+                        .access(tokenAccess.apply(TokenPurpose.REFRESH))
+                        .requestMatchers(PathConfig.BASE_URI + "/**")
+                        .access(tokenAccess.apply(TokenPurpose.AUTH))
+                        .anyRequest().denyAll()
+                )
+                .oauth2ResourceServer((oauth2) -> oauth2
+                        .jwt(Customizer.withDefaults()))
+                .httpBasic(Customizer.withDefaults())
+                .headers((headers) -> headers
+                        .frameOptions(FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }

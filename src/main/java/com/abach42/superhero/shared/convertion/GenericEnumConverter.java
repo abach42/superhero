@@ -9,7 +9,7 @@ public abstract class GenericEnumConverter<E extends Enum<E> & ConvertibleEnum<T
 
     @Override
     public T convertToDatabaseColumn(E attribute) {
-        if(attribute == null) {
+        if (attribute == null) {
             return null;
         }
 

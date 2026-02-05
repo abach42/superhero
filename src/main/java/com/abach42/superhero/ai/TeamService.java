@@ -26,6 +26,22 @@ public class TeamService {
         this.vectorService = vectorService;
     }
 
+    /**
+     * Sort all candidates by semantic similarity of skills, descending.
+     */
+    private static void sortSemantic(List<SemanticMatch> matches) {
+        try {
+            matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
+        } catch (Exception e) {
+            throw new SemanticSearchException("Sorting failed " + e.getMessage(), e);
+        }
+    }
+
+    private static List<SemanticMatch> limitToTeamSize(int teamSize,
+            List<SemanticMatch> matches) {
+        return matches.stream().limit(teamSize).toList();
+    }
+
     public SuperheroTeam recommendTeam(String taskDescription, int teamSize) {
         try {
             //double up team size for more emphasize on skills.
@@ -52,21 +68,5 @@ public class TeamService {
         return docs.stream()
                 .map(documentService::getSuperheroId)
                 .collect(Collectors.toSet());
-    }
-
-    /**
-     * Sort all candidates by semantic similarity of skills, descending.
-     */
-    private static void sortSemantic(List<SemanticMatch> matches) {
-        try {
-            matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
-        } catch (Exception e) {
-            throw new SemanticSearchException("Sorting failed " + e.getMessage(), e);
-        }
-    }
-
-    private static List<SemanticMatch> limitToTeamSize(int teamSize,
-            List<SemanticMatch> matches) {
-        return matches.stream().limit(teamSize).toList();
     }
 }
