@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import java.time.LocalDate;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.security;
+package com.abach42.superhero.shared.security;
 
 import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;

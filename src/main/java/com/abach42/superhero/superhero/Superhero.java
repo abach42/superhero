@@ -1,6 +1,6 @@
 package com.abach42.superhero.superhero;
 
-import com.abach42.superhero.config.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnCreate;
 import com.abach42.superhero.skillprofile.SkillProfile;
 import com.abach42.superhero.user.ApplicationUser;
 import com.fasterxml.jackson.annotation.JsonFormat;

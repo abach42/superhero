@@ -1,6 +1,6 @@
 package com.abach42.superhero.superhero;
 
-import com.abach42.superhero.config.convertion.ConvertibleEnum;
+import com.abach42.superhero.shared.convertion.ConvertibleEnum;
 
 public enum Gender implements ConvertibleEnum<Byte> {
     MALE((byte) 0),

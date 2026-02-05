@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.security;
+package com.abach42.superhero.shared.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

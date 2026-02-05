@@ -1,6 +1,6 @@
 package com.abach42.superhero.skillprofile;
 
-import static com.abach42.superhero.config.api.PathConfig.SKILL_PROFILES;
+import static com.abach42.superhero.shared.api.PathConfig.SKILL_PROFILES;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

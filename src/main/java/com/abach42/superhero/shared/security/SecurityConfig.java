@@ -1,7 +1,7 @@
-package com.abach42.superhero.config.security;
+package com.abach42.superhero.shared.security;
 
-import com.abach42.superhero.config.api.PathConfig;
-import com.abach42.superhero.config.security.AppConfiguration.CorsConfigurationProperties;
+import com.abach42.superhero.shared.api.PathConfig;
+import com.abach42.superhero.shared.security.AppConfiguration.CorsConfigurationProperties;
 import com.abach42.superhero.login.token.AbstractTokenGenerator;
 import com.abach42.superhero.login.token.TokenPurpose;
 import java.util.function.Function;

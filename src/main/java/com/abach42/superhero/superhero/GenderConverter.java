@@ -1,6 +1,6 @@
 package com.abach42.superhero.superhero;
 
-import com.abach42.superhero.config.convertion.GenericEnumConverter;
+import com.abach42.superhero.shared.convertion.GenericEnumConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)

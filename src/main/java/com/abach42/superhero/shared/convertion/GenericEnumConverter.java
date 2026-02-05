@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.convertion;
+package com.abach42.superhero.shared.convertion;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

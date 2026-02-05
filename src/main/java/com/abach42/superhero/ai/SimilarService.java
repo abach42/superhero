@@ -1,6 +1,6 @@
 package com.abach42.superhero.ai;
 
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.abach42.superhero.login.authentication;
 
-import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.shared.api.PathConfig;
 import com.abach42.superhero.login.token.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;

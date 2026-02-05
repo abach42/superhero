@@ -1,7 +1,7 @@
 package com.abach42.superhero.skill;
 
-import com.abach42.superhero.config.validation.OnCreate;
-import com.abach42.superhero.config.validation.OnUpdate;
+import com.abach42.superhero.shared.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnUpdate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode;
 import jakarta.validation.constraints.NotNull;

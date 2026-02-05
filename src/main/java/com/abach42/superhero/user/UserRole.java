@@ -1,6 +1,6 @@
 package com.abach42.superhero.user;
 
-import com.abach42.superhero.config.convertion.ConvertibleEnum;
+import com.abach42.superhero.shared.convertion.ConvertibleEnum;
 
 public enum UserRole implements ConvertibleEnum<Byte> {
     ADMIN((byte) 0),

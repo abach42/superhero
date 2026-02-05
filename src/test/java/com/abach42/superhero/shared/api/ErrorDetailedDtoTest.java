@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.api;
+package com.abach42.superhero.shared.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

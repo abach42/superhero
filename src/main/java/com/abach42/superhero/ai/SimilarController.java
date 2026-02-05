@@ -1,6 +1,6 @@
 package com.abach42.superhero.ai;
 
-import com.abach42.superhero.config.api.PathConfig;
+import com.abach42.superhero.shared.api.PathConfig;
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
