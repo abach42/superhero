@@ -1,7 +1,7 @@
 package com.abach42.superhero.ai;
 
-import com.abach42.superhero.shared.api.PathConfig;
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
+import com.abach42.superhero.shared.api.PathConfig;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;

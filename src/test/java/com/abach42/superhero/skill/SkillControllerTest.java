@@ -42,7 +42,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @WebAppConfiguration
 @WithMockUser
 public class SkillControllerTest {
-    
+
     @Autowired
     private WebApplicationContext context;
 
@@ -54,7 +54,17 @@ public class SkillControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
+
+    private static Stream<Arguments> endpointProvider() {
+        return Stream.of(
+                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS).toUriString(),
+                        MockMvcResultMatchers.status().isUnauthorized()),
+                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS)
+                                .pathSegment("{id}").buildAndExpand(0L)
+                                .toUriString(),
+                        MockMvcResultMatchers.status().isUnauthorized())
+        );
+    }
 
     @BeforeEach
     public void setUp() {
@@ -75,17 +85,6 @@ public class SkillControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status);
-    }
-
-    private static Stream<Arguments> endpointProvider() {
-        return Stream.of(
-                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS).toUriString(),
-                        MockMvcResultMatchers.status().isUnauthorized()),
-                Arguments.of(HttpMethod.GET, UriComponentsBuilder.fromPath(SKILLS)
-                                .pathSegment("{id}").buildAndExpand(0L)
-                                .toUriString(),
-                        MockMvcResultMatchers.status().isUnauthorized())
-        );
     }
 
     @Test

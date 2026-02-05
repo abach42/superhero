@@ -8,17 +8,17 @@ import org.springframework.data.domain.Page;
 @Schema(name = "superheroes")
 public record SuperheroListDto(
         @Schema(
-            title = "superheroes",
-            description = "List of superheroes",
-            format = "array",
-            accessMode = AccessMode.READ_ONLY
+                title = "superheroes",
+                description = "List of superheroes",
+                format = "array",
+                accessMode = AccessMode.READ_ONLY
         )
         List<SuperheroDto> superheroes,
         @Schema(
-            title = "pagination",
-            description = "Pagination meta data",
-            format = "object",
-            accessMode = AccessMode.READ_ONLY
+                title = "pagination",
+                description = "Pagination meta data",
+                format = "object",
+                accessMode = AccessMode.READ_ONLY
         )
         PageMeta pageMeta
 ) {

@@ -25,8 +25,8 @@ public class SkillProfileService {
             "Skill profile not found for superhero";
     public static final BiFunction<Long, Long, String> SKILL_PROFILE_SUPERHERO_NOT_FOUND_FN =
             (superheroId, skillId) -> String.format(
-            SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG + " by superhero id %d and skill id %d",
-            superheroId, skillId);
+                    SKILL_PROFILE_SUPERHERO_NOT_FOUND_MSG + " by superhero id %d and skill id %d",
+                    superheroId, skillId);
     public static final String SKILL_PROFILE_SUPERHERO_NOT_CREATED_MSG =
             "Skill profile for superhero could not be written.";
     public static final String SKILL_PROFILE_SUPERHERO_NOT_UPDATED_MSG =

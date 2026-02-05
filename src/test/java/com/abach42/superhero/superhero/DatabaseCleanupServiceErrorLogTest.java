@@ -35,7 +35,8 @@ class DatabaseCleanupServiceErrorLogTest {
 
         SuperheroRepository superheroRepositoryMock = mock(SuperheroRepository.class);
         when(superheroRepositoryMock.countByDeletedIsTrue()).thenReturn(1L);
-        doThrow(new DataAccessException("simulated db error") {})
+        doThrow(new DataAccessException("simulated db error") {
+        })
                 .when(superheroRepositoryMock).deleteByDeletedIsTrue();
 
         databaseCleanupService = new DatabaseCleanupService(superheroRepositoryMock);

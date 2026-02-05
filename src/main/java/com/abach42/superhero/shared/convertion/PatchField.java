@@ -9,10 +9,6 @@ import java.util.function.Consumer;
 @JsonSerialize(using = PatchFieldSerializer.class)
 public sealed interface PatchField<T> permits PatchField.Missing, PatchField.Value {
 
-    boolean isPresent();
-
-    T value();
-
     static <T> PatchField<T> missing() {
         return new Missing<>();
     }
@@ -27,6 +23,10 @@ public sealed interface PatchField<T> permits PatchField.Missing, PatchField.Val
             setter.accept(field.value());
         }
     }
+
+    boolean isPresent();
+
+    T value();
 
     final class Missing<T> implements PatchField<T> {
 

@@ -58,7 +58,7 @@ public class ExceptionHandlerAdvice {
 
     private String getError(ErrorResponse exception) {
         return Optional.ofNullable(HttpStatus.resolve(
-                getStatusCodeNumber(exception.getStatusCode())))
+                        getStatusCodeNumber(exception.getStatusCode())))
                 .map(HttpStatus::getReasonPhrase).orElse("Unknown error");
     }
 
