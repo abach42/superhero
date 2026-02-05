@@ -1,12 +1,12 @@
 package com.abach42.superhero.skill;
 
-import static com.abach42.superhero.config.api.PathConfig.SKILLS;
+import static com.abach42.superhero.shared.api.PathConfig.SKILLS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.abach42.superhero.config.api.ErrorDto;
+import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.testconfiguration.TestContainerConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;

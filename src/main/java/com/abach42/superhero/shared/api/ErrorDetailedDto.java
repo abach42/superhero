@@ -1,4 +1,4 @@
-package com.abach42.superhero.config.api;
+package com.abach42.superhero.shared.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

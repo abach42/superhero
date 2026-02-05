@@ -3,8 +3,8 @@ package com.abach42.superhero.superhero;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.abach42.superhero.config.validation.OnCreate;
-import com.abach42.superhero.config.validation.OnUpdate;
+import com.abach42.superhero.shared.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnUpdate;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import com.abach42.superhero.user.ApplicationUserDto;
 import com.abach42.superhero.user.UserRole;

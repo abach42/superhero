@@ -1,6 +1,6 @@
 package com.abach42.superhero.superhero;
 
-import static com.abach42.superhero.config.api.PathConfig.SUPERHEROES;
+import static com.abach42.superhero.shared.api.PathConfig.SUPERHEROES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

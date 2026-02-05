@@ -3,7 +3,7 @@ package com.abach42.superhero.superhero;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.testconfiguration.TestContainerConfiguration;
 import com.abach42.superhero.user.ApplicationUserDto;
 import com.abach42.superhero.user.ApplicationUserRepository;

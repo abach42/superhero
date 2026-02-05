@@ -1,7 +1,6 @@
 package com.abach42.superhero.skill;
 
-import static com.abach42.superhero.config.api.PathConfig.SKILLS;
-import static com.abach42.superhero.config.api.PathConfig.SUPERHEROES;
+import static com.abach42.superhero.shared.api.PathConfig.SKILLS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -11,7 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.abach42.superhero.config.api.PathConfig;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;

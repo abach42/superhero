@@ -1,7 +1,7 @@
 package com.abach42.superhero.ai;
 
-import com.abach42.superhero.config.validation.OnCreate;
-import com.abach42.superhero.config.validation.OnUpdate;
+import com.abach42.superhero.shared.validation.OnCreate;
+import com.abach42.superhero.shared.validation.OnUpdate;
 import com.abach42.superhero.superhero.Gender;
 import com.abach42.superhero.superhero.Superhero;
 import com.fasterxml.jackson.annotation.JsonFormat;

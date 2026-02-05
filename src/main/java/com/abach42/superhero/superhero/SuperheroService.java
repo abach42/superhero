@@ -2,7 +2,7 @@ package com.abach42.superhero.superhero;
 
 import com.abach42.superhero.ai.RemoveSuperheroVectorEvent;
 import com.abach42.superhero.ai.UpdateSuperheroVectorEvent;
-import com.abach42.superhero.config.api.ApiException;
+import com.abach42.superhero.shared.api.ApiException;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
