@@ -106,4 +106,12 @@ public class SuperheroServiceIntegrationTest {
                 .isInstanceOf(ApiException.class)
                 .hasMessageContaining(SuperheroService.SUPERHERO_NOT_CREATED_MSG_CONSTRAINT);
     }
+
+    @Test
+    @DisplayName("Should return empty list when no superheroes found for ids")
+    void shouldReturnEmptyListWhenNoSuperheroesFoundForIds() {
+        java.util.Set<Long> nonExistentIds = java.util.Set.of(999L, 1000L);
+        java.util.List<Superhero> result = superheroService.retrieveSuperheroesInList(nonExistentIds);
+        assertThat(result).isEmpty();
+    }
 }
