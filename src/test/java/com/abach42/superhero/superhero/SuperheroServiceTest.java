@@ -22,6 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,12 +40,16 @@ class SuperheroServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     private SuperheroService subject;
 
     private Superhero superhero;
 
     @BeforeEach
     void setUp() {
+        subject = new SuperheroService(superheroRepository, 10, passwordEncoder, eventPublisher);
         superhero = TestStubs.getSuperheroStubWithPassword();
     }
 

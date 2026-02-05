@@ -2,9 +2,11 @@ package com.abach42.superhero.shared.convertion;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.function.Consumer;
 
 @JsonDeserialize(using = PatchFieldDeserializer.class)
+@JsonSerialize(using = PatchFieldSerializer.class)
 public sealed interface PatchField<T> permits PatchField.Missing, PatchField.Value {
 
     boolean isPresent();
