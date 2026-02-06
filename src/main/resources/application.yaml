@@ -77,7 +77,7 @@ spring:
             - nomic-embed-text
   shell:
     interactive:
-      enabled: true
+      enabled: false
   jpa:
     properties:
       hibernate:

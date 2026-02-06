@@ -9,7 +9,7 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
         - sqlFile:
-            path: classpath:/arrange/data/data.sql
+            path: classpath:/arrange/data/superhero-data.sql
             encoding: UTF-8
             splitStatements: true
             stripComments: true
