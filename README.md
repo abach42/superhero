@@ -104,6 +104,6 @@ initialize a postgres database as container and provide localhost, TLS at port 8
 * PATCH /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
 
-## ⏳ Plans for 1.1.0 
-
-* End to end test API against Swagger doc
+### Semantic search
+* GET /api/v1/superheroes/team
+* GET /api/v1/superheroes/search
