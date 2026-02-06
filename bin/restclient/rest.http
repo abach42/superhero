@@ -169,6 +169,27 @@ Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
 ### team recommendation
+GET {{domain}}/api/v1/superheroes/team?task=contain a rogue AI controlling the robots&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### team recommendation
+GET {{domain}}/api/v1/superheroes/team?task=coordinate a defense against a robotic invasion&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### team recommendation
+GET {{domain}}/api/v1/superheroes/team?task=manage a crisis caused by robots&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### team recommendation
+GET {{domain}}/api/v1/superheroes/team?task=hack an AI overlord steering evil robots&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+
+### team recommendation
 GET {{domain}}/api/v1/superheroes/team?task=clean up city from bad police officers&teamSize=5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
