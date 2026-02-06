@@ -33,7 +33,8 @@ feature of spring boot).
 Start with `bin/start.sh`
 
 This will generate keys, make an image of Java project, start it in a docker container, 
-initialize a postgres database as container and provide localhost, TLS at port 8443.
+initialize a postgres database as container, start a ollama container for semantic search 
+and provide localhost, TLS at port 8443.
 
 (Java will be installed inside the container, you do not need it in your OS).
 
@@ -44,8 +45,6 @@ initialize a postgres database as container and provide localhost, TLS at port 8
 * See OpenAPI definition at https://localhost:8443/swagger-ui/index.html. (Please write `index.html`, there is no redirect)
 
 * See a chart of superhero skills (id: 1 - 16) https://localhost:8443/chart.html?id=1
-
-* For AI just run command of `update-semantic-data` in spring shell.
 
 ## <img src="./src/main/resources/static/img/jwt_logo.svg" width="20"> Using JWT
 
@@ -104,6 +103,6 @@ initialize a postgres database as container and provide localhost, TLS at port 8
 * PATCH /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
 * DELETE /api/v1/superheroes/{superheroId}/skill-profiles/{skillId}
 
-### Semantic search
+### Semantic search 🧠
 * GET /api/v1/superheroes/team
 * GET /api/v1/superheroes/search
