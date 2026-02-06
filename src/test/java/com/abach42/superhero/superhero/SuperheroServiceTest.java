@@ -191,10 +191,18 @@ class SuperheroServiceTest {
 
     private SuperheroPatchDto createPatchForField(String field, String value) {
         return switch (field) {
-            case "alias" -> new SuperheroPatchDto(PatchField.of(value), null, null, null, null, null);
-            case "realName" -> new SuperheroPatchDto(null, PatchField.of(value), null, null, null, null);
-            case "occupation" -> new SuperheroPatchDto(null, null, null, null, PatchField.of(value), null);
-            case "originStory" -> new SuperheroPatchDto(null, null, null, null, null, PatchField.of(value));
+            case "alias" ->
+                    new SuperheroPatchDto(PatchField.of(value), null, null,
+                            null, null, null);
+            case "realName" ->
+                    new SuperheroPatchDto(null, PatchField.of(value), null,
+                            null, null, null);
+            case "occupation" ->
+                    new SuperheroPatchDto(null, null, null, null,
+                            PatchField.of(value), null);
+            case "originStory" ->
+                    new SuperheroPatchDto(null, null, null, null,
+                            null, PatchField.of(value));
             default -> throw new IllegalArgumentException("Unknown field: " + field);
         };
     }
@@ -256,8 +264,8 @@ class SuperheroServiceTest {
     void shouldThrowNotFoundWhenUpdatingNonExistent() {
         given(superheroRepository.findById(1L)).willReturn(Optional.empty());
 
-        SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null, null,
-                null, null, null);
+        SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null,
+                null, null, null, null);
 
         ApiException exception = assertThrows(ApiException.class,
                 () -> subject.changeSuperhero(1L, emptyUpdate));
@@ -287,6 +295,7 @@ class SuperheroServiceTest {
 
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
     @Test
     @DisplayName("Should throw bad request on runtime exception during add")
     void shouldThrowBadRequestOnRuntimeExceptionDuringAdd() {
@@ -307,17 +316,20 @@ class SuperheroServiceTest {
     void shouldThrowBadRequestOnExceptionDuringChange() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
         // PatchField.updateField throws exception if consumer throws exception
-        // We can simulate this by providing a patch that will cause an issue if we had complex setters, 
-        // but since they are simple, we might need to mock something if possible or just rely on the fact that 
-        // PatchField.updateField(update.alias(), origin::setAlias) calls the setter.
-        
+        // We can simulate this by providing a patch that will cause an issue if we had complex
+        // setters, but since they are simple, we might need to mock something if possible or just
+        // rely on the fact that PatchField.updateField(update.alias(), origin::setAlias) calls
+        // the setter.
+
         // Actually, origin is a real object here (from TestStubs).
         // Using a mock for origin to force an exception.
         Superhero mockSuperhero = org.mockito.Mockito.mock(Superhero.class);
         given(superheroRepository.findById(1L)).willReturn(Optional.of(mockSuperhero));
-        org.mockito.Mockito.doThrow(new RuntimeException("Setter failed")).when(mockSuperhero).setAlias(anyString());
+        org.mockito.Mockito.doThrow(new RuntimeException("Setter failed")).when(mockSuperhero)
+                .setAlias(anyString());
 
-        SuperheroPatchDto update = new SuperheroPatchDto(PatchField.of("new"), null, null, null, null, null);
+        SuperheroPatchDto update = new SuperheroPatchDto(PatchField.of("new"), null,
+                null, null, null, null);
 
         ApiException exception = assertThrows(ApiException.class,
                 () -> subject.changeSuperhero(1L, update));
@@ -353,32 +365,36 @@ class SuperheroServiceTest {
     @DisplayName("Should not trigger update vector when no change")
     void shouldNotTriggerUpdateVectorWhenNoChange() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
-        SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null, null, null, null, null);
+        SuperheroPatchDto emptyUpdate = new SuperheroPatchDto(null, null,
+                null, null, null, null);
 
         subject.changeSuperhero(1L, emptyUpdate);
 
-        verify(eventPublisher, org.mockito.Mockito.never()).publishEvent(any(com.abach42.superhero.ai.UpdateSuperheroVectorEvent.class));
+        verify(eventPublisher, org.mockito.Mockito.never()).publishEvent(
+                any(com.abach42.superhero.ai.UpdateSuperheroVectorEvent.class));
     }
 
     @Test
     @DisplayName("Should trigger update vector when alias changed")
     void shouldTriggerUpdateVectorWhenAliasChanged() {
         given(superheroRepository.findById(1L)).willReturn(Optional.of(superhero));
-        SuperheroPatchDto update = new SuperheroPatchDto(PatchField.of("New Alias"), null, null, null, null, null);
+        SuperheroPatchDto update = new SuperheroPatchDto(PatchField.of("New Alias"),
+                null, null, null, null, null);
 
         subject.changeSuperhero(1L, update);
 
-        verify(eventPublisher).publishEvent(any(com.abach42.superhero.ai.UpdateSuperheroVectorEvent.class));
+        verify(eventPublisher).publishEvent(
+                any(com.abach42.superhero.ai.UpdateSuperheroVectorEvent.class));
     }
 
     @Test
     @DisplayName("Should throw IllegalStateException when accessing value of Missing PatchField")
     void shouldThrowIllegalStateExceptionWhenAccessingValueOfMissingPatchField() {
         PatchField<String> missingField = PatchField.missing();
-        
-        IllegalStateException exception = assertThrows(IllegalStateException.class, 
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
                 missingField::value);
-        
+
         assertThat(exception.getMessage()).isEqualTo("Missing has no value");
     }
 }

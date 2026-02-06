@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
-//todo test
 public class SimilarService {
 
     private final SuperheroService superheroService;
