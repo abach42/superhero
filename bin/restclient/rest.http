@@ -154,12 +154,17 @@ Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
 ### search similar superheroes by embedding
-GET {{domain}}/api/v1/superheroes/search?query=wise peaceful hero who resolves conflicts calmly  HTTP/1.1
+GET {{domain}}/api/v1/superheroes/search?query=wise peaceful hero who resolves conflicts calmly HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
 ### search similar superheroes by embedding
-GET {{domain}}/api/v1/superheroes/search?query=strength and courage  HTTP/1.1
+GET {{domain}}/api/v1/superheroes/search?query=strength and courage HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### search similar superheroes by embedding
+GET {{domain}}/api/v1/superheroes/search?query=beautiful HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
@@ -188,8 +193,17 @@ GET {{domain}}/api/v1/superheroes/team?task=hack an AI overlord steering evil ro
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
-
 ### team recommendation
 GET {{domain}}/api/v1/superheroes/team?task=clean up city from bad police officers&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### group of close heroes to rescue Germany  
+GET {{domain}}/api/v1/superheroes/search?query=persons who can stop political interests of producing weapons and strengthen education and inclusion HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+### team recommendation to rescue Germany  
+GET {{domain}}/api/v1/superheroes/team?task=stop political interests of producing weapons and strengthen education and inclusion&teamSize=5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
