@@ -50,7 +50,8 @@ public class SimilarControllerTest {
         String query = "Batman";
         int quantity = 5;
 
-        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(TestStubs.getSuperheroStub()), 0.95);
+        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(
+                TestStubs.getSuperheroStub()), 0.95);
         given(similarService.searchSimilarHeroes(anyString(), anyInt())).willReturn(List.of(match));
 
         String uri = UriComponentsBuilder.fromPath(PathConfig.SUPERHEROES)
@@ -66,7 +67,8 @@ public class SimilarControllerTest {
 
         String content = result.getResponse().getContentAsString();
         List<SemanticMatch> response = objectMapper.readValue(content, 
-                objectMapper.getTypeFactory().constructCollectionType(List.class, SemanticMatch.class));
+                objectMapper.getTypeFactory().constructCollectionType(List.class,
+                        SemanticMatch.class));
         
         assertThat(response).hasSize(1);
         assertThat(response.get(0).similarity()).isEqualTo(0.95);

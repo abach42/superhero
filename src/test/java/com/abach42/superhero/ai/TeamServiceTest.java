@@ -75,11 +75,14 @@ class TeamServiceTest {
         
         // SemanticMatch that will throw exception on similarity()
         SemanticMatch match = mock(SemanticMatch.class);
-        // TeamService.sortSemantic uses matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
+        // TeamService.sortSemantic uses
+        // matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
         // reversed() might call similarity() multiple times or during comparison.
         given(match.similarity()).willThrow(new RuntimeException("Similarity failed"));
         
-        List<SemanticMatch> matches = new java.util.ArrayList<>(List.of(match, match)); // Need at least 2 to trigger comparison usually, but sort might call it even for 1 in some implementations, though unlikely to throw if not compared. 
+        List<SemanticMatch> matches = new java.util.ArrayList<>(List.of(match, match));
+        // Need at least 2 to trigger comparison usually, but sort might call it even for 1 in some
+        // implementations, though unlikely to throw if not compared.
         // Actually Comparator.comparingDouble calls the keyExtractor.
 
         given(vectorService.searchSimilarMatch(any(), any())).willReturn(docs);
