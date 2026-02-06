@@ -32,7 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(classes = {TestContainerConfiguration.class})
 @AutoConfigureMockMvc(addFilters = false)
 @Import({ObjectMapperSerializerHelper.class})
-public class TeamControllerIntegrationTest {
+public class SimilarControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,22 +41,22 @@ public class TeamControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private TeamService teamService;
+    private SimilarService similarService;
 
     @Test
-    @DisplayName("Should recommend team successfully")
+    @DisplayName("Should search similar superheroes successfully")
     @WithMockUser(authorities = "ROLE_ADMIN")
-    void shouldRecommendTeamSuccessfully() throws Exception {
-        String task = "Rescue mission";
-        int teamSize = 3;
-        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(TestStubs.getSuperheroStub()), 0.88);
-        SuperheroTeam team = new SuperheroTeam(task, List.of(match));
-        given(teamService.recommendTeam(anyString(), anyInt())).willReturn(team);
+    void shouldSearchSimilarSuperheroesSuccessfully() throws Exception {
+        String query = "Batman";
+        int quantity = 5;
+
+        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(TestStubs.getSuperheroStub()), 0.95);
+        given(similarService.searchSimilarHeroes(anyString(), anyInt())).willReturn(List.of(match));
 
         String uri = UriComponentsBuilder.fromPath(PathConfig.SUPERHEROES)
-                .pathSegment("team")
-                .queryParam("task", task)
-                .queryParam("teamSize", teamSize)
+                .pathSegment("search")
+                .queryParam("query", query)
+                .queryParam("quantity", String.valueOf(quantity))
                 .toUriString();
 
         MvcResult result = mockMvc.perform(get(uri)
@@ -65,9 +65,10 @@ public class TeamControllerIntegrationTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        SuperheroTeam response = objectMapper.readValue(content, SuperheroTeam.class);
+        List<SemanticMatch> response = objectMapper.readValue(content, 
+                objectMapper.getTypeFactory().constructCollectionType(List.class, SemanticMatch.class));
         
-        assertThat(response.taskDescription()).isEqualTo(task);
-        assertThat(response.members()).hasSize(1);
+        assertThat(response).hasSize(1);
+        assertThat(response.get(0).similarity()).isEqualTo(0.95);
     }
 }

@@ -35,3 +35,18 @@ CREATE TABLE skill_profile (
     CONSTRAINT fk_skill FOREIGN KEY (skill_id) REFERENCES Skill(skill_id),
     CONSTRAINT unique_superhero_skill UNIQUE (superhero_id, skill_id)
 );
+
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS vector_store (
+                                            id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+                                            content text,
+                                            metadata jsonb,
+                                            embedding vector(1024)
+);
+
+CREATE INDEX IF NOT EXISTS vector_store_embedding_idx
+    ON vector_store
+        USING hnsw (embedding vector_cosine_ops);

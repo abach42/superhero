@@ -28,7 +28,7 @@ spring:
     show-summary: verbose
     show-summary-output: console
     ui-service: console
-    change-log: classpath:/arrange/changelog-master.yaml
+    change-log: classpath:/arrange/changelog-superhero-test.yaml
 springdoc:
   swagger-ui:
     enabled: false
