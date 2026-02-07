@@ -39,7 +39,7 @@ CREATE TABLE skill_profile (
 INSERT INTO skill (skill_name) VALUES
 ('strength'), -- 1 Stärke
 ('speed'), -- 2 Schnelligkeit
-('self_confidence'), -- 3 Selbstvertrauen
+('self confidence'), -- 3 Selbstvertrauen
 ('patience'), -- 4 Geduld
 ('kindness'), -- 5 Freundlichkeit
 ('courage'), -- 6 Mut
@@ -52,8 +52,8 @@ INSERT INTO skill (skill_name) VALUES
 ('peacekeeping'), -- 13 Friedensstifter
 ('charity'), -- 14 Nächstenliebe
 ('gentleness'), -- 15 Sanftmut
-('self_control'), -- 16 Selbstbeherrschung
-('good_looks'); -- 17 Gut-Aussehen
+('self control'), -- 16 Selbstbeherrschung
+('good looks'); -- 17 Gut-Aussehen
 
 INSERT INTO application_user (email, password, role)
 VALUES

@@ -74,4 +74,25 @@ public class SkillProfile {
     public void setSkill(Skill skill) {
         this.skill = skill;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        String descriptive = "";
+
+        //transform intensity to description for RAG to be interpreted
+        switch (getIntensity()) {
+            case 1 -> descriptive = "is very low";
+            case 2 -> descriptive = "is low";
+            case 3 -> descriptive = "is medium";
+            case 4 -> descriptive = "is high";
+            case 5 -> descriptive = "is very high";
+        }
+
+        sb.append("- ").append(getSkill()).append(" ").append(descriptive)
+                .append("\n");
+
+        return sb.toString();
+    }
 }

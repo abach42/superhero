@@ -176,27 +176,30 @@ public class Superhero {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Alias: ").append(getAlias()).append("\n");
-        sb.append("Real Name: ").append(getRealName()).append("\n");
-        sb.append("Occupation: ").append(getOccupation()).append("\n");
+        sb.append("Real Name: ").append(getRealName()).append(", ")
+                .append("\n\n");
+
+        sb.append("Skills: ")
+                .append("\n");
+        getSkillProfiles().stream()
+                .map(SkillProfile::toString)
+                .forEach(sb::append);
+        sb.append("\n");
+
+        sb.append("Alias: ").append(getAlias()).append(", ")
+                .append("\n");
 
         if (getDateOfBirth() != null) {
             sb.append("Born: ")
-                    .append(getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .append(getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE)).append(", ")
                     .append("\n");
         }
 
-        sb.append("Origin Story:\n");
-        sb.append(getOriginStory()).append("\n\n");
+        sb.append("Occupation: ").append(getOccupation()).append(", ")
+                .append("\n");
 
-        sb.append("Skills:\n");
-        for (SkillProfile sp : getSkillProfiles()) {
-            sb.append("- ")
-                    .append(sp.getSkill().getName())
-                    .append(": ")
-                    .append(sp.getIntensity())
-                    .append("\n");
-        }
+        sb.append("Origin Story: ").append(getOriginStory())
+                .append("\n\n");
 
         return sb.toString();
     }
