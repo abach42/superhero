@@ -8,9 +8,9 @@ source ./bin/init/init.sh
 
 . bin/init/maven-cmd.sh
 
-echo "--------------------------------------------------"
+echo "--------------------------------------------------------"
 echo " 🪴  starting spring on default profile, skipping tests"
-echo "--------------------------------------------------"
+echo "--------------------------------------------------------"
 
 # you can add -PmyProfile 
 $mvn clean spring-boot:run \
