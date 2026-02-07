@@ -16,5 +16,5 @@ get_maven_cmd() {
 # Export as environment variable
 export mvn=$(get_maven_cmd)
 
-echo "📦 Builder: $mvn"
-echo "☕ Java: $JAVA_HOME"
+echo " 📦 Builder: $mvn"
+echo " ☕ Java: $JAVA_HOME"
