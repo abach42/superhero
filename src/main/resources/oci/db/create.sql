@@ -190,28 +190,17 @@ values
 (16,7,4),(16,8,3),(16,9,3),(16,10,4),(16,11,5),(16,12,3),
 (16,13,5),(16,14,3),(16,15,3),(16,16,5);
 
-create EXTENSION IF NOT EXISTS vector;
-create EXTENSION IF NOT EXISTS hstore;
-create EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-create TABLE IF NOT EXISTS vector_profiles (
+CREATE TABLE IF NOT EXISTS vector_store (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     content text,
     metadata jsonb,
     embedding vector(1024)
 );
 
-create index IF NOT EXISTS vector_profiles_embedding_idx
-ON vector_profiles
-USING hnsw (embedding vector_cosine_ops);
-
-create TABLE IF NOT EXISTS vector_all (
-    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    content text,
-    metadata jsonb,
-    embedding vector(1024)
-);
-
-create index IF NOT EXISTS vector_all_embedding_idx
-ON vector_all
+CREATE INDEX IF NOT EXISTS vector_store_embedding_idx
+ON vector_store
 USING hnsw (embedding vector_cosine_ops);

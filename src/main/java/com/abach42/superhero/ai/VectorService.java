@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,7 @@ public class VectorService {
     private final VectorStore vectorStore;
 
     public VectorService(DocumentService documentService, SuperheroService superheroService,
-            @Qualifier(AllContentStrategy.QUALIFIER) VectorStore vectorStore) {
+            VectorStore vectorStore) {
         this.documentService = documentService;
         this.superheroService = superheroService;
         this.vectorStore = vectorStore;
