@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class VectorStoreConfig {
+
     @Bean
     @Qualifier(ProfileContentStrategy.QUALIFIER)
     public VectorStore profileStore(JdbcTemplate jdbcTemplate, EmbeddingModel openAiModel) {

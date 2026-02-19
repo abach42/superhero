@@ -8,7 +8,8 @@ import java.io.IOException;
 public class PatchFieldSerializer extends JsonSerializer<PatchField<?>> {
 
     @Override
-    public void serialize(PatchField<?> value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(PatchField<?> value, JsonGenerator gen, SerializerProvider serializers)
+            throws IOException {
         if (value.isPresent()) {
             serializers.defaultSerializeValue(value.value(), gen);
         } else {

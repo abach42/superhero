@@ -59,7 +59,7 @@ class TeamServiceTest {
 
         assertThat(result.taskDescription()).isEqualTo(task);
         assertThat(result.members()).hasSize(1);
-        assertThat(result.members().get(0).similarity()).isEqualTo(0.9);
+        assertThat(result.members().get(0).relevance()).isEqualTo(0.9);
         verify(vectorService).searchSimilarMatch(any(), any());
     }
 
@@ -72,14 +72,14 @@ class TeamServiceTest {
         List<Document> docs = List.of(doc);
         Superhero hero = TestStubs.getSuperheroStub();
         List<Superhero> heroes = List.of(hero);
-        
-        // SemanticMatch that will throw exception on similarity()
+
+        // SemanticMatch that will throw exception on relevance()
         SemanticMatch match = mock(SemanticMatch.class);
         // TeamService.sortSemantic uses
-        // matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
-        // reversed() might call similarity() multiple times or during comparison.
-        given(match.similarity()).willThrow(new RuntimeException("Similarity failed"));
-        
+        // matches.sort(Comparator.comparingDouble(SemanticMatch::relevance).reversed());
+        // reversed() might call relevance() multiple times or during comparison.
+        given(match.relevance()).willThrow(new RuntimeException("Similarity failed"));
+
         List<SemanticMatch> matches = new java.util.ArrayList<>(List.of(match, match));
         // Need at least 2 to trigger comparison usually, but sort might call it even for 1 in some
         // implementations, though unlikely to throw if not compared.

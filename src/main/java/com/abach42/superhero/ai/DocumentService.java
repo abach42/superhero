@@ -50,8 +50,7 @@ public class DocumentService {
     }
 
     /**
-     * Converts a Superhero into a Spring AI Document that will be
-     * embedded and stored in pgvector.
+     * Converts a Superhero into a Spring AI Document that will be embedded and stored in pgvector.
      */
     public Document toDocument(Superhero hero) {
 
@@ -65,16 +64,14 @@ public class DocumentService {
     }
 
     /**
-     * The semantic text that will be embedded.
-     * This is where "meaning" lives.
+     * The semantic text that will be embedded. This is where "meaning" lives.
      */
     private String buildContent(Superhero hero) {
         return contentService.getContent(AllContentStrategy.QUALIFIER, hero);
     }
 
     /**
-     * Structured data that is NOT embedded but used for filtering,
-     * lookups and joins back to JPA.
+     * Structured data that is NOT embedded but used for filtering, lookups and joins back to JPA.
      */
     private Map<String, Object> buildMetadata(Superhero hero) {
         Map<String, Object> meta = new HashMap<>();

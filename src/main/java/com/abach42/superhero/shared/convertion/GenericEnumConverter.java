@@ -25,6 +25,7 @@ public abstract class GenericEnumConverter<E extends Enum<E> & ConvertibleEnum<T
                 return enumConstant;
             }
         }
-        throw new IllegalArgumentException("Invalid " + enumClass.getSimpleName() + " value: " + value);
+        throw new IllegalArgumentException(
+                "Invalid " + enumClass.getSimpleName() + " value: " + value);
     }
 }

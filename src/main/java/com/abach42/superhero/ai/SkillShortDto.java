@@ -29,6 +29,7 @@ public record SkillShortDto(
         )
         @NotNull(groups = {OnCreate.class, OnUpdate.class})
         Integer intensity) {
+
     public static SkillShortDto fromDomain(SkillProfile skillProfile) {
         return new SkillShortDto(skillProfile.getSkill().getName(), skillProfile.getIntensity());
     }
