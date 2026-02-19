@@ -19,7 +19,7 @@ public class VectorService {
     private final VectorStore vectorStore;
 
     public VectorService(DocumentService documentService, SuperheroService superheroService,
-            @Qualifier("allContent") VectorStore vectorStore) {
+            @Qualifier(AllContentStrategy.QUALIFIER) VectorStore vectorStore) {
         this.documentService = documentService;
         this.superheroService = superheroService;
         this.vectorStore = vectorStore;

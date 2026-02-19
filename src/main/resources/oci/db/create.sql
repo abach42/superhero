@@ -1,6 +1,6 @@
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+create EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE application_user (
+create TABLE application_user (
     id SERIAL PRIMARY KEY,
     email VARCHAR(64) UNIQUE NOT NULL,
     password VARCHAR(128) NOT NULL,
@@ -8,9 +8,9 @@ CREATE TABLE application_user (
     deleted BOOLEAN DEFAULT false
 );
 
-CREATE TABLE superhero (
+create TABLE superhero (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES application_user(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES application_user(id) ON delete CASCADE,
     alias VARCHAR(100),
     real_name VARCHAR(100),
     date_of_birth DATE,
@@ -21,12 +21,12 @@ CREATE TABLE superhero (
     CONSTRAINT fk_application_user FOREIGN KEY (user_id) REFERENCES application_user(id)
 );
 
-CREATE TABLE skill (
+create TABLE skill (
     skill_id SERIAL PRIMARY KEY,
     skill_name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE skill_profile (
+create TABLE skill_profile (
     skill_profile_id SERIAL PRIMARY KEY,
     superhero_id INT,
     skill_id INT,
@@ -36,7 +36,7 @@ CREATE TABLE skill_profile (
     CONSTRAINT unique_superhero_skill UNIQUE (superhero_id, skill_id)
 );
 
-INSERT INTO skill (skill_name) VALUES
+insert into skill (skill_name) values
 ('strength'), -- 1 Stärke
 ('speed'), -- 2 Schnelligkeit
 ('self confidence'), -- 3 Selbstvertrauen
@@ -54,8 +54,8 @@ INSERT INTO skill (skill_name) VALUES
 ('gentleness'), -- 15 Sanftmut
 ('self control'); -- 16 Selbstbeherrschung
 
-INSERT INTO application_user (email, password, role)
-VALUES
+insert into application_user (email, password, role)
+values
 ('admin@example.com', '{bcrypt}$2a$12$anOoGoXF50pcBQMlUSDA..s7mJjQakVJ3dGXkQm3iRAiigRZWvts6', 0),
 ('captain@example.com', '{bcrypt}$2a$12$4cAnXB4ziicHOuRiV4XVQOhCNr3w4N95Q07d3d1SNovRmLFfcPchS', 1),
 ('speedster@example.com', '{bcrypt}$2a$12$XTxxbXQmCVr.c10nOM/V2OE0tFwxwumS.CDqOjFg6GkST2VhXwUuy', 1),
@@ -73,8 +73,8 @@ VALUES
 ('eagle@example.com', '{bcrypt}$2a$12$Ya7ekHzToVdqyeuiozpoJODLto6HABrDNkSQ8Uigz2CgkvC0e/aUy', 1),
 ('owl@example.com', '{bcrypt}$2a$12$gErPAHGz.PrcwrTkLkZ2euMD02qqTYR3q7bjw0VAaEMenVQFrsnaC', 1);
 
-INSERT INTO superhero (user_id, alias, real_name, date_of_birth, gender, occupation, origin_story)
-VALUES
+insert into superhero (user_id, alias, real_name, date_of_birth, gender, occupation, origin_story)
+values
 (1, 'The Administrator', 'Michael Anderson', '1987-07-22', 0, 'Strategic Operations Director',
 'After leading digital transformation initiatives across public institutions, he became known for building resilient governance systems. His expertise lies in crisis coordination, institutional reform, and transparent administrative structures that strengthen democratic stability.'),
 (2, 'Captain Courageous', 'Jonathan Hayes', '1980-05-15', 0, 'Civil Rights Advocate',
@@ -108,8 +108,8 @@ VALUES
 (16, 'The Wise Owl', 'Edward Harrington', '1963-09-28', 0, 'Retired Ethics Professor',
 'A former professor of moral philosophy and civic education, he now advises NGOs and policy groups on ethical governance, peaceful reform, and education-based conflict prevention strategies.');
 
-INSERT INTO skill_profile (superhero_id, skill_id, intensity)
-VALUES
+insert into skill_profile (superhero_id, skill_id, intensity)
+values
 -- 1 The Administrator
 (1,1,2),(1,2,2),(1,3,5),(1,4,4),(1,5,3),(1,6,4),
 (1,7,3),(1,8,4),(1,9,3),(1,10,3),(1,11,5),(1,12,4),
@@ -190,28 +190,28 @@ VALUES
 (16,7,4),(16,8,3),(16,9,3),(16,10,4),(16,11,5),(16,12,3),
 (16,13,5),(16,14,3),(16,15,3),(16,16,5);
 
-CREATE EXTENSION IF NOT EXISTS vector;
-CREATE EXTENSION IF NOT EXISTS hstore;
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+create EXTENSION IF NOT EXISTS vector;
+create EXTENSION IF NOT EXISTS hstore;
+create EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS vector_profiles (
+create TABLE IF NOT EXISTS vector_profiles (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     content text,
     metadata jsonb,
     embedding vector(1024)
 );
 
-CREATE INDEX IF NOT EXISTS vector_profiles_embedding_idx
+create index IF NOT EXISTS vector_profiles_embedding_idx
 ON vector_profiles
 USING hnsw (embedding vector_cosine_ops);
 
-CREATE TABLE IF NOT EXISTS vector_all (
+create TABLE IF NOT EXISTS vector_all (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     content text,
     metadata jsonb,
     embedding vector(1024)
 );
 
-CREATE INDEX IF NOT EXISTS vector_all_embedding_idx
+create index IF NOT EXISTS vector_all_embedding_idx
 ON vector_all
 USING hnsw (embedding vector_cosine_ops);

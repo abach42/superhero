@@ -76,6 +76,7 @@ public record SuperheroSkillDto(
 
         List<SkillShortDto> skill
 ) {
+
     public static SuperheroSkillDto fromDomain(Superhero domain) {
         return new SuperheroSkillDto(
                 domain.getId(), domain.getAlias(), domain.getRealName(), domain.getDateOfBirth(),

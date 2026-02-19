@@ -68,7 +68,7 @@ public class TeamControllerTest {
 
         String content = result.getResponse().getContentAsString();
         SuperheroTeam response = objectMapper.readValue(content, SuperheroTeam.class);
-        
+
         assertThat(response.taskDescription()).isEqualTo(task);
         assertThat(response.members()).hasSize(1);
     }

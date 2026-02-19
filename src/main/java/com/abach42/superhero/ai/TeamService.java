@@ -26,11 +26,11 @@ public class TeamService {
     }
 
     /**
-     * Sort all candidates by semantic similarity of skills, descending.
+     * Sort all candidates by semantic relevance of skills, descending.
      */
     private static void sortSemantic(List<SemanticMatch> matches) {
         try {
-            matches.sort(Comparator.comparingDouble(SemanticMatch::similarity).reversed());
+            matches.sort(Comparator.comparingDouble(SemanticMatch::relevance).reversed());
         } catch (Exception e) {
             throw new SemanticSearchException("Sorting failed " + e.getMessage(), e);
         }

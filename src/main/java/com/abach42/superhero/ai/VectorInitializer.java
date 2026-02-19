@@ -26,7 +26,7 @@ public class VectorInitializer {
     public void initializeVectorStore() {
         int maxRetries = 10;
         int delay = 5000;
-        
+
         for (int i = 0; i < maxRetries; i++) {
             try {
                 logger.info("Starting semantic indexing (attempt {}/{})...", i + 1, maxRetries);
@@ -34,7 +34,8 @@ public class VectorInitializer {
                 logger.info("Semantic indexing completed successfully.");
                 return;
             } catch (Exception e) {
-                logger.warn("Semantic indexing failed: {}. Retrying in {}ms...", e.getMessage(), delay);
+                logger.warn("Semantic indexing failed: {}. Retrying in {}ms...", e.getMessage(),
+                        delay);
                 try {
                     Thread.sleep(delay);
                 } catch (InterruptedException ie) {

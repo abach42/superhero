@@ -52,7 +52,8 @@ public class SuperheroServiceIntegrationTest {
                 PatchField.of("Service Updated Origin Story")
         );
 
-        SuperheroDto updatedSuperhero = superheroService.changeSuperhero(superheroId, partialUpdate);
+        SuperheroDto updatedSuperhero = superheroService.changeSuperhero(superheroId,
+                partialUpdate);
 
         assertThat(updatedSuperhero.alias()).isEqualTo("Service Updated Alias");
         assertThat(updatedSuperhero.realName()).isEqualTo(originalSuperhero.realName());
@@ -111,7 +112,8 @@ public class SuperheroServiceIntegrationTest {
     @DisplayName("Should return empty list when no superheroes found for ids")
     void shouldReturnEmptyListWhenNoSuperheroesFoundForIds() {
         java.util.Set<Long> nonExistentIds = java.util.Set.of(999L, 1000L);
-        java.util.List<Superhero> result = superheroService.retrieveSuperheroesInList(nonExistentIds);
+        java.util.List<Superhero> result = superheroService.retrieveSuperheroesInList(
+                nonExistentIds);
         assertThat(result).isEmpty();
     }
 }

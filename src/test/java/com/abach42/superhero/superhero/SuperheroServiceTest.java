@@ -191,18 +191,14 @@ class SuperheroServiceTest {
 
     private SuperheroPatchDto createPatchForField(String field, String value) {
         return switch (field) {
-            case "alias" ->
-                    new SuperheroPatchDto(PatchField.of(value), null, null,
-                            null, null, null);
-            case "realName" ->
-                    new SuperheroPatchDto(null, PatchField.of(value), null,
-                            null, null, null);
-            case "occupation" ->
-                    new SuperheroPatchDto(null, null, null, null,
-                            PatchField.of(value), null);
-            case "originStory" ->
-                    new SuperheroPatchDto(null, null, null, null,
-                            null, PatchField.of(value));
+            case "alias" -> new SuperheroPatchDto(PatchField.of(value), null, null,
+                    null, null, null);
+            case "realName" -> new SuperheroPatchDto(null, PatchField.of(value), null,
+                    null, null, null);
+            case "occupation" -> new SuperheroPatchDto(null, null, null, null,
+                    PatchField.of(value), null);
+            case "originStory" -> new SuperheroPatchDto(null, null, null, null,
+                    null, PatchField.of(value));
             default -> throw new IllegalArgumentException("Unknown field: " + field);
         };
     }

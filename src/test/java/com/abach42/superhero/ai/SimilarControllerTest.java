@@ -66,11 +66,11 @@ public class SimilarControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        List<SemanticMatch> response = objectMapper.readValue(content, 
+        List<SemanticMatch> response = objectMapper.readValue(content,
                 objectMapper.getTypeFactory().constructCollectionType(List.class,
                         SemanticMatch.class));
-        
+
         assertThat(response).hasSize(1);
-        assertThat(response.get(0).similarity()).isEqualTo(0.95);
+        assertThat(response.get(0).relevance()).isEqualTo(0.95);
     }
 }

@@ -10,17 +10,16 @@ import org.springframework.context.annotation.Profile;
 
 /**
  * Custom serializer for the {@link ApplicationUserDto} class, to overcome password hiding in tests
- * for input.
- * Be careful in usage, normally passwords have to be hidden.
- * <br/>
- * This class is utilized in the configuration class where the Jackson {@link ObjectMapper}
- * is set up with this custom serializer for handling {@link ApplicationUserDto} objects.
+ * for input. Be careful in usage, normally passwords have to be hidden. <br/> This class is
+ * utilized in the configuration class where the Jackson {@link ObjectMapper} is set up with this
+ * custom serializer for handling {@link ApplicationUserDto} objects.
  */
 @Profile("test")
 public class ApplicationUserDtoSerializer extends JsonSerializer<ApplicationUserDto> {
 
     @Override
-    public void serialize(ApplicationUserDto value, JsonGenerator gen, SerializerProvider serializers)
+    public void serialize(ApplicationUserDto value, JsonGenerator gen,
+            SerializerProvider serializers)
             throws IOException {
         gen.writeStartObject();
         gen.writeStringField("email", value.email());
