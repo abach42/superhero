@@ -31,7 +31,8 @@ class UserRoleTest {
     void shouldImplementConvertibleEnumInterface() {
         UserRole admin = UserRole.ADMIN;
 
-        assertThat(admin).isInstanceOf(com.abach42.superhero.shared.convertion.ConvertibleEnum.class);
+        assertThat(admin).isInstanceOf(
+                com.abach42.superhero.shared.convertion.ConvertibleEnum.class);
     }
 
     @Test

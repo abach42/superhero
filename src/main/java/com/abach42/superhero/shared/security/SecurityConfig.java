@@ -60,17 +60,17 @@ public class SecurityConfig {
     }
 
     /**
-     * Determines access based on a given {@link TokenPurpose}.
-     * So a refresh token cannot be used to authorize a normal action, a jwt for authorization
-     * cannot be used to renew a token pair, but a refresh token may pass.
-     * <br/>
-     * Usage: httpSecurity.requestMatchers(...).access(tokenAccess.apply(TokenPurpose.AUTH))
+     * Determines access based on a given {@link TokenPurpose}. So a refresh token cannot be used to
+     * authorize a normal action, a jwt for authorization cannot be used to renew a token pair, but
+     * a refresh token may pass. <br/> Usage:
+     * httpSecurity.requestMatchers(...).access(tokenAccess.apply(TokenPurpose.AUTH))
      */
     @Bean
     public Function<TokenPurpose, AuthorizationManager<RequestAuthorizationContext>> tokenAccess() {
         return tokenPurpose -> (authentication, context) -> {
             if (authentication.get() instanceof JwtAuthenticationToken jwtToken) {
-                String claimValue = jwtToken.getToken().getClaimAsString(AbstractTokenGenerator.CLAIM_ALLOWED);
+                String claimValue = jwtToken.getToken()
+                        .getClaimAsString(AbstractTokenGenerator.CLAIM_ALLOWED);
                 return new AuthorizationDecision(tokenPurpose.name().equals(claimValue));
             }
             return new AuthorizationDecision(false);
@@ -94,7 +94,8 @@ public class SecurityConfig {
     SecurityFilterChain documentationResourceFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/chart.html", "/favicon.ico", "/swagger-ui/**", "/v3/api-docs/**")
+                        .requestMatchers("/chart.html", "/favicon.ico", "/swagger-ui/**",
+                                "/v3/api-docs/**")
                         .permitAll());
         return http.build();
     }
