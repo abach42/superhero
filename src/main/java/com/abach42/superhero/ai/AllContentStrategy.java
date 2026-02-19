@@ -2,13 +2,12 @@ package com.abach42.superhero.ai;
 
 import com.abach42.superhero.superhero.Superhero;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
-@Component(AllContentStrategy.ALL_CONTENT)
+@Component(AllContentStrategy.QUALIFIER)
 public class AllContentStrategy extends ContentStrategy {
 
-    public static final String ALL_CONTENT = "allContent";
+    public static final String QUALIFIER = "allContent";
 
     @Override
     public String generate(Superhero superhero) {

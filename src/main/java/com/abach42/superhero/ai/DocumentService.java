@@ -69,7 +69,7 @@ public class DocumentService {
      * This is where "meaning" lives.
      */
     private String buildContent(Superhero hero) {
-        return contentService.getContent(ProfileContentStrategy.PROFILE_CONTENT, hero);
+        return contentService.getContent(AllContentStrategy.QUALIFIER, hero);
     }
 
     /**

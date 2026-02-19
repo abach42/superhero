@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 public class VectorStoreConfig {
     @Bean
-    @Qualifier(ProfileContentStrategy.PROFILE_CONTENT)
+    @Qualifier(ProfileContentStrategy.QUALIFIER)
     public VectorStore profileStore(JdbcTemplate jdbcTemplate, EmbeddingModel openAiModel) {
         return PgVectorStore.builder(jdbcTemplate, openAiModel)
                 .vectorTableName("vector_profiles")
@@ -19,7 +19,7 @@ public class VectorStoreConfig {
     }
 
     @Bean
-    @Qualifier(AllContentStrategy.ALL_CONTENT)
+    @Qualifier(AllContentStrategy.QUALIFIER)
     public VectorStore allStore(JdbcTemplate jdbcTemplate, EmbeddingModel ollamaModel) {
         return PgVectorStore.builder(jdbcTemplate, ollamaModel)
                 .vectorTableName("vector_all")
