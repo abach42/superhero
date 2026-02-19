@@ -79,6 +79,18 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
+    SecurityFilterChain errorResourceFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatchers(matchers -> matchers
+                        .requestMatchers("/error", "/error/**"))
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().permitAll())
+                .build();
+    }
+
+    @Bean
+    @Order(3)
     SecurityFilterChain documentationResourceFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
@@ -88,8 +100,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    Function<String, CorsConfigurationSource> generateCorsConfig(
-            CorsConfigurationProperties configurationProperties) {
+    Function<String, CorsConfigurationSource> generateCorsConfig(CorsConfigurationProperties configurationProperties) {
         return securityMatcherPattern -> {
             CorsConfiguration configuration = new CorsConfiguration();
 
@@ -99,7 +110,7 @@ public class SecurityConfig {
             configuration.setExposedHeaders(configurationProperties.exposedHeaders());
             configuration.setAllowCredentials(configurationProperties.allowCredentials());
 
-            configuration.setMaxAge(configuration.getMaxAge());
+            configuration.setMaxAge(configurationProperties.maxAge());
 
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration(securityMatcherPattern, configuration);
