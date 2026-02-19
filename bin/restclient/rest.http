@@ -212,3 +212,13 @@ Authorization: Bearer {{jwt}}
 GET {{domain}}/api/v1/superheroes/team?task=Build a team of superheroes with very high peacekeeping, compassion, empathy, charity and wisdom to promote education, social inclusion and resolve conflicts peacefully&teamSize=5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
+
+###
+GET {{domain}}/api/v1/superheroes/team?task=Solve a humanitarian crisis in a war zone under fire&teamSize=10 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+###
+GET {{domain}}/api/v1/superheroes/team?task=Solve a humanitarian crisis in a war zone under fire by a legion of evil fighting robots&teamSize=10 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
