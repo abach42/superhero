@@ -38,13 +38,17 @@ and provide localhost, TLS at port 8443.
 
 (Java will be installed inside the container, you do not need it in your OS).
 
-### Go on using 
+### Go on using...
 
 * Use some rest client: `GET https://localhost:8443/api/v1/superheroes/ HTTP/1.1` (Please use JWT).
 
 * See OpenAPI definition at https://localhost:8443/swagger-ui/index.html. (Please write `index.html`, there is no redirect)
 
 * See a chart of superhero skills (id: 1 - 16) https://localhost:8443/chart.html?id=1
+
+* Use AI semantic search `GET /api/v1/superheroes/team?task=hack an AI overlord steering evil robots&teamSize=5`
+
+* Use AI similarity search `GET /api/v1/superheroes/search?query=wise peaceful hero who resolves conflicts calmly&quantity=5`
 
 ## <img src="./src/main/resources/static/img/jwt_logo.svg" width="20"> Using JWT
 
