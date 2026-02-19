@@ -171,36 +171,4 @@ public class Superhero {
         result = 31 * result + (originStory != null ? originStory.hashCode() : 0);
         return result;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Real Name: ").append(getRealName()).append(", ")
-                .append("\n\n");
-
-        sb.append("Skills: ")
-                .append("\n");
-        getSkillProfiles().stream()
-                .map(SkillProfile::toString)
-                .forEach(sb::append);
-        sb.append("\n");
-
-        sb.append("Alias: ").append(getAlias()).append(", ")
-                .append("\n");
-
-        if (getDateOfBirth() != null) {
-            sb.append("Born: ")
-                    .append(getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE)).append(", ")
-                    .append("\n");
-        }
-
-        sb.append("Occupation: ").append(getOccupation()).append(", ")
-                .append("\n");
-
-        sb.append("Origin Story: ").append(getOriginStory())
-                .append("\n\n");
-
-        return sb.toString();
-    }
 }

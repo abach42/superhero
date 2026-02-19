@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class DocumentService {
 
+    private final ContentService contentService;
+
+    public DocumentService(ContentService contentService) {
+        this.contentService = contentService;
+    }
+
     public Double getDistance(Document doc) {
         if (doc.getScore() == null) {
             return 0.0;
@@ -63,7 +69,7 @@ public class DocumentService {
      * This is where "meaning" lives.
      */
     private String buildContent(Superhero hero) {
-        return hero.toString();
+        return contentService.getContent(ProfileContentStrategy.PROFILE_CONTENT, hero);
     }
 
     /**
