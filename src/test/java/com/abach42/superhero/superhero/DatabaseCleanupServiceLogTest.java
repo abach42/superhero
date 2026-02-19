@@ -26,6 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Import({DatabaseCleanupService.class})
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class DatabaseCleanupServiceLogTest {
+
     @Autowired
     private DatabaseCleanupService databaseCleanupService;
 

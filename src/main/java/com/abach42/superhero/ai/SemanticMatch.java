@@ -1,6 +1,6 @@
 package com.abach42.superhero.ai;
 
-public record SemanticMatch(SuperheroSkillDto superhero, double similarity) {
+public record SemanticMatch(SuperheroSkillDto superhero, double relevance) {
 
 }
 

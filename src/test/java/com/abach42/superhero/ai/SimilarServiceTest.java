@@ -58,7 +58,7 @@ class SimilarServiceTest {
         List<SemanticMatch> result = subject.searchSimilarHeroes(query, quantity);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).similarity()).isEqualTo(0.9);
+        assertThat(result.get(0).relevance()).isEqualTo(0.9);
         verify(vectorService).searchSimilarMatch(any(), any());
     }
 }

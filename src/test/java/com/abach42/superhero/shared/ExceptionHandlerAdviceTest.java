@@ -107,7 +107,8 @@ class ExceptionHandlerAdviceTest {
     void shouldHandleMethodArgumentNotValidExceptionWithValidationErrors() {
         String requestPath = "/api/users";
         BindingResult bindingResult = mock(BindingResult.class);
-        MethodArgumentNotValidException exception = new MethodArgumentNotValidException(null, bindingResult);
+        MethodArgumentNotValidException exception = new MethodArgumentNotValidException(null,
+                bindingResult);
 
         FieldError fieldError1 = new FieldError(
                 "user", "email", "Email is required");
@@ -116,7 +117,8 @@ class ExceptionHandlerAdviceTest {
 
         given(servletWebRequest.getRequest()).willReturn(httpServletRequest);
         given(httpServletRequest.getRequestURI()).willReturn(requestPath);
-        given(bindingResult.getFieldErrors()).willReturn(java.util.List.of(fieldError1, fieldError2));
+        given(bindingResult.getFieldErrors()).willReturn(
+                java.util.List.of(fieldError1, fieldError2));
 
         ResponseEntity<ErrorDetailedDto> result = subject.handleMethodArgumentNotValid(
                 exception, servletWebRequest);

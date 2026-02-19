@@ -13,4 +13,5 @@ public record SkillListDto(
                 accessMode = AccessMode.READ_ONLY
         )
         List<SkillDto> skills) {
+
 }
