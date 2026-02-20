@@ -50,9 +50,8 @@ public class TeamControllerTest {
         String task = "Rescue mission";
         int teamSize = 3;
 
-        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(
-                TestStubs.getSuperheroStub()), 0.88);
-        SuperheroTeam team = new SuperheroTeam(task, List.of(match));
+        SemanticMatch match = new SemanticMatch(TestStubs.getSuperheroStub(), 0.88);
+        SuperheroEmbeddedTeamDto team = SuperheroEmbeddedTeamDto.fromSemanticMatches(task, List.of(match));
         given(teamService.recommendTeam(anyString(), anyInt())).willReturn(team);
 
         String uri = UriComponentsBuilder.fromPath(PathConfig.SUPERHEROES)
@@ -67,7 +66,7 @@ public class TeamControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        SuperheroTeam response = objectMapper.readValue(content, SuperheroTeam.class);
+        SuperheroEmbeddedTeamDto response = objectMapper.readValue(content, SuperheroEmbeddedTeamDto.class);
 
         assertThat(response.taskDescription()).isEqualTo(task);
         assertThat(response.members()).hasSize(1);

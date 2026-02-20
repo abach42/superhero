@@ -7,9 +7,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.abach42.superhero.ai.indexing.DocumentService;
+import com.abach42.superhero.ai.indexing.VectorService;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
 import com.abach42.superhero.testconfiguration.TestStubs;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,15 +50,15 @@ class TeamServiceTest {
         List<Document> docs = List.of(doc);
         Superhero hero = TestStubs.getSuperheroStub();
         List<Superhero> heroes = List.of(hero);
-        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(hero), 0.9);
-        List<SemanticMatch> matches = new java.util.ArrayList<>(List.of(match));
+        SemanticMatch match = new SemanticMatch(hero, 0.9);
+        List<SemanticMatch> matches = new ArrayList<>(List.of(match));
 
         given(vectorService.searchSimilarMatch(any(), any())).willReturn(docs);
         given(documentService.getSuperheroId(doc)).willReturn(1L);
         given(superheroService.retrieveSuperheroesInList(any())).willReturn(heroes);
         given(documentService.generateSemanticMatches(docs, heroes)).willReturn(matches);
 
-        SuperheroTeam result = subject.recommendTeam(task, teamSize);
+        SuperheroEmbeddedTeamDto result = subject.recommendTeam(task, teamSize);
 
         assertThat(result.taskDescription()).isEqualTo(task);
         assertThat(result.members()).hasSize(1);

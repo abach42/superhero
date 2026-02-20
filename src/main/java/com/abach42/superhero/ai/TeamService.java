@@ -1,11 +1,14 @@
 package com.abach42.superhero.ai;
 
+import com.abach42.superhero.ai.indexing.DocumentService;
+import com.abach42.superhero.ai.indexing.VectorService;
 import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.springframework.ai.document.Document;
 import org.springframework.http.HttpStatus;
@@ -28,9 +31,10 @@ public class TeamService {
     /**
      * Sort all candidates by semantic relevance of skills, descending.
      */
-    private static void sortSemantic(List<SemanticMatch> matches) {
+    private static List<SemanticMatch> sortSemantic(List<SemanticMatch> matches) {
         try {
             matches.sort(Comparator.comparingDouble(SemanticMatch::relevance).reversed());
+            return matches;
         } catch (Exception e) {
             throw new SemanticSearchException("Sorting failed " + e.getMessage(), e);
         }
@@ -41,10 +45,22 @@ public class TeamService {
         return matches.stream().limit(teamSize).toList();
     }
 
-    public SuperheroTeam recommendTeam(String taskDescription, int teamSize) {
+    public SuperheroEmbeddedTeamDto recommendTeam(String taskDescription, int teamSize) {
         try {
             //double up team size for more emphasize on skills.
-            var docs = vectorService.searchSimilarMatch(taskDescription, () -> teamSize * 2);
+            List<SemanticMatch> matches = retrieveEmbeddingTeam(taskDescription, () -> teamSize * 2);
+            matches = limitToTeamSize(teamSize, matches);
+
+            return SuperheroEmbeddedTeamDto.fromSemanticMatches(taskDescription, matches);
+        } catch (SemanticSearchException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    public List<SemanticMatch> retrieveEmbeddingTeam(String taskDescription, Supplier<Integer> teamSize)
+            throws SemanticSearchException{
+        try {
+            var docs = vectorService.searchSimilarMatch(taskDescription, teamSize);
             Set<Long> heroIds = extractSuperheroIds(docs);
 
             List<Superhero> heroes = superheroService.retrieveSuperheroesInList(heroIds);
@@ -52,14 +68,9 @@ public class TeamService {
             List<SemanticMatch> matches =
                     documentService.generateSemanticMatches(docs, heroes);
 
-            sortSemantic(matches);
-
-            List<SemanticMatch> teamMembers = limitToTeamSize(teamSize,
-                    matches);
-
-            return new SuperheroTeam(taskDescription, teamMembers);
+            return sortSemantic(matches);
         } catch (Exception e) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new SemanticSearchException(e.getMessage(), e);
         }
     }
 

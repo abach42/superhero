@@ -1,5 +1,7 @@
 package com.abach42.superhero.ai;
 
+import com.abach42.superhero.ai.indexing.UpdateSuperheroVectorEvent;
+import com.abach42.superhero.ai.indexing.VectorService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;

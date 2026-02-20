@@ -1,5 +1,7 @@
 package com.abach42.superhero.ai;
 
+import com.abach42.superhero.ai.indexing.DocumentService;
+import com.abach42.superhero.ai.indexing.VectorService;
 import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
@@ -26,7 +28,7 @@ public class SimilarService {
         this.vectorService = vectorService;
     }
 
-    public List<SemanticMatch> searchSimilarHeroes(String heroDescription, int quantity) {
+    public List<RelevantSuperheroesDto> searchSimilarHeroes(String heroDescription, int quantity) {
         try {
             var docs = vectorService.searchSimilarMatch(heroDescription, () -> quantity);
             Map<Long, Double> heroIdToScore = extractSuperheroIds(docs);
@@ -34,7 +36,9 @@ public class SimilarService {
             Set<Long> heroIds = heroIdToScore.keySet();
             List<Superhero> heroes = superheroService.retrieveSuperheroesInList(heroIds);
 
-            return documentService.generateSemanticMatches(docs, heroes);
+            List<SemanticMatch> matches = documentService.generateSemanticMatches(docs, heroes);
+
+            return matches.stream().map(RelevantSuperheroesDto::fromSemanticMatch).toList();
         } catch (Exception e) {
             throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

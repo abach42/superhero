@@ -56,6 +56,8 @@ spring:
       # path, "/", is automatically added as a location as well.
       static-locations: classpath:/public/, classpath:/static/
   ai:
+    model:
+      chat: ollama
     vectorstore:
       pgvector:
       index-type: HNSW
@@ -63,17 +65,27 @@ spring:
       dimensions: 1024
       max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
     ollama:
+      base-url: http://localhost:11434
+      embedding:
+        options:
+          model: mxbai-embed-large
+      chat:
+        options:
+          model: mistral
+          format: json
+          temperature: 0.7
       retry:
         enabled: false
       init:
         # let AI service do the job of pulling
-        pull-model-strategy: never
-        timeout: 60s
-        max-retries: 1
+        pull-model-strategy: when_missing
+        chat:
+          include: true
+          additional-models:
+            - mistral
         embedding:
           additional-models:
             - mxbai-embed-large
-            - nomic-embed-text
   shell:
     interactive:
       enabled: false

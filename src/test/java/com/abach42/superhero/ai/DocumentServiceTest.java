@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.abach42.superhero.ai.indexing.DocumentService;
+import com.abach42.superhero.ai.contextual.PromptService;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import java.util.List;
@@ -20,7 +22,7 @@ import org.springframework.ai.document.Document;
 class DocumentServiceTest {
 
     @Mock
-    private ContentService contentService;
+    private PromptService promptService;
 
     @InjectMocks
     private DocumentService subject;
@@ -78,6 +80,6 @@ class DocumentServiceTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).relevance()).isEqualTo(0.75);
-        assertThat(result.get(0).superhero().alias()).isEqualTo(hero.getAlias());
+        assertThat(result.get(0).superhero().getAlias()).isEqualTo(hero.getAlias());
     }
 }

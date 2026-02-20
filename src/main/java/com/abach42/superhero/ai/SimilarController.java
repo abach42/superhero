@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Superhero API")
+@Tag(name = "Find groups of similar heroes.")
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
@@ -62,7 +62,7 @@ public class SimilarController {
             )
     })
     @GetMapping("/search")
-    public List<SemanticMatch> searchSimilar(
+    public List<RelevantSuperheroesDto> searchSimilar(
             @Parameter(description = "Description of the superhero to search for") @RequestParam String query,
             @Parameter(description = "Maximum number of results to return") @RequestParam(defaultValue = "5") int quantity) {
         return similarService.searchSimilarHeroes(query, quantity);

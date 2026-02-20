@@ -1,4 +1,4 @@
-package com.abach42.superhero.ai;
+package com.abach42.superhero.ai.indexing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
