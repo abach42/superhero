@@ -2,6 +2,8 @@ package com.abach42.superhero.ai;
 
 import static org.mockito.Mockito.verify;
 
+import com.abach42.superhero.ai.indexing.UpdateSuperheroVectorEvent;
+import com.abach42.superhero.ai.indexing.VectorService;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import org.junit.jupiter.api.BeforeEach;

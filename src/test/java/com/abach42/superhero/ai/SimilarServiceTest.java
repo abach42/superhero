@@ -6,6 +6,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.abach42.superhero.ai.indexing.DocumentService;
+import com.abach42.superhero.ai.indexing.VectorService;
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
 import com.abach42.superhero.testconfiguration.TestStubs;
@@ -47,7 +49,7 @@ class SimilarServiceTest {
         List<Document> docs = List.of(doc);
         Superhero hero = TestStubs.getSuperheroStub();
         List<Superhero> heroes = List.of(hero);
-        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(hero), 0.9);
+        SemanticMatch match = new SemanticMatch(hero, 0.9);
 
         given(vectorService.searchSimilarMatch(any(), any())).willReturn(docs);
         given(documentService.getSuperheroId(doc)).willReturn(1L);
@@ -55,7 +57,7 @@ class SimilarServiceTest {
         given(superheroService.retrieveSuperheroesInList(Set.of(1L))).willReturn(heroes);
         given(documentService.generateSemanticMatches(docs, heroes)).willReturn(List.of(match));
 
-        List<SemanticMatch> result = subject.searchSimilarHeroes(query, quantity);
+        List<RelevantSuperheroesDto> result = subject.searchSimilarHeroes(query, quantity);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).relevance()).isEqualTo(0.9);

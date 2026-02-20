@@ -1,4 +1,4 @@
-package com.abach42.superhero.ai;
+package com.abach42.superhero.ai.indexing;
 
 public class VectorException extends RuntimeException {
 

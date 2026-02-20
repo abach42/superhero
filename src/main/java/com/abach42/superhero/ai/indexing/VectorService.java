@@ -1,4 +1,4 @@
-package com.abach42.superhero.ai;
+package com.abach42.superhero.ai.indexing;
 
 import com.abach42.superhero.superhero.Superhero;
 import com.abach42.superhero.superhero.SuperheroService;
@@ -53,7 +53,7 @@ public class VectorService {
                             .build()
             );
         } catch (Exception e) {
-            throw new VectorException("Search similar failed.");
+            throw new VectorException("Semantic search failed.");
         }
     }
 }

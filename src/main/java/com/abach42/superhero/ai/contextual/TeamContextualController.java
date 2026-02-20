@@ -1,5 +1,6 @@
-package com.abach42.superhero.ai;
+package com.abach42.superhero.ai.contextual;
 
+import com.abach42.superhero.ai.SuperheroEmbeddedTeamDto;
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
 import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.shared.api.PathConfig;
@@ -16,20 +17,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Collect a team by embedding, getting relevance.")
+@Tag(name = "Collect a team prompting.")
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
 @IsAdmin
-public class TeamController {
+public class TeamContextualController {
 
-    private final TeamService teamService;
+    private final TeamContextualService teamContextualService;
 
-    public TeamController(TeamService teamService) {
-        this.teamService = teamService;
+    public TeamContextualController(TeamContextualService teamContextualService) {
+        this.teamContextualService = teamContextualService;
     }
 
-    @Operation(summary = "Recommend a superhero team for a task")
+    @Operation(summary = "Recommend a superhero team for a task by prompting.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200", description = "Superhero team recommended.",
@@ -56,13 +57,14 @@ public class TeamController {
                     )
             )
     })
-    @GetMapping("/team")
-    public SuperheroEmbeddedTeamDto recommendTeam(
+    @GetMapping("/team/contextual")
+    public SuperheroRagTeamDto generateTeam(
             @Parameter(description = "Description of the task for the team")
             @RequestParam String task,
 
             @Parameter(description = "Requested size of the team")
-            @RequestParam(defaultValue = "3") int teamSize) {
-        return teamService.recommendTeam(task, teamSize);
+            @RequestParam(defaultValue = "5")
+            int teamSize) {
+        return teamContextualService.generateTeamByRag(task, teamSize);
     }
 }

@@ -1,6 +1,8 @@
 package com.abach42.superhero.ai;
 
-public record SemanticMatch(SuperheroSkillDto superhero, double relevance) {
+import com.abach42.superhero.superhero.Superhero;
+
+public record SemanticMatch(Superhero superhero, double relevance) {
 
 }
 

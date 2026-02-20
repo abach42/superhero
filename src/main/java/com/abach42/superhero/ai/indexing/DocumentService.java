@@ -1,5 +1,7 @@
-package com.abach42.superhero.ai;
+package com.abach42.superhero.ai.indexing;
 
+import com.abach42.superhero.ai.SemanticMatch;
+import com.abach42.superhero.ai.contextual.PromptService;
 import com.abach42.superhero.superhero.Superhero;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class DocumentService {
 
-    private final ContentService contentService;
+    private final PromptService promptService;
 
-    public DocumentService(ContentService contentService) {
-        this.contentService = contentService;
+    public DocumentService(PromptService promptService) {
+        this.promptService = promptService;
     }
 
     public Double getDistance(Document doc) {
@@ -45,7 +47,7 @@ public class DocumentService {
                     .orElseThrow();
 
             double score = getDistance(doc);
-            return new SemanticMatch(SuperheroSkillDto.fromDomain(hero), score);
+            return new SemanticMatch(hero, score);
         }).collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -67,7 +69,7 @@ public class DocumentService {
      * The semantic text that will be embedded. This is where "meaning" lives.
      */
     private String buildContent(Superhero hero) {
-        return contentService.getContent(AllContentStrategy.QUALIFIER, hero);
+        return promptService.generateSuperheroProfile(hero).getContents();
     }
 
     /**

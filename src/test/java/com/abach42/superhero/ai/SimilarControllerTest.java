@@ -50,9 +50,9 @@ public class SimilarControllerTest {
         String query = "Batman";
         int quantity = 5;
 
-        SemanticMatch match = new SemanticMatch(SuperheroSkillDto.fromDomain(
-                TestStubs.getSuperheroStub()), 0.95);
-        given(similarService.searchSimilarHeroes(anyString(), anyInt())).willReturn(List.of(match));
+        RelevantSuperheroesDto heroStub = new RelevantSuperheroesDto(
+                TestStubs.getSuperheroDtoStub(), 0.95);
+        given(similarService.searchSimilarHeroes(anyString(), anyInt())).willReturn(List.of(heroStub));
 
         String uri = UriComponentsBuilder.fromPath(PathConfig.SUPERHEROES)
                 .pathSegment("search")

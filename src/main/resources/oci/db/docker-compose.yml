@@ -1,6 +1,6 @@
 services:
   database:
-    image: pgvector/pgvector:pg17
+    image: pgvector/pgvector:pg18
     restart: always
     ports:
       - "15432:5432"

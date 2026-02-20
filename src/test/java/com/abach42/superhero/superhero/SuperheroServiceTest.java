@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import com.abach42.superhero.ai.indexing.UpdateSuperheroVectorEvent;
 import com.abach42.superhero.shared.api.ApiException;
 import com.abach42.superhero.shared.convertion.PatchField;
 import com.abach42.superhero.testconfiguration.TestStubs;
@@ -367,7 +368,7 @@ class SuperheroServiceTest {
         subject.changeSuperhero(1L, emptyUpdate);
 
         verify(eventPublisher, org.mockito.Mockito.never()).publishEvent(
-                any(com.abach42.superhero.ai.UpdateSuperheroVectorEvent.class));
+                any(UpdateSuperheroVectorEvent.class));
     }
 
     @Test
@@ -380,7 +381,7 @@ class SuperheroServiceTest {
         subject.changeSuperhero(1L, update);
 
         verify(eventPublisher).publishEvent(
-                any(com.abach42.superhero.ai.UpdateSuperheroVectorEvent.class));
+                any(UpdateSuperheroVectorEvent.class));
     }
 
     @Test
