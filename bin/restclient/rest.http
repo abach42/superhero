@@ -223,10 +223,12 @@ GET {{domain}}/api/v1/superheroes/team?task=Build a team of superheroes with ver
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
-### Reasoning: high peacekeeping, compassion, empathy
+### Contextual research: high peacekeeping, compassion, empathy
 GET {{domain}}/api/v1/superheroes/team/contextual?task=Build a team of superheroes with very high peacekeeping, compassion, empathy, charity and wisdom to promote education, social inclusion and resolve conflicts peacefully&teamSize=5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{jwt}}
 
-###
-GET http://localhost:11434/api/tags
+### team recommendation to rescue Germany  
+GET {{domain}}/api/v1/superheroes/team/contextual?task=stop political interests of producing weapons and strengthen education and inclusion&teamSize=5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwt}}

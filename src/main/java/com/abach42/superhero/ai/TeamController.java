@@ -1,6 +1,7 @@
 package com.abach42.superhero.ai;
 
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
+import com.abach42.superhero.login.methodsecurity.IsUser;
 import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.shared.api.PathConfig;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Collect a team by embedding, getting relevance.")
+@Tag(name = "Collect a team by with relevance scores.")
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
-@IsAdmin
+@IsUser
 public class TeamController {
 
     private final TeamService teamService;

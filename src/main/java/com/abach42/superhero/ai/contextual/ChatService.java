@@ -3,6 +3,7 @@ package com.abach42.superhero.ai.contextual;
 import com.abach42.superhero.ai.SemanticMatch;
 import com.abach42.superhero.ai.TeamService;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.ChatClient.Builder;
@@ -25,7 +26,8 @@ public class ChatService {
 
     public String callTeamPrompt(String query, int quantity) {
         Prompt prompt = generateTeamPrompt(query, quantity);
-        return chatClient.prompt(prompt).call().content();
+        return Objects.requireNonNull(chatClient.prompt(prompt).call().chatResponse())
+                .getResult().getOutput().getText();
     }
 
     private Prompt generateTeamPrompt(String query, int quantity) {
