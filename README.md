@@ -50,6 +50,8 @@ and provide localhost, TLS at port 8443.
 
 * Use AI similarity search `GET /api/v1/superheroes/search?query=wise peaceful hero who resolves conflicts calmly&quantity=5`
 
+* Use AI contextual explained research `GET /api/v1/superheroes/team/contextual?task=clean up city from bad police officers&teamSize=5`
+
 ## <img src="./src/main/resources/static/img/jwt_logo.svg" width="20"> Using JWT
 
 1. Get a token by authentication
@@ -110,3 +112,4 @@ and provide localhost, TLS at port 8443.
 ### Semantic search 🧠
 * GET /api/v1/superheroes/team
 * GET /api/v1/superheroes/search
+* GET /api/v1/superheroes/team/contextual

@@ -3,22 +3,21 @@ package com.abach42.superhero.ai.contextual;
 import com.abach42.superhero.ai.SemanticSearchException;
 import com.abach42.superhero.superhero.SuperheroDto;
 import com.abach42.superhero.superhero.SuperheroService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TeamContextualService {
 
     private final ChatService chatService;
-    private final ObjectMapper objectMapper;
     private final SuperheroService superheroService;
+    private final BeanOutputConverter<TeamRagResponseDto> outputConverter;
 
-    public TeamContextualService(ChatService chatService, ObjectMapper objectMapper,
-            SuperheroService superheroService) {
+    public TeamContextualService(ChatService chatService, SuperheroService superheroService,
+            BeanOutputConverter<TeamRagResponseDto> outputConverter) {
         this.chatService = chatService;
-        this.objectMapper = objectMapper;
         this.superheroService = superheroService;
+        this.outputConverter = outputConverter;
     }
 
     public SuperheroRagTeamDto generateTeamByRag(String query, int quantity) {
@@ -33,8 +32,8 @@ public class TeamContextualService {
         String maybeJson = chatService.callTeamPrompt(query, quantity);
 
         try {
-            return objectMapper.readValue(maybeJson, TeamRagResponseDto.class);
-        } catch (JsonProcessingException e) {
+            return outputConverter.convert(maybeJson);
+        } catch (RuntimeException e) {
             throw new SemanticSearchException("Team contextual response could not be rendered: "
                     + maybeJson, e);
         }

@@ -13,4 +13,3 @@ Team size:
 Rules:
 - Respond ONLY as valid JSON
 - No explanation outside JSON
-- Use this json format: "team": [ID, ID, ID, ...], "explanation": "short explanation"

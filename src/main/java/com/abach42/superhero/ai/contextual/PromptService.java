@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
+import org.springframework.ai.converter.BeanOutputConverter;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -14,35 +16,39 @@ public class PromptService {
 
     private final Resource profilingResource;
     private final Resource contextualResource;
+    private final BeanOutputConverter<TeamRagResponseDto> outputConverter;
 
     public PromptService(
             @Value("classpath:/prompts/superhero-profiling.st") Resource profilingResource,
-            @Value("classpath:/prompts/team-contextual.st") Resource contextualResource) {
+            @Value("classpath:/prompts/team-contextual.st") Resource contextualResource,
+            BeanOutputConverter<TeamRagResponseDto> outputConverter) {
         this.profilingResource = profilingResource;
         this.contextualResource = contextualResource;
+        this.outputConverter = outputConverter;
     }
 
     public Prompt generateSuperheroProfile(Superhero superhero) {
-        SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(profilingResource);
-
         Map<String, Object> params = Map.of(
                 "skillsFormatted", generateSkills(superhero),
                 "hero", superhero
         );
 
+        SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(profilingResource);
         return systemPromptTemplate.create(params);
     }
 
     public Prompt generateContextualPrompt(String task, int teamSize, String candidates) {
-        SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(contextualResource);
-
         Map<String, Object> params = Map.of(
                 "candidates", candidates,
                 "task", task,
                 "teamSize", teamSize
         );
 
-        return systemPromptTemplate.create(params);
+        OllamaChatOptions ollamaChatOptions =
+                OllamaChatOptions.builder().format(outputConverter.getJsonSchemaMap()).build();
+
+        SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(contextualResource);
+        return systemPromptTemplate.create(params, ollamaChatOptions);
     }
 
     private String generateSkills(Superhero superhero) {

@@ -2,6 +2,7 @@ package com.abach42.superhero.ai.contextual;
 
 import com.abach42.superhero.ai.SuperheroEmbeddedTeamDto;
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
+import com.abach42.superhero.login.methodsecurity.IsUser;
 import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.shared.api.PathConfig;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Collect a team prompting.")
+@Tag(name = "Collect a team by contextual research.")
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
-@IsAdmin
+@IsUser
 public class TeamContextualController {
 
     private final TeamContextualService teamContextualService;
@@ -30,14 +31,14 @@ public class TeamContextualController {
         this.teamContextualService = teamContextualService;
     }
 
-    @Operation(summary = "Recommend a superhero team for a task by prompting.")
+    @Operation(summary = "Recommend a superhero team for a task by prompting technologies.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200", description = "Superhero team recommended.",
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SuperheroEmbeddedTeamDto.class)
+                                    schema = @Schema(implementation = SuperheroRagTeamDto.class)
                             )
                     }),
             @ApiResponse(

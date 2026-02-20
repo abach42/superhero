@@ -1,6 +1,7 @@
 package com.abach42.superhero.ai;
 
 import com.abach42.superhero.login.methodsecurity.IsAdmin;
+import com.abach42.superhero.login.methodsecurity.IsUser;
 import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.shared.api.PathConfig;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = PathConfig.SUPERHEROES)
 @SecurityRequirement(name = "Bearer Authentication")
-@IsAdmin
+@IsUser
 public class SimilarController {
 
     private final SimilarService similarService;
