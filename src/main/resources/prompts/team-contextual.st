@@ -10,6 +10,4 @@ Select a Team out of these candidates based on the following task:
 Team size:
 {teamSize} Candidates
 
-Rules:
-- Respond ONLY as valid JSON
-- No explanation outside JSON
+Explain your choice naming reasons.

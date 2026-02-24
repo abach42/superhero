@@ -77,15 +77,7 @@ spring:
       retry:
         enabled: false
       init:
-        # let AI service do the job of pulling
-        pull-model-strategy: when_missing
-        chat:
-          include: true
-          additional-models:
-            - mistral
-        embedding:
-          additional-models:
-            - mxbai-embed-large
+        pull-model-strategy: never
   shell:
     interactive:
       enabled: false
