@@ -46,6 +46,6 @@ public class ChatService {
     }
 
     private List<SemanticMatch> getEmbeddingCandidates(String query, int quantity) {
-        return teamService.retrieveEmbeddingTeam(query, () -> quantity * 2); //todo quantity
+        return teamService.retrieveEmbeddingTeam(query, () -> (int) Math.round(quantity * 1.4)); //todo quantity
     }
 }

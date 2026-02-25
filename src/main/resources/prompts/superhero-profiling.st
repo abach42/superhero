@@ -1,4 +1,5 @@
-Superhero {hero.realName}:
+
+Superhero description starts:
 ID: {hero.id};
 Real Name: {hero.realName};
 
@@ -7,4 +8,6 @@ Skills:
 Alias: {hero.alias};
 Born: {hero.dateOfBirth};
 Occupation: {hero.occupation};
-Origin Story: {hero.originStory};
+Origin Story: {hero.originStory}
+Superhero description ends.
+
