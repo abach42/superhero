@@ -10,4 +10,4 @@ Select a Team out of these candidates based on the following task:
 Team size:
 {teamSize} Candidates
 
-Explain your choice naming reasons.
+Explain your choice.
