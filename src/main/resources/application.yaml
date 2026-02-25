@@ -16,6 +16,12 @@ com.abach42.superhero:
       # must be at least 256 bits,
       # caution: never commit key in production, consider to use env var
       token-secret: ks9lg8pubax3ctmw9aq4pz4vduxllqq4
+    bothSiteEncryption:
+      key: 5fBNTgKtKMEzbp4P
+      initVector: QhxmlzIsIPv6oPDY
+  mail:
+    from: foo@bar.com
+    reply-to: reply@bar.com
   database-cleanup-service:
     enabled: true
     erase-soft-deleted-at: "0 0 0 ? * SAT"
@@ -55,6 +61,11 @@ spring:
       # locations). The root servlet context
       # path, "/", is automatically added as a location as well.
       static-locations: classpath:/public/, classpath:/static/
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: foo
+    password: onlyForLocalhost456
   ai:
     model:
       chat: ollama
@@ -97,6 +108,7 @@ spring:
       file:
         - src/main/resources/oci/db/docker-compose.yml
         - src/main/resources/oci/ai/docker-compose.yml
+        - src/main/resources/oci/mail/docker-compose.yml
       skip:
         in-tests: true
       start:

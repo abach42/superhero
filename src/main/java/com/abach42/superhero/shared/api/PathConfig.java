@@ -12,6 +12,7 @@ public final class PathConfig {
     public static final String BASE_URI = ALIAS + VERSION;
 
     public static final String AUTH = BASE_URI + "/auth";
+    public static final String SYSLOG = BASE_URI + "/sys-log";
     public static final String SUPERHEROES = BASE_URI + "/superheroes";
     public static final String SKILL_PROFILES = SUPERHEROES + "/{superheroId}" + "/skill-profiles";
     public static final String SKILLS = BASE_URI + "/skills";

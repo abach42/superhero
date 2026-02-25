@@ -4,6 +4,8 @@ import com.abach42.superhero.login.methodsecurity.IsAdmin;
 import com.abach42.superhero.login.methodsecurity.IsUser;
 import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.shared.api.PathConfig;
+import com.abach42.superhero.syslog.Level;
+import com.abach42.superhero.syslog.LogAction;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -63,6 +65,7 @@ public class SimilarController {
             )
     })
     @GetMapping("/search")
+    @LogAction(value = "similar embedding called", level = Level.ESSENTIAL)
     public List<RelevantSuperheroesDto> searchSimilar(
             @Parameter(description = "Description of the superhero to search for") @RequestParam String query,
             @Parameter(description = "Maximum number of results to return") @RequestParam(defaultValue = "5") int quantity) {

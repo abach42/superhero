@@ -1,6 +1,7 @@
 include:
   - path: src/main/resources/oci/ai/docker-compose.yml
   - path: src/main/resources/oci/db/docker-compose.yml
+  - path: src/main/resources/oci/mail/docker-compose.yml
 
 services:
   application:

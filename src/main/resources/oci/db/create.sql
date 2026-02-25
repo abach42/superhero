@@ -36,6 +36,16 @@ create TABLE skill_profile (
     CONSTRAINT unique_superhero_skill UNIQUE (superhero_id, skill_id)
 );
 
+CREATE TABLE sys_log (
+    id SERIAL PRIMARY KEY,
+    actor SMALLINT NOT NULL,
+    level SMALLINT NOT NULL,
+    title VARCHAR(250) NOT NULL,
+    message TEXT,
+    read BOOLEAN DEFAULT FALSE,
+    create_date_time TIMESTAMP WITHOUT TIME ZONE
+);
+
 insert into skill (skill_name) values
 ('strength'), -- 1 Stärke
 ('speed'), -- 2 Schnelligkeit
