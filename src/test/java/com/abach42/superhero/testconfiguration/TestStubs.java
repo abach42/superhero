@@ -1,5 +1,6 @@
 package com.abach42.superhero.testconfiguration;
 
+import com.abach42.superhero.ai.SuperheroShortDto;
 import com.abach42.superhero.skill.Skill;
 import com.abach42.superhero.skill.SkillDto;
 import com.abach42.superhero.skillprofile.SkillProfile;
@@ -35,6 +36,10 @@ public class TestStubs {
 
     public static SuperheroDto getSuperheroDtoStub() {
         return SuperheroDto.fromDomain(getSuperheroStub());
+    }
+
+    public static SuperheroShortDto getSuperheroShortDtoStub() {
+        return SuperheroShortDto.fromDomain(getSuperheroStub());
     }
 
     public static SuperheroDto getSuperheroDtoStubEmpty() {

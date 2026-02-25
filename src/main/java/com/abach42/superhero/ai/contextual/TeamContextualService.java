@@ -1,7 +1,7 @@
 package com.abach42.superhero.ai.contextual;
 
 import com.abach42.superhero.ai.SemanticSearchException;
-import com.abach42.superhero.superhero.SuperheroDto;
+import com.abach42.superhero.ai.SuperheroShortDto;
 import com.abach42.superhero.superhero.SuperheroService;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class TeamContextualService {
         TeamRagResponseDto teamRagResponseDto = getTeamRagResponse(query, quantity);
 
         return new SuperheroRagTeamDto(query, teamRagResponseDto.team().stream().map(id ->
-                        SuperheroDto.fromDomain(superheroService.getSuperhero(id))).toList(),
+                SuperheroShortDto.fromDomain(superheroService.getSuperhero(id))).toList(),
                 teamRagResponseDto.explanation());
     }
 
