@@ -51,7 +51,7 @@ public class SimilarControllerTest {
         int quantity = 5;
 
         RelevantSuperheroesDto heroStub = new RelevantSuperheroesDto(
-                TestStubs.getSuperheroDtoStub(), 0.95);
+                TestStubs.getSuperheroShortDtoStub(), 0.95);
         given(similarService.searchSimilarHeroes(anyString(), anyInt())).willReturn(List.of(heroStub));
 
         String uri = UriComponentsBuilder.fromPath(PathConfig.SUPERHEROES)
