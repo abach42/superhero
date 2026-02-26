@@ -161,6 +161,9 @@
           </dependency>
         </dependencies>
         <configuration>
+          <argLine>
+            -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+          </argLine>
           <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
           <parallel>all</parallel>
           <reportFormat>plain</reportFormat>

@@ -1,6 +1,7 @@
 package com.abach42.superhero.ai;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.document.Document;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +33,8 @@ class DocumentServiceTest {
     @DisplayName("Should convert superhero to document")
     void shouldConvertSuperheroToDocument() {
         Superhero hero = TestStubs.getSuperheroStub();
+        Prompt promptStub = new Prompt();
+        when(promptService.generateSuperheroProfile(any(Superhero.class))).thenReturn(promptStub);
 
         Document result = subject.toDocument(hero);
 

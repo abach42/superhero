@@ -102,6 +102,6 @@ class VectorServiceTest {
 
         assertThatThrownBy(() -> subject.searchSimilarMatch("query", () -> 5))
                 .isInstanceOf(VectorException.class)
-                .hasMessage("Search similar failed.");
+                .hasMessage("Semantic search failed.");
     }
 }
