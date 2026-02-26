@@ -1,5 +1,7 @@
 package com.abach42.superhero.ai.contextual;
 
+import com.abach42.superhero.ai.Query;
+import com.abach42.superhero.skillprofile.SkillProfile;
 import com.abach42.superhero.superhero.Superhero;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class PromptService {
 
     public Prompt generateSuperheroProfile(Superhero superhero) {
         Map<String, Object> params = Map.of(
-                "skillsFormatted", generateSkills(superhero),
+                "skillsFormatted", buildSkillRepresentation(superhero),
                 "hero", superhero
         );
 
@@ -37,11 +39,11 @@ public class PromptService {
         return systemPromptTemplate.create(params);
     }
 
-    public Prompt generateContextualPrompt(String task, int teamSize, String candidates) {
+    public Prompt generateContextualPrompt(Query query, String candidates) {
         Map<String, Object> params = Map.of(
                 "candidates", candidates,
-                "task", task,
-                "teamSize", teamSize
+                "task", query.task(),
+                "teamSize", query.quantity()
         );
 
         OllamaChatOptions ollamaChatOptions =
@@ -51,19 +53,47 @@ public class PromptService {
         return systemPromptTemplate.create(params, ollamaChatOptions);
     }
 
-    private String generateSkills(Superhero superhero) {
-        return superhero.getSkillProfiles().stream()
-                .map(skill -> {
-                    String descriptive = switch (skill.getIntensity()) {
-                        case 1 -> "is very low";
-                        case 2 -> "is low";
-                        case 3 -> "is medium";
-                        case 4 -> "is high";
-                        case 5 -> "is very high";
-                        default -> "is unknown";
-                    };
-                    return "- " + skill.getSkill() + " " + descriptive + "\n";
-                })
-                .collect(Collectors.joining());
+    /**
+     * representation: enrich numeric values with deterministic natural language.
+     */
+    private String buildSkillRepresentation(Superhero hero) {
+        String skills = hero.getSkillProfiles().stream()
+                .map(this::toEmbeddingSkillLine)
+                .collect(Collectors.joining("\n"));
+
+        return "Normalized skill scale (1 to 5)\n" + skills;
+    }
+
+    private String toEmbeddingSkillLine(SkillProfile skillProfile) {
+        Integer intensity = skillProfile.getIntensity();
+        String level = normalizeLevel(intensity);
+        String labels = comparableLabels(intensity);
+
+        return "Skill: " + skillProfile.getSkill().getName() + " | "
+                + "Level: " + intensity + "/5 | "
+                + "Interpretation: " + level + " | "
+                + "Comparable labels: " + labels;
+    }
+
+    private String normalizeLevel(Integer intensity) {
+        return switch (intensity) {
+            case 1 -> "very low";
+            case 2 -> "low";
+            case 3 -> "medium";
+            case 4 -> "high";
+            case 5 -> "very high";
+            default -> "unknown";
+        };
+    }
+
+    private String comparableLabels(Integer intensity) {
+        return switch (intensity) {
+            case 1 -> "minimal, weak, beginner";
+            case 2 -> "limited, basic, developing";
+            case 3 -> "solid, moderate, capable";
+            case 4 -> "strong, advanced, excellent";
+            case 5 -> "outstanding, top-tier, elite";
+            default -> "unclassified";
+        };
     }
 }

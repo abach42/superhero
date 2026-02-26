@@ -8,7 +8,6 @@ import com.abach42.superhero.superhero.SuperheroService;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.springframework.ai.document.Document;
 import org.springframework.http.HttpStatus;
@@ -46,9 +45,10 @@ public class TeamService {
     }
 
     public SuperheroEmbeddedTeamDto recommendTeam(String taskDescription, int teamSize) {
+        Query query = new Query(taskDescription, teamSize);
         try {
             //double up team size for more emphasize on skills.
-            List<SemanticMatch> matches = retrieveEmbeddingTeam(taskDescription, () -> teamSize * 2);
+            List<SemanticMatch> matches = retrieveEmbeddingTeam(query);
             matches = limitToTeamSize(teamSize, matches);
 
             return SuperheroEmbeddedTeamDto.fromSemanticMatches(taskDescription, matches);
@@ -57,10 +57,10 @@ public class TeamService {
         }
     }
 
-    public List<SemanticMatch> retrieveEmbeddingTeam(String taskDescription, Supplier<Integer> teamSize)
+    public List<SemanticMatch> retrieveEmbeddingTeam(Query query)
             throws SemanticSearchException{
         try {
-            var docs = vectorService.searchSimilarMatch(taskDescription, teamSize);
+            var docs = vectorService.searchSimilarMatch(query);
             Set<Long> heroIds = extractSuperheroIds(docs);
 
             List<Superhero> heroes = superheroService.retrieveSuperheroesInList(heroIds);

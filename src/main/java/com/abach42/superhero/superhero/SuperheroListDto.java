@@ -51,7 +51,7 @@ public record SuperheroListDto(
             Integer pageNumber,
             @Schema(
                     title = "total pages",
-                    description = "Number of total pages of actual query",
+                    description = "Number of total pages of actual task",
                     format = "integer",
                     accessMode = AccessMode.READ_ONLY
             )
@@ -65,7 +65,7 @@ public record SuperheroListDto(
             Integer pageSize,
             @Schema(
                     title = "total elements",
-                    description = "Number of total superheroes of query",
+                    description = "Number of total superheroes of task",
                     format = "integer",
                     accessMode = AccessMode.READ_ONLY
             )

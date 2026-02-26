@@ -5,6 +5,7 @@ Real Name: {hero.realName};
 
 Skills:
 {skillsFormatted};
+
 Alias: {hero.alias};
 Born: {hero.dateOfBirth};
 Occupation: {hero.occupation};

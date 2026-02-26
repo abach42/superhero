@@ -84,11 +84,10 @@ class VectorServiceTest {
     @Test
     @DisplayName("Should search similar match successfully")
     void shouldSearchSimilarMatchSuccessfully() {
-        String description = "search query";
         Document doc = new Document("1", "content", Map.of());
         given(vectorStore.similaritySearch(any(SearchRequest.class))).willReturn(List.of(doc));
 
-        List<Document> result = subject.searchSimilarMatch(description, () -> 5);
+        List<Document> result = subject.searchSimilarMatch(new Query("search task", 9));
 
         assertThat(result).hasSize(1);
         verify(vectorStore).similaritySearch(any(SearchRequest.class));
@@ -100,7 +99,7 @@ class VectorServiceTest {
         given(vectorStore.similaritySearch(any(SearchRequest.class))).willThrow(
                 new RuntimeException("Search failed"));
 
-        assertThatThrownBy(() -> subject.searchSimilarMatch("query", () -> 5))
+        assertThatThrownBy(() -> subject.searchSimilarMatch(new Query("search task", 9)))
                 .isInstanceOf(VectorException.class)
                 .hasMessage("Semantic search failed.");
     }

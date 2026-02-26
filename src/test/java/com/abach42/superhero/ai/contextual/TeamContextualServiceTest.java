@@ -2,16 +2,17 @@ package com.abach42.superhero.ai.contextual;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
 
+import com.abach42.superhero.ai.Query;
 import com.abach42.superhero.ai.SemanticSearchException;
 import com.abach42.superhero.superhero.SuperheroService;
 import com.abach42.superhero.testconfiguration.TestStubs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +46,10 @@ class TeamContextualServiceTest {
         String promptResult = objectMapper.writeValueAsString(
                 teamRagResponseDto);
 
-        given(chatService.callTeamPrompt("Rescue city", 2)).willReturn(promptResult);
+        given(chatService.callTeamPrompt(argThat(query ->
+                query.task().equals("Rescue city") && query.quantity() == 2
+        ))).willReturn(promptResult);
+
         given(outputConverter.convert(promptResult)).willReturn(teamRagResponseDto);
         given(superheroService.getSuperhero(1L)).willReturn(TestStubs.getSuperheroStub());
 
@@ -59,12 +63,14 @@ class TeamContextualServiceTest {
     @Test
     @DisplayName("Should throw semantic search exception for invalid json")
     void shouldThrowForInvalidJson() {
-        given(chatService.callTeamPrompt("Rescue city", 2)).willReturn("not-json");
+        given(chatService.callTeamPrompt(argThat(query ->
+                query.task().equals("Rescue city") && query.quantity() == 9)))
+                .willReturn("not-json");
 
         given(outputConverter.convert("not-json"))
                 .willThrow(new RuntimeException("Parsing failed"));
 
-        assertThatThrownBy(() -> subject.generateTeamByRag("Rescue city", 2))
+        assertThatThrownBy(() -> subject.generateTeamByRag("Rescue city", 9))
                 .isInstanceOf(SemanticSearchException.class)
                 .hasMessageContaining("Team contextual response could not be rendered");
     }

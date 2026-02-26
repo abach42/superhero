@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
+import com.abach42.superhero.ai.Query;
 import com.abach42.superhero.ai.SemanticMatch;
 import com.abach42.superhero.ai.TeamService;
 import com.abach42.superhero.testconfiguration.TestStubs;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -36,8 +38,8 @@ class ChatServiceTest {
     @Test
     @DisplayName("Should generate team response text from chat client")
     void shouldGenerateTeamResponseText() throws JsonProcessingException {
-        ChatClient.Builder builder = org.mockito.Mockito.mock(ChatClient.Builder.class);
-        ChatClient chatClient = org.mockito.Mockito.mock(ChatClient.class, RETURNS_DEEP_STUBS);
+        ChatClient.Builder builder = Mockito.mock(ChatClient.Builder.class);
+        ChatClient chatClient = Mockito.mock(ChatClient.class, RETURNS_DEEP_STUBS);
         given(builder.build()).willReturn(chatClient);
 
         var hero = TestStubs.getSuperheroStub();
@@ -45,10 +47,10 @@ class ChatServiceTest {
         Prompt heroPrompt = new Prompt("Candidate profile");
         Prompt teamPrompt = new Prompt("Final prompt");
 
-        given(teamService.retrieveEmbeddingTeam(eq("Rescue city"), any()))
+        given(teamService.retrieveEmbeddingTeam(eq(new Query("Rescue city", 9))))
                 .willReturn(List.of(candidate));
         given(promptService.generateSuperheroProfile(hero)).willReturn(heroPrompt);
-        given(promptService.generateContextualPrompt("Rescue city", 5,
+        given(promptService.generateContextualPrompt(new Query("Rescue city", 9),
                 "Candidate profile"))
                 .willReturn(teamPrompt);
         given(Objects.requireNonNull(chatClient.prompt(teamPrompt).call().chatResponse()).
@@ -57,7 +59,7 @@ class ChatServiceTest {
 
         ChatService subject = new ChatService(teamService, promptService, builder);
 
-        String result = subject.callTeamPrompt("Rescue city", 5);
+        String result = subject.callTeamPrompt(new Query("Rescue city", 9));
 
         assertThat(result).contains("team");
     }

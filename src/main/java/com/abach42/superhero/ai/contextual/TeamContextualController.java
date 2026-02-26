@@ -1,7 +1,5 @@
 package com.abach42.superhero.ai.contextual;
 
-import com.abach42.superhero.ai.SuperheroEmbeddedTeamDto;
-import com.abach42.superhero.login.methodsecurity.IsAdmin;
 import com.abach42.superhero.login.methodsecurity.IsUser;
 import com.abach42.superhero.shared.api.ErrorDto;
 import com.abach42.superhero.shared.api.PathConfig;

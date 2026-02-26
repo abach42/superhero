@@ -2,6 +2,7 @@ package com.abach42.superhero.ai.contextual;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.abach42.superhero.ai.Query;
 import com.abach42.superhero.skill.Skill;
 import com.abach42.superhero.skillprofile.SkillProfile;
 import com.abach42.superhero.testconfiguration.TestStubs;
@@ -30,7 +31,9 @@ class PromptServiceTest {
         String content = subject.generateSuperheroProfile(hero).getContents();
 
         assertThat(content).contains("Hero: " + hero.getAlias());
-        assertThat(content).contains("courage is very high");
+        assertThat(content).contains("Hero: foo").contains("Normalized skill scale (1 to 5)")
+                .contains("Skill: courage | Level: 5/5 | Interpretation: very high | "
+                        + "Comparable labels: outstanding, top-tier, elite");
     }
 
     @Test
@@ -43,7 +46,7 @@ class PromptServiceTest {
                 new ByteArrayResource(contextualTemplate.getBytes()),
                 new BeanOutputConverter<>(TeamRagResponseDto.class));
 
-        String content = subject.generateContextualPrompt("Rescue city", 3,
+        String content = subject.generateContextualPrompt(new Query("Rescue city", 3),
                 "- Hero A").getContents();
 
         assertThat(content).contains("Task: Rescue city");

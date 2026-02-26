@@ -51,7 +51,7 @@ class SimilarServiceTest {
         List<Superhero> heroes = List.of(hero);
         SemanticMatch match = new SemanticMatch(hero, 0.9);
 
-        given(vectorService.searchSimilarMatch(any(), any())).willReturn(docs);
+        given(vectorService.searchSimilarMatch(any())).willReturn(docs);
         given(documentService.getSuperheroId(doc)).willReturn(1L);
         given(documentService.getDistance(doc)).willReturn(0.9);
         given(superheroService.retrieveSuperheroesInList(Set.of(1L))).willReturn(heroes);
@@ -61,6 +61,6 @@ class SimilarServiceTest {
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).relevance()).isEqualTo(0.9);
-        verify(vectorService).searchSimilarMatch(any(), any());
+        verify(vectorService).searchSimilarMatch(any());
     }
 }

@@ -29,8 +29,9 @@ public class SimilarService {
     }
 
     public List<RelevantSuperheroesDto> searchSimilarHeroes(String heroDescription, int quantity) {
+        Query query = new Query(heroDescription, quantity);
         try {
-            var docs = vectorService.searchSimilarMatch(heroDescription, () -> quantity);
+            var docs = vectorService.searchSimilarMatch(query);
             Map<Long, Double> heroIdToScore = extractSuperheroIds(docs);
 
             Set<Long> heroIds = heroIdToScore.keySet();

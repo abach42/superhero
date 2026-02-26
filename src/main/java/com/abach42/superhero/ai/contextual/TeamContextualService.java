@@ -1,5 +1,6 @@
 package com.abach42.superhero.ai.contextual;
 
+import com.abach42.superhero.ai.Query;
 import com.abach42.superhero.ai.SemanticSearchException;
 import com.abach42.superhero.ai.SuperheroShortDto;
 import com.abach42.superhero.superhero.SuperheroService;
@@ -21,15 +22,16 @@ public class TeamContextualService {
     }
 
     public SuperheroRagTeamDto generateTeamByRag(String query, int quantity) {
-        TeamRagResponseDto teamRagResponseDto = getTeamRagResponse(query, quantity);
+        Query chatRequest = new Query(query, quantity);
+        TeamRagResponseDto teamRagResponseDto = getTeamRagResponse(chatRequest);
 
         return new SuperheroRagTeamDto(query, teamRagResponseDto.team().stream().map(id ->
                 SuperheroShortDto.fromDomain(superheroService.getSuperhero(id))).toList(),
                 teamRagResponseDto.explanation());
     }
 
-    private TeamRagResponseDto getTeamRagResponse(String query, int quantity) {
-        String maybeJson = chatService.callTeamPrompt(query, quantity);
+    private TeamRagResponseDto getTeamRagResponse(Query chatRequest) {
+        String maybeJson = chatService.callTeamPrompt(chatRequest);
 
         try {
             return outputConverter.convert(maybeJson);

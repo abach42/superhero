@@ -1,5 +1,6 @@
 package com.abach42.superhero.ai.contextual;
 
+import com.abach42.superhero.ai.Query;
 import com.abach42.superhero.ai.SemanticMatch;
 import com.abach42.superhero.ai.TeamService;
 import java.util.List;
@@ -24,20 +25,24 @@ public class ChatService {
         this.chatClient = chatClientBuilder.build();
     }
 
-    public String callTeamPrompt(String query, int quantity) {
-        Prompt prompt = generateTeamPrompt(query, quantity);
+    public String callTeamPrompt(Query query) {
+        Prompt prompt = generateTeamPrompt(query);
         return Objects.requireNonNull(chatClient.prompt(prompt).call().chatResponse())
                 .getResult().getOutput().getText();
     }
 
-    private Prompt generateTeamPrompt(String query, int quantity) {
-        List<SemanticMatch> candidateSuperheroes = getEmbeddingCandidates(query, quantity);
+    private Prompt generateTeamPrompt(Query query) {
+        List<SemanticMatch> candidateSuperheroes = getEmbeddingCandidates(query);
 
         String candidates = candidateSuperheroes.stream()
                 .map(this::getCandidate)
                 .collect(Collectors.joining());
 
-        return promptService.generateContextualPrompt(query, quantity, candidates);
+        return promptService.generateContextualPrompt(query, candidates);
+    }
+
+    private List<SemanticMatch> getEmbeddingCandidates(Query query) {
+        return teamService.retrieveEmbeddingTeam(query);
     }
 
     private String getCandidate(SemanticMatch semanticMatch) {
@@ -45,7 +50,4 @@ public class ChatService {
         return prompt.getContents();
     }
 
-    private List<SemanticMatch> getEmbeddingCandidates(String query, int quantity) {
-        return teamService.retrieveEmbeddingTeam(query, () -> (int) Math.round(quantity * 1.4)); //todo quantity
-    }
 }

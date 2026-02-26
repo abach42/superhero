@@ -53,7 +53,7 @@ class TeamServiceTest {
         SemanticMatch match = new SemanticMatch(hero, 0.9);
         List<SemanticMatch> matches = new ArrayList<>(List.of(match));
 
-        given(vectorService.searchSimilarMatch(any(), any())).willReturn(docs);
+        given(vectorService.searchSimilarMatch(any())).willReturn(docs);
         given(documentService.getSuperheroId(doc)).willReturn(1L);
         given(superheroService.retrieveSuperheroesInList(any())).willReturn(heroes);
         given(documentService.generateSemanticMatches(docs, heroes)).willReturn(matches);
@@ -63,7 +63,7 @@ class TeamServiceTest {
         assertThat(result.taskDescription()).isEqualTo(task);
         assertThat(result.members()).hasSize(1);
         assertThat(result.members().get(0).relevance()).isEqualTo(0.9);
-        verify(vectorService).searchSimilarMatch(any(), any());
+        verify(vectorService).searchSimilarMatch(any());
     }
 
     @Test
@@ -88,7 +88,7 @@ class TeamServiceTest {
         // implementations, though unlikely to throw if not compared.
         // Actually Comparator.comparingDouble calls the keyExtractor.
 
-        given(vectorService.searchSimilarMatch(any(), any())).willReturn(docs);
+        given(vectorService.searchSimilarMatch(any())).willReturn(docs);
         given(documentService.getSuperheroId(doc)).willReturn(1L);
         given(superheroService.retrieveSuperheroesInList(any())).willReturn(heroes);
         given(documentService.generateSemanticMatches(docs, heroes)).willReturn(matches);
