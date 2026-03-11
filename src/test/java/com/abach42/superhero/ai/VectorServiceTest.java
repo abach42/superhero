@@ -98,10 +98,10 @@ class VectorServiceTest {
     @DisplayName("Should throw VectorException when search fails")
     void shouldThrowVectorExceptionWhenSearchFails() {
         given(vectorStore.similaritySearch(any(SearchRequest.class))).willThrow(
-                new RuntimeException("Search failed"));
+                new RuntimeException("Semantic search failed"));
 
         assertThatThrownBy(() -> subject.searchSimilarMatch("query", () -> 5))
                 .isInstanceOf(VectorException.class)
-                .hasMessage("Search similar failed.");
+                .hasMessage("Semantic search failed.");
     }
 }
